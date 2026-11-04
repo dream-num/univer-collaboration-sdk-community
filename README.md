@@ -23,6 +23,13 @@ release.
 | [`@univerjs-pro/collaboration-comment-database-memory`](./packages/collaboration-comment-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-comment-database-sqlite`](./packages/collaboration-comment-database-sqlite/README.md) | SQLite adapter built on `libsql` |
 
+### History database adapters
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-history-database-memory`](./packages/collaboration-history-database-memory/README.md) | In-process adapter for tests and temporary services |
+| [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+
 ## Development
 
 Requires Node.js 22 or later and pnpm 11.
@@ -42,4 +49,5 @@ Each SPI ships a testkit with the contract tests every implementation passes. Im
 interface, run the contract against it, and read the matching package here as a reference. See
 [`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) for
 `IDatabaseAdapter` and [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md)
-for `ICommentDatabaseAdapter`.
+for `ICommentDatabaseAdapter`, and [`collaboration-history-database-testkit`](./testkits/collaboration-history-database-testkit/README.md)
+for `IHistoryDatabaseAdapter`.

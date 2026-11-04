@@ -102,6 +102,43 @@ importers:
         specifier: 1.3.1
         version: 1.3.1
 
+  packages/collaboration-history-database-memory:
+    devDependencies:
+      '@univerjs-pro/collaboration-history-database-testkit':
+        specifier: workspace:*
+        version: link:../../testkits/collaboration-history-database-testkit
+      '@univerjs-pro/collaboration-history-service':
+        specifier: 1.3.1
+        version: 1.3.1(rxjs@7.8.2)
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
+  packages/collaboration-history-database-sqlite:
+    dependencies:
+      libsql:
+        specifier: ^0.5.29
+        version: 0.5.29
+    devDependencies:
+      '@univerjs-pro/collaboration-database-sqlite':
+        specifier: workspace:*
+        version: link:../collaboration-database-sqlite
+      '@univerjs-pro/collaboration-database-testkit':
+        specifier: workspace:*
+        version: link:../../testkits/collaboration-database-testkit
+      '@univerjs-pro/collaboration-history-database-testkit':
+        specifier: workspace:*
+        version: link:../../testkits/collaboration-history-database-testkit
+      '@univerjs-pro/collaboration-history-service':
+        specifier: 1.3.1
+        version: 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/collaboration-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
   testkits/collaboration-comment-database-testkit:
     dependencies:
       vitest:
@@ -124,6 +161,19 @@ importers:
       '@univerjs-pro/collaboration-service':
         specifier: 1.3.1
         version: 1.3.1
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
+  testkits/collaboration-history-database-testkit:
+    dependencies:
+      vitest:
+        specifier: '>=4.1.0'
+        version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
+    devDependencies:
+      '@univerjs-pro/collaboration-history-service':
+        specifier: 1.3.1
+        version: 1.3.1(rxjs@7.8.2)
       '@univerjs/protocol':
         specifier: 1.3.1
         version: 1.3.1
@@ -426,6 +476,9 @@ packages:
 
   '@univerjs-pro/collaboration-comment-service@1.3.1':
     resolution: {integrity: sha512-WQIbjCEPXiK8ormY6sT4jcSoe0VeVBil2nUGuUhHuPg73oAkoLzFU6+zCojfpcPsNNOLoqkqhzI4TiNH8do/xQ==}
+
+  '@univerjs-pro/collaboration-history-service@1.3.1':
+    resolution: {integrity: sha512-68LR43/a2F8vuoG9j0y2/cKPIz4WS9D6RcEFDQ1aCZDsYT4eHg0WYKA6DGeA6wpnA/ANlPztdw8+PLBPD6IC9Q==}
 
   '@univerjs-pro/collaboration-service@1.3.1':
     resolution: {integrity: sha512-TswZQTB6/WgBBVHjQvcrlfgm6p63/AnBzSUKDUss7tKfWbhmVldhEAzbgVVCmhvirzUoU+JwS3qIQ/SQAKXCxg==}
@@ -1526,6 +1579,16 @@ snapshots:
       '@univerjs/protocol': 1.3.1
     transitivePeerDependencies:
       - react
+
+  '@univerjs-pro/collaboration-history-service@1.3.1(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/collaboration': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/collaboration-service': 1.3.1
+      '@univerjs/protocol': 1.3.1
+    transitivePeerDependencies:
+      - '@univerjs-pro/embed'
+      - react
+      - rxjs
 
   '@univerjs-pro/collaboration-service@1.3.1':
     dependencies:
