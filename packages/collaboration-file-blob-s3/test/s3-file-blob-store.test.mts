@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { DeleteObjectCommand, ListMultipartUploadsCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { fileBlobStoreContract } from "@univerjs-pro/collaboration-file-blob-testkit";
+import { parse as parseContentDisposition } from "content-disposition";
 import { describe, expect, it } from "vitest";
 import { S3FileBlobStore } from "../src/index.js";
 
@@ -99,7 +100,7 @@ if (endpoint && bucket) {
       const response = await fetch(direct!.url);
       expect(await response.text()).toBe("a,b");
       expect(response.headers.get("content-type")).toBe("text/csv");
-      expect(response.headers.get("content-disposition")).toBe(`attachment; filename*=UTF-8''${encodeURIComponent("报表.csv")}; filename=--.csv`);
+      expect(parseContentDisposition(response.headers.get("content-disposition")!).parameters.filename).toBe("报表.csv");
       await store.delete(put.blobKey, context);
       s3.destroy();
     });
@@ -130,12 +131,12 @@ describe("S3FileBlobStore options", () => {
       credentials: { accessKeyId: "AKIDEXAMPLE", secretAccessKey: "secret" },
     });
     const store = new S3FileBlobStore({ client: s3, bucket: "bucket", prefix: "files", directUrl: { client: s3, expiresInSeconds: 120 } });
-    const record = { fileID: "f", name: "a b.png", size: 0, contentType: "image/png", source: 3, assign: "u", blobKey: "files/f", createdAt: 1 };
+    const record = { fileID: "f", name: "报表 (1).png", size: 0, contentType: "image/png", source: 3, assign: "u", blobKey: "files/f", createdAt: 1 };
     const direct = await store.signUrl({ blobKey: "files/f", record }, { userID: "u", customData: {}, request: { fileID: "f" } });
     const url = new URL(direct!.url);
     expect(url.origin + url.pathname).toBe("https://files.example.com/bucket/files/f");
     expect(url.searchParams.get("X-Amz-Expires")).toBe("120");
-    expect(url.searchParams.get("response-content-disposition")).toBe("attachment; filename*=UTF-8''a%20b.png; filename=a b.png");
+    expect(parseContentDisposition(url.searchParams.get("response-content-disposition")!).parameters.filename).toBe("报表 (1).png");
     expect(url.searchParams.get("response-content-type")).toBe("image/png");
     expect(direct!.expiresAt).toBeGreaterThan(Date.now() + 100_000);
     s3.destroy();

@@ -61,7 +61,7 @@ Endpoint 不会 dispose File Service。
 **sign-url**：blob store 签发了直链时返回绝对 URL，否则返回下载路由的相对路径，客户端用
 `downloadEndpointUrl` 解析相对路径。
 
-**下载**：响应带记录中的 `Content-Type`、`Content-Length`、带文件名的 `Content-Disposition: attachment`、
+**下载**：响应带记录中的 `Content-Type`、`Content-Length`、带文件名的 `Content-Disposition: attachment`（RFC 6266，非 ASCII 文件名带 `filename*`）、
 `X-Content-Type-Options: nosniff`、`ETag` 以及 `Cache-Control: private, max-age=<downloadCacheMaxAgeSeconds>, immutable`。
 所有文件都以附件形式返回，不影响 `<img>` 嵌入显示。
 

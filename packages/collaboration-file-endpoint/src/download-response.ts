@@ -1,26 +1,19 @@
 import type { ServerResponse } from "node:http";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { create as createContentDisposition } from "content-disposition";
 import type { FileContent, FileRecord } from "@univerjs-pro/collaboration-file-service";
 
-/**
- * Builds the proxy download headers. `filename*` goes first and the plain `filename=` last and
- * unquoted, because exchange-client extracts the name with `/filename=(.+)/`.
- */
+/** Builds the proxy download headers; `Content-Disposition` follows RFC 6266 and RFC 8187. */
 export function downloadHeaders(record: FileRecord, cacheMaxAgeSeconds: number): Record<string, string> {
   return {
     "content-type": record.contentType,
     "content-length": String(record.size),
-    "content-disposition": contentDisposition(record.name),
+    "content-disposition": createContentDisposition(record.name),
     "x-content-type-options": "nosniff",
     "cache-control": `private, max-age=${cacheMaxAgeSeconds}, immutable`,
     etag: `"${record.fileID}"`,
   };
-}
-
-export function contentDisposition(name: string): string {
-  const ascii = name.replace(/[^\x20-\x7e]/g, "-").replace(/["\\;]/g, "-").trim() || "file";
-  return `attachment; filename*=UTF-8''${encodeURIComponent(name)}; filename=${ascii}`;
 }
 
 export async function writeDownload(

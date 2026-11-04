@@ -53,7 +53,7 @@ With the default prefix these are the URLs that `exchange-client` and `collabora
 
 **sign-url.** Returns an absolute direct link when the blob store signs one, otherwise the relative path of the download route. Clients resolve relative paths against `downloadEndpointUrl`.
 
-**Download.** Responses carry `Content-Type` from the record, `Content-Length`, `Content-Disposition: attachment` with the file name, `X-Content-Type-Options: nosniff`, an `ETag` and `Cache-Control: private, max-age=<downloadCacheMaxAgeSeconds>, immutable`. Every file is served as an attachment; `<img>` embedding is not affected.
+**Download.** Responses carry `Content-Type` from the record, `Content-Length`, `Content-Disposition: attachment` with the file name (RFC 6266, `filename*` for non-ASCII names), `X-Content-Type-Options: nosniff`, an `ETag` and `Cache-Control: private, max-age=<downloadCacheMaxAgeSeconds>, immutable`. Every file is served as an attachment; `<img>` embedding is not affected.
 
 ## Authentication
 

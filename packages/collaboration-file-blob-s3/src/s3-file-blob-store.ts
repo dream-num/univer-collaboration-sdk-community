@@ -2,6 +2,7 @@ import { Readable } from "node:stream";
 import { DeleteObjectCommand, GetObjectCommand, type S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { create as createContentDisposition } from "content-disposition";
 import {
   FileError,
   type DirectUrl,
@@ -122,7 +123,8 @@ export class S3FileBlobStore implements IFileBlobStore {
         Bucket: this._bucket,
         Key: input.blobKey,
         ResponseContentType: input.record.contentType,
-        ResponseContentDisposition: contentDisposition(input.record.name),
+        // The same RFC 6266 header the proxy route sends.
+        ResponseContentDisposition: createContentDisposition(input.record.name),
       }),
       { expiresIn: this._expiresInSeconds }
     );
@@ -131,13 +133,6 @@ export class S3FileBlobStore implements IFileBlobStore {
 
   // The client belongs to the application and is not destroyed here.
   async dispose(): Promise<void> {}
-}
-
-// Same Content-Disposition as the file-endpoint proxy download: filename* first and an unquoted
-// ASCII filename= last, because exchange-client extracts the name with /filename=(.+)/.
-function contentDisposition(name: string): string {
-  const ascii = name.replace(/[^\x20-\x7e]/g, "-").replace(/["\\;]/g, "-").trim() || "file";
-  return `attachment; filename*=UTF-8''${encodeURIComponent(name)}; filename=${ascii}`;
 }
 
 function isNotFound(error: unknown): boolean {

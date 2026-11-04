@@ -36,7 +36,8 @@
   },
   "dependencies": {
     "@aws-sdk/lib-storage": "^3.1161.0",
-    "@aws-sdk/s3-request-presigner": "^3.1161.0"
+    "@aws-sdk/s3-request-presigner": "^3.1161.0",
+    "content-disposition": "^3.0.0"
   },
   "peerDependencies": {
     "@univerjs-pro/collaboration-file-service": "workspace:*",

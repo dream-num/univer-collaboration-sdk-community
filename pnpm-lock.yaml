@@ -119,6 +119,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.1161.0
         version: 3.1161.0
+      content-disposition:
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.1161.0
@@ -163,6 +166,9 @@ importers:
       '@fastify/busboy':
         specifier: ^3.2.4
         version: 3.2.4
+      content-disposition:
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       '@univerjs-pro/collaboration-file-memory':
         specifier: workspace:*
@@ -1065,6 +1071,10 @@ packages:
 
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  content-disposition@3.0.0:
+    resolution: {integrity: sha512-ZH/0Xs9rMIFWCOmGdmS9eHBTF62qqQYNz4nVjQhkdIO/a0fCP4UIM3mRz/wiqL0L14YgAz/1xio4OaSY4+ON/A==}
+    engines: {node: '>=22'}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -2832,6 +2842,8 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
+
+  content-disposition@3.0.0: {}
 
   convert-source-map@2.0.0: {}
 

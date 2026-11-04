@@ -5,6 +5,7 @@ import { MemoryFileBlobStore, MemoryFileDatabaseAdapter } from "@univerjs-pro/co
 import { FileError, UniverFileService } from "@univerjs-pro/collaboration-file-service";
 import { createNodeTransport } from "@univerjs-pro/collaboration-transport-node";
 import { ErrorCode } from "@univerjs/protocol";
+import { parse as parseContentDisposition } from "content-disposition";
 import { afterEach, describe, expect, it } from "vitest";
 import { UniverFileEndpoint, type UniverFileEndpointOptions } from "../src/index.js";
 
@@ -78,10 +79,10 @@ describe("UniverFileEndpoint", () => {
     expect(file.headers.get("x-content-type-options")).toBe("nosniff");
     expect(file.headers.get("cache-control")).toBe("private, max-age=3600, immutable");
     expect(file.headers.get("etag")).toBe(`"${json.FileId}"`);
-    const disposition = file.headers.get("content-disposition")!;
-    expect(disposition).toBe(`attachment; filename*=UTF-8''${encodeURIComponent("报表 2026.png")}; filename=-- 2026.png`);
-    // exchange-client extracts the name with /filename=(.+)/ and gets the trailing ASCII name.
-    expect(disposition.match(/filename=(.+)/)![1]).toBe("-- 2026.png");
+    // RFC 6266: an ASCII fallback in `filename` and the full name in `filename*`.
+    const disposition = parseContentDisposition(file.headers.get("content-disposition")!);
+    expect(disposition.type).toBe("attachment");
+    expect(disposition.parameters.filename).toBe("报表 2026.png");
   });
 
   it("uses the configured cache max-age", async () => {

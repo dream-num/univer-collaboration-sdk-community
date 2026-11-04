@@ -35,7 +35,8 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@fastify/busboy": "^3.2.4"
+    "@fastify/busboy": "^3.2.4",
+    "content-disposition": "^3.0.0"
   },
   "peerDependencies": {
     "@univerjs-pro/collaboration-file-service": "workspace:*",
