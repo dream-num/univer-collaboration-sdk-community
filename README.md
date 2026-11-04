@@ -35,6 +35,7 @@ release.
 | Package | Description |
 | --- | --- |
 | [`@univerjs-pro/collaboration-file-service`](./packages/collaboration-file-service/README.md) | File Service: metadata and content contracts, ownership rules, middleware and expiry cleanup |
+| [`@univerjs-pro/collaboration-file-endpoint`](./packages/collaboration-file-endpoint/README.md) | HTTP routes the Univer frontend calls for uploads, downloads and import/export transfers |
 | [`@univerjs-pro/collaboration-file-memory`](./packages/collaboration-file-memory/README.md) | In-process metadata adapter and blob store for tests and demos |
 | [`@univerjs-pro/collaboration-file-database-sqlite`](./packages/collaboration-file-database-sqlite/README.md) | SQLite metadata adapter built on `libsql` |
 | [`@univerjs-pro/collaboration-file-database-postgres`](./packages/collaboration-file-database-postgres/README.md) | PostgreSQL metadata adapter built on `node-postgres` |

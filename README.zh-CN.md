@@ -34,6 +34,7 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | 包 | 说明 |
 | --- | --- |
 | [`@univerjs-pro/collaboration-file-service`](./packages/collaboration-file-service/README.zh-CN.md) | File Service：元数据与内容契约、归属规则、middleware 和过期清理 |
+| [`@univerjs-pro/collaboration-file-endpoint`](./packages/collaboration-file-endpoint/README.zh-CN.md) | Univer 前端上传、下载和导入导出传输调用的 HTTP 路由 |
 | [`@univerjs-pro/collaboration-file-memory`](./packages/collaboration-file-memory/README.zh-CN.md) | 进程内元数据适配器与 blob store，用于测试和演示 |
 | [`@univerjs-pro/collaboration-file-database-sqlite`](./packages/collaboration-file-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 元数据适配器 |
 | [`@univerjs-pro/collaboration-file-database-postgres`](./packages/collaboration-file-database-postgres/README.zh-CN.md) | 基于 `node-postgres` 的 PostgreSQL 元数据适配器 |
