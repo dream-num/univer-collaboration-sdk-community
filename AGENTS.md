@@ -26,6 +26,9 @@ source; this repository works with them only through their published public cont
 - A package depends only on contracts that the closed-source SDK packages mark `@public`. Types are
   imported with `import type`; the runtime values a package uses, such as `CollabError`, are listed
   in its README.
+- A Service package that lives in this repository, such as `collaboration-file-service`, defines its
+  own SPI here. Its adapters and testkits depend on it with `workspace:*`, which the release turns
+  into the exact version.
 - Closed-source SDK packages and `@univerjs/protocol` are peerDependencies pinned to the latest
   published SDK version; devDependencies use the same version for tests. The release process moves
   both to the SDK version being released.

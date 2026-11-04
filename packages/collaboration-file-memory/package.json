@@ -1,0 +1,45 @@
+{
+  "name": "@univerjs-pro/collaboration-file-memory",
+  "version": "0.0.0",
+  "description": "In-process IFileDatabaseAdapter and IFileBlobStore for Univer Collaboration tests and demos",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-file-memory"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*",
+    "@univerjs-pro/collaboration-file-blob-testkit": "workspace:*",
+    "@univerjs-pro/collaboration-file-database-testkit": "workspace:*"
+  }
+}

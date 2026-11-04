@@ -30,6 +30,17 @@ release.
 | [`@univerjs-pro/collaboration-history-database-memory`](./packages/collaboration-history-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.md) | SQLite adapter built on `libsql` |
 
+### File
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-file-service`](./packages/collaboration-file-service/README.md) | File Service: metadata and content contracts, ownership rules, middleware and expiry cleanup |
+| [`@univerjs-pro/collaboration-file-memory`](./packages/collaboration-file-memory/README.md) | In-process metadata adapter and blob store for tests and demos |
+| [`@univerjs-pro/collaboration-file-database-sqlite`](./packages/collaboration-file-database-sqlite/README.md) | SQLite metadata adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-file-database-postgres`](./packages/collaboration-file-database-postgres/README.md) | PostgreSQL metadata adapter built on `node-postgres` |
+| [`@univerjs-pro/collaboration-file-blob-local`](./packages/collaboration-file-blob-local/README.md) | Local directory blob store |
+| [`@univerjs-pro/collaboration-file-blob-s3`](./packages/collaboration-file-blob-s3/README.md) | S3-compatible blob store with optional presigned direct links |
+
 ## Development
 
 Requires Node.js 22 or later and pnpm 11.
@@ -46,8 +57,12 @@ PostgreSQL tests run when `UNIVER_COLLAB_POSTGRES_URL` points at a reachable ser
 ## Implementing your own adapter
 
 Each SPI ships a testkit with the contract tests every implementation passes. Implement the
-interface, run the contract against it, and read the matching package here as a reference. See
-[`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) for
-`IDatabaseAdapter` and [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md)
-for `ICommentDatabaseAdapter`, and [`collaboration-history-database-testkit`](./testkits/collaboration-history-database-testkit/README.md)
-for `IHistoryDatabaseAdapter`.
+interface, run the contract against it, and read the matching package here as a reference.
+
+| SPI | Testkit |
+| --- | --- |
+| `IDatabaseAdapter` | [`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) |
+| `ICommentDatabaseAdapter` | [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md) |
+| `IHistoryDatabaseAdapter` | [`collaboration-history-database-testkit`](./testkits/collaboration-history-database-testkit/README.md) |
+| `IFileDatabaseAdapter` | [`collaboration-file-database-testkit`](./testkits/collaboration-file-database-testkit/README.md) |
+| `IFileBlobStore` | [`collaboration-file-blob-testkit`](./testkits/collaboration-file-blob-testkit/README.md) |

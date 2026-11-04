@@ -1,0 +1,43 @@
+{
+  "name": "@univerjs-pro/collaboration-file-blob-testkit",
+  "version": "0.0.0",
+  "description": "Contract tests for Univer Collaboration IFileBlobStore implementations",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "testkits/collaboration-file-blob-testkit"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*",
+    "vitest": ">=4.1.0"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*"
+  }
+}

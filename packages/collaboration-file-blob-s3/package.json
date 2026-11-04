@@ -1,0 +1,50 @@
+{
+  "name": "@univerjs-pro/collaboration-file-blob-s3",
+  "version": "0.0.0",
+  "description": "S3-compatible IFileBlobStore for Univer Collaboration with optional presigned direct links",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-file-blob-s3"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@aws-sdk/lib-storage": "^3.1161.0",
+    "@aws-sdk/s3-request-presigner": "^3.1161.0"
+  },
+  "peerDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*",
+    "@aws-sdk/client-s3": "^3.1161.0"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-file-service": "workspace:*",
+    "@aws-sdk/client-s3": "^3.1161.0",
+    "@univerjs-pro/collaboration-file-blob-testkit": "workspace:*"
+  }
+}
