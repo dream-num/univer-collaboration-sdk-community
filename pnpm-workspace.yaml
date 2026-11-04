@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+  - testkits/*
+
+allowBuilds:
+  protobufjs: true

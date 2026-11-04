@@ -1,0 +1,50 @@
+{
+  "name": "@univerjs-pro/collaboration-database-sqlite",
+  "version": "0.0.0",
+  "description": "SQLite IDatabaseAdapter for Univer Collaboration built on libsql",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-database-sqlite"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^3.1.3",
+    "libsql": "^0.5.29"
+  },
+  "peerDependencies": {
+    "@univerjs-pro/collaboration-service": "1.3.1",
+    "@univerjs/protocol": "1.3.1"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-database-testkit": "workspace:*",
+    "@univerjs-pro/collaboration-service": "1.3.1",
+    "@univerjs/protocol": "1.3.1"
+  }
+}
