@@ -16,6 +16,13 @@ release.
 | [`@univerjs-pro/collaboration-database-sqlite`](./packages/collaboration-database-sqlite/README.md) | SQLite adapter built on `libsql` |
 | [`@univerjs-pro/collaboration-database-postgres`](./packages/collaboration-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
 
+### Thread Comment database adapters
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-comment-database-memory`](./packages/collaboration-comment-database-memory/README.md) | In-process adapter for tests and temporary services |
+| [`@univerjs-pro/collaboration-comment-database-sqlite`](./packages/collaboration-comment-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+
 ## Development
 
 Requires Node.js 22 or later and pnpm 11.
@@ -34,4 +41,5 @@ PostgreSQL tests run when `UNIVER_COLLAB_POSTGRES_URL` points at a reachable ser
 Each SPI ships a testkit with the contract tests every implementation passes. Implement the
 interface, run the contract against it, and read the matching package here as a reference. See
 [`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) for
-`IDatabaseAdapter`.
+`IDatabaseAdapter` and [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md)
+for `ICommentDatabaseAdapter`.

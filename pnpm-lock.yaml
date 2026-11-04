@@ -21,6 +21,34 @@ importers:
         specifier: ^4.1.10
         version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
 
+  packages/collaboration-comment-database-memory:
+    devDependencies:
+      '@univerjs-pro/collaboration-comment-database-testkit':
+        specifier: workspace:*
+        version: link:../../testkits/collaboration-comment-database-testkit
+      '@univerjs-pro/collaboration-comment-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
+  packages/collaboration-comment-database-sqlite:
+    dependencies:
+      libsql:
+        specifier: ^0.5.29
+        version: 0.5.29
+    devDependencies:
+      '@univerjs-pro/collaboration-comment-database-testkit':
+        specifier: workspace:*
+        version: link:../../testkits/collaboration-comment-database-testkit
+      '@univerjs-pro/collaboration-comment-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
   packages/collaboration-database-memory:
     devDependencies:
       '@univerjs-pro/collaboration-database-testkit':
@@ -68,6 +96,19 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-database-testkit
       '@univerjs-pro/collaboration-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
+  testkits/collaboration-comment-database-testkit:
+    dependencies:
+      vitest:
+        specifier: '>=4.1.0'
+        version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
+    devDependencies:
+      '@univerjs-pro/collaboration-comment-service':
         specifier: 1.3.1
         version: 1.3.1
       '@univerjs/protocol':
@@ -382,6 +423,9 @@ packages:
     resolution: {integrity: sha512-BCaB8q/saSAbexrq3y0Mwm595gNZuuZyIoSMdq8KPHT0Y7Z0zbLXFH0A2dOL2DWdgHSUD4faXG8ZYPtkibUXlg==}
     peerDependencies:
       rxjs: '>=7.0.0'
+
+  '@univerjs-pro/collaboration-comment-service@1.3.1':
+    resolution: {integrity: sha512-WQIbjCEPXiK8ormY6sT4jcSoe0VeVBil2nUGuUhHuPg73oAkoLzFU6+zCojfpcPsNNOLoqkqhzI4TiNH8do/xQ==}
 
   '@univerjs-pro/collaboration-service@1.3.1':
     resolution: {integrity: sha512-TswZQTB6/WgBBVHjQvcrlfgm6p63/AnBzSUKDUss7tKfWbhmVldhEAzbgVVCmhvirzUoU+JwS3qIQ/SQAKXCxg==}
@@ -1473,6 +1517,13 @@ snapshots:
       '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
       '@univerjs/core': 1.3.1(rxjs@7.8.2)
       rxjs: 7.8.2
+    transitivePeerDependencies:
+      - react
+
+  '@univerjs-pro/collaboration-comment-service@1.3.1':
+    dependencies:
+      '@univerjs-pro/collaboration-service': 1.3.1
+      '@univerjs/protocol': 1.3.1
     transitivePeerDependencies:
       - react
 
