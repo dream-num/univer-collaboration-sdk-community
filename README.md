@@ -42,6 +42,13 @@ release.
 | [`@univerjs-pro/collaboration-file-blob-local`](./packages/collaboration-file-blob-local/README.md) | Local directory blob store |
 | [`@univerjs-pro/collaboration-file-blob-s3`](./packages/collaboration-file-blob-s3/README.md) | S3-compatible blob store with optional presigned direct links |
 
+### Exchange
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-exchange-service`](./packages/collaboration-exchange-service/README.md) | Exchange Service: Office and PDF import and export through `exchange-node`, the collaboration Service and the File Service |
+| [`@univerjs-pro/collaboration-exchange-endpoint`](./packages/collaboration-exchange-endpoint/README.md) | HTTP routes the Univer frontend calls for import and export |
+
 ## Development
 
 Requires Node.js 22 or later and pnpm 11.

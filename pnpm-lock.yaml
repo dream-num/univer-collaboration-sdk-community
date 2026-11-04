@@ -102,6 +102,54 @@ importers:
         specifier: 1.3.1
         version: 1.3.1
 
+  packages/collaboration-exchange-endpoint:
+    devDependencies:
+      '@univerjs-pro/collaboration-database-memory':
+        specifier: workspace:*
+        version: link:../collaboration-database-memory
+      '@univerjs-pro/collaboration-exchange-service':
+        specifier: workspace:*
+        version: link:../collaboration-exchange-service
+      '@univerjs-pro/collaboration-file-memory':
+        specifier: workspace:*
+        version: link:../collaboration-file-memory
+      '@univerjs-pro/collaboration-file-service':
+        specifier: workspace:*
+        version: link:../collaboration-file-service
+      '@univerjs-pro/collaboration-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs-pro/collaboration-transport-node':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs-pro/exchange-node':
+        specifier: 1.3.1
+        version: 1.3.1(rxjs@7.8.2)
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
+  packages/collaboration-exchange-service:
+    devDependencies:
+      '@univerjs-pro/collaboration-database-memory':
+        specifier: workspace:*
+        version: link:../collaboration-database-memory
+      '@univerjs-pro/collaboration-file-memory':
+        specifier: workspace:*
+        version: link:../collaboration-file-memory
+      '@univerjs-pro/collaboration-file-service':
+        specifier: workspace:*
+        version: link:../collaboration-file-service
+      '@univerjs-pro/collaboration-service':
+        specifier: 1.3.1
+        version: 1.3.1
+      '@univerjs-pro/exchange-node':
+        specifier: 1.3.1
+        version: 1.3.1(rxjs@7.8.2)
+      '@univerjs/protocol':
+        specifier: 1.3.1
+        version: 1.3.1
+
   packages/collaboration-file-blob-local:
     devDependencies:
       '@univerjs-pro/collaboration-file-blob-testkit':
@@ -800,6 +848,44 @@ packages:
 
   '@univerjs-pro/engine-shape@1.3.1':
     resolution: {integrity: sha512-KA79GJEmnMZbmscOJ4/avou6RnmMKRlhyyDfEyiSfC4re7V8wXcXrqJtFrJYph5JR1GgmxbWkHlL6IbOl3oC+Q==}
+
+  '@univerjs-pro/exchange-node-binding-darwin-arm64@1.0.6':
+    resolution: {integrity: sha512-Jy/zy16pWP2Cvy1oOK0XL4ZaKLZszH73C7SR6UsEVQ3zSJbXp9vFXyP5lvnI+mIWqSSs1A9Wyfabx5HP6VaGSg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@univerjs-pro/exchange-node-binding-darwin-x64@1.0.6':
+    resolution: {integrity: sha512-D3TVyQkC2MbBq0rtxguJGI2WFFZKFPKPsCJvnb99ormU9nBNKJk8qSWzup9ztAO1dOeGgdj21xH/10i362HMWw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-gnu@1.0.6':
+    resolution: {integrity: sha512-yZVvbo81Xa+eZgM/alz0a+O2bd5drE3PP+d5P0jmK7msAQ2QyLMLB+XK2DrGfMfEWKUpK2vfwjTUoy8ZQox/qA==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-gnu@1.0.6':
+    resolution: {integrity: sha512-fpmpeUqV2eh0fMFQQZPigvGpzM9xQO7tjO4KBnOj8XKomTbFD4wX4W/H9JDDII2mueC01x/G3JWk+je+S5ZSuw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@univerjs-pro/exchange-node-binding-win32-x64-msvc@1.0.6':
+    resolution: {integrity: sha512-8YsSMwGYNk7hpOFZFG4A5ghLvAw4mCoAXS8b3kppglQpJ5uxm4AgIYGNfxqtZgMn+k6UBbXrq7KZeNUP+FFG1w==}
+    cpu: [x64]
+    os: [win32]
+
+  '@univerjs-pro/exchange-node-binding@1.0.6':
+    resolution: {integrity: sha512-FpYL3IZc7rIavpTxPKKTTzmoXWqfiVguYYBPNwxEhLb3hUYKopyKZ7krMoOHt/VN3JH6v0PikpbAu1zW0kd+Gw==}
+
+  '@univerjs-pro/exchange-node@1.3.1':
+    resolution: {integrity: sha512-haU6+0Ootji1fOq8Vt7fzESCNNFbFojY3y/EXGGyjQYq076GsWgqEeHyRUWMR1dolepYL4dqDeKLB2v/ECPjoA==}
+    peerDependencies:
+      '@univerjs-pro/exchange-pdf-node-binding': ~1.0.1
+    peerDependenciesMeta:
+      '@univerjs-pro/exchange-pdf-node-binding':
+        optional: true
 
   '@univerjs-pro/license@1.3.1':
     resolution: {integrity: sha512-uQaeFef+gK07gLIcoocU6hQ4SuwDszrSr6c6sfHv5rMgRiKGaG18TkgumkqPlZ3uDnyzuD8yXEB3vBpaId1pYQ==}
@@ -2334,6 +2420,42 @@ snapshots:
       '@univerjs/core': 1.3.1(rxjs@7.8.2)
       '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
     transitivePeerDependencies:
+      - react
+      - rxjs
+
+  '@univerjs-pro/exchange-node-binding-darwin-arm64@1.0.6':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-darwin-x64@1.0.6':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-gnu@1.0.6':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-gnu@1.0.6':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-win32-x64-msvc@1.0.6':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding@1.0.6':
+    optionalDependencies:
+      '@univerjs-pro/exchange-node-binding-darwin-arm64': 1.0.6
+      '@univerjs-pro/exchange-node-binding-darwin-x64': 1.0.6
+      '@univerjs-pro/exchange-node-binding-linux-arm64-gnu': 1.0.6
+      '@univerjs-pro/exchange-node-binding-linux-x64-gnu': 1.0.6
+      '@univerjs-pro/exchange-node-binding-win32-x64-msvc': 1.0.6
+
+  '@univerjs-pro/exchange-node@1.3.1(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/collaboration': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/exchange-node-binding': 1.0.6
+      '@univerjs-pro/pdfs': 1.3.1
+      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/protocol': 1.3.1
+    transitivePeerDependencies:
+      - '@univerjs-pro/embed'
       - react
       - rxjs
 
