@@ -5,6 +5,10 @@
 Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包以与 SDK 其余部分相同的名称和
 版本号发布到 npm，与同版本的 SDK 配合使用。
 
+这些包在 Univer Collaboration SDK 仓库中与闭源的 Service、Endpoint 一起开发，每次 SDK 发版时把源码
+同步到本仓库。本仓库是发布后的只读副本：可以阅读、构建、fork，问题和改动建议通过 Issue 与 Pull Request
+提出，流程见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
 ## 包
 
 ### 协同数据库适配器
@@ -52,7 +56,8 @@ pnpm test
 ```
 
 PostgreSQL 测试在 `UNIVER_COLLAB_POSTGRES_URL` 指向可连接的服务器时运行，例如
-`postgres://localhost:5432/postgres`。仓库约定见 [AGENTS.md](./AGENTS.md)。
+`postgres://localhost:5432/postgres`。仓库约定见 [AGENTS.md](./AGENTS.md)，改动如何进入本仓库见
+[CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ## 实现自己的适配器
 

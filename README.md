@@ -6,6 +6,11 @@ Open-source packages of the Univer Collaboration SDK, licensed under Apache-2.0.
 to npm under the same names and versions as the rest of the SDK and work with the matching SDK
 release.
 
+The packages are developed in the Univer Collaboration SDK repository together with the closed-source
+Service and Endpoint packages, and this repository receives their source at every SDK release. It is
+the published, read-only copy: read it, build it, fork it, and report problems or propose changes
+through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Packages
 
 ### Collaboration database adapters
@@ -53,7 +58,8 @@ pnpm test
 ```
 
 PostgreSQL tests run when `UNIVER_COLLAB_POSTGRES_URL` points at a reachable server, for example
-`postgres://localhost:5432/postgres`. Repository conventions are in [AGENTS.md](./AGENTS.md).
+`postgres://localhost:5432/postgres`. Repository conventions are in [AGENTS.md](./AGENTS.md); how
+changes reach this repository is in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Implementing your own adapter
 
