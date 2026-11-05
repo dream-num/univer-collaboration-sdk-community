@@ -8,7 +8,9 @@ This repository is the published, read-only copy of the open-source part of the 
 SDK. The packages under `packages/*` and `testkits/*` are developed in the Univer Collaboration SDK
 repository, in its `packages-community/*` and `testkits-community/*` directories, next to the
 closed-source Service and Endpoint packages. At every SDK release the SDK's sync script replaces
-`packages/*` and `testkits/*` here with that release's source and commits the result to `main`.
+`packages/*` and `testkits/*` here with that release's source on a `sync/<version>` branch and opens a
+pull request; CI checks it and a maintainer merges it into `main`. `main` is protected and only
+receives merges that passed CI; nothing is pushed to it directly.
 
 Consequences:
 
