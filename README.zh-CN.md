@@ -45,6 +45,13 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | [`@univerjs-pro/collaboration-file-blob-local`](./packages/collaboration-file-blob-local/README.zh-CN.md) | 本地目录 blob store |
 | [`@univerjs-pro/collaboration-file-blob-s3`](./packages/collaboration-file-blob-s3/README.zh-CN.md) | S3 兼容 blob store，可选预签名直链 |
 
+### Exchange
+
+| 包 | 说明 |
+| --- | --- |
+| [`@univerjs-pro/collaboration-exchange-service`](./packages/collaboration-exchange-service/README.zh-CN.md) | Exchange Service：经 `exchange-node`、协同 Service 与 File Service 完成 Office 与 PDF 的导入导出 |
+| [`@univerjs-pro/collaboration-exchange-endpoint`](./packages/collaboration-exchange-endpoint/README.zh-CN.md) | Univer 前端导入、导出与任务查询的 HTTP 路由 |
+
 ## 开发
 
 需要 Node.js 22 及以上和 pnpm 11。
