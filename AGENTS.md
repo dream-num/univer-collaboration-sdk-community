@@ -28,8 +28,9 @@ Consequences:
 - `packages/*` holds every published package in a flat list, named after the SDK convention
   `collaboration-<domain>-<kind>-<backend>`, for example `collaboration-database-sqlite` and
   `collaboration-file-blob-s3`.
-- `testkits/*` holds the contract tests of each SPI, named `collaboration-<domain>-<kind>-testkit`,
-  and is published together with the adapters.
+- `testkits/*` holds the contract tests of each SPI, named `collaboration-<domain>-<kind>-testkit`.
+  They are private workspace packages: their source is public here, but they are not published to
+  npm.
 - Domains are grouped only in the package table of `README.md`.
 
 ## Verification

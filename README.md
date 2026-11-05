@@ -63,8 +63,10 @@ changes reach this repository is in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Implementing your own adapter
 
-Each SPI ships a testkit with the contract tests every implementation passes. Implement the
-interface, run the contract against it, and read the matching package here as a reference.
+Each SPI has a testkit with the contract tests every implementation passes. The testkits are
+not published to npm: use them from this repository, either by adding your package to this
+workspace or by copying the testkit's `src/` into your project. Implement the interface, run the
+contract against it, and read the matching package here as a reference.
 
 | SPI | Testkit |
 | --- | --- |

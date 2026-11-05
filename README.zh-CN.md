@@ -61,8 +61,9 @@ PostgreSQL 测试在 `UNIVER_COLLAB_POSTGRES_URL` 指向可连接的服务器时
 
 ## 实现自己的适配器
 
-每个 SPI 都配有 testkit，包含所有实现都要通过的契约测试。实现接口，用契约测试验证，并以本仓库中
-对应的包作为参考。
+每个 SPI 都配有 testkit，包含所有实现都要通过的契约测试。testkit 不发布到 npm，直接在本仓库中使用：
+把你的包加入这个 workspace，或者把 testkit 的 `src/` 拷进你的项目。实现接口，用契约测试验证，并以
+本仓库中对应的包作为参考。
 
 | SPI | Testkit |
 | --- | --- |
