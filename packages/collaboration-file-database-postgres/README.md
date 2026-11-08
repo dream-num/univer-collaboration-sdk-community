@@ -27,7 +27,7 @@ await pool.end();
 
 ## Storage contract
 
-- File metadata is stored in `collaboration_files` in the pool's `search_path`, one row per `fileID`; deleting a row always releases its `blobKey`.
-- Schema version `('file', 1)` is stored in shared `collaboration_schema_versions`. Nodes that start together initialize the schema once: creation runs in a transaction behind an advisory lock.
+- File metadata is stored in `collaboration.files`, one row per `fileID`; deleting a row always releases its `blobKey`. The `collaboration` schema is shared with the other collaboration adapters, so the pool's `search_path` does not matter and the role only needs `CREATE` on the database.
+- Schema version `('file', 1)` is stored in the shared `collaboration.schema_versions`. Nodes and components that start together initialize the schema once: creation runs in a transaction behind an advisory lock.
 - An empty schema is initialized automatically. A file schema version other than 1 is rejected.
 - `file_id` uses the `"C"` collation, so `list` keyset pagination on `(created_at, file_id)` does not depend on the database locale.

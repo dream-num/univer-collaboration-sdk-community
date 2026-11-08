@@ -2,8 +2,7 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-A PostgreSQL `IDatabaseAdapter` built on [node-postgres](https://node-postgres.com/). Every write decision is made by PostgreSQL, so several service nodes can share one database. Requires Node.js 22 or later and PostgreSQL 13 or later.
-
+A PostgreSQL `IDatabaseAdapter` built on [node-postgres](https://node-postgres.com/). It serves a single node and several collaboration nodes sharing one database alike. Requires Node.js 22 or later and PostgreSQL 13 or later.
 
 ## Create the Adapter
 
@@ -14,7 +13,7 @@ pnpm add \
   pg
 ```
 
-The application owns the connection pool. `create` initializes the schema on first use and verifies it afterwards:
+The application owns the connection pool. `create` initializes the schema in an empty database and verifies an existing one:
 
 ```ts
 import { PostgresDatabaseAdapter } from '@univerjs-pro/collaboration-database-postgres';
@@ -29,10 +28,9 @@ await service.dispose();
 await pool.end();
 ```
 
-Pass the Adapter to `UniverCollabService` as `dbAdapter`. Ending the pool is the application's job.
+Pass the Adapter to `UniverCollabService` as `dbAdapter`. Dispose the Service first, then end the pool.
 
 ## PostgreSQL behavior
 
 - Tables live in the `collaboration` schema: `units`, `snapshots`, `changesets`, `sheet_blocks` and `schema_versions`. Protocol objects are stored as MessagePack `BYTEA` payloads.
-- Schema version `('core', 1)` is stored in `schema_versions`. A schema with a different core version is rejected; migration is always explicit.
-- The adapter does not create the database, roles or extensions.
+- `schema_versions` records `('core', 1)` and is shared by component with the other collaboration adapters. `create` opens a schema of this core version and leaves migration to an explicit step.

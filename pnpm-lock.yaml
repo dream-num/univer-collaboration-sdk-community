@@ -27,11 +27,11 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-comment-database-testkit
       '@univerjs-pro/collaboration-comment-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-comment-database-sqlite:
     dependencies:
@@ -43,11 +43,11 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-comment-database-testkit
       '@univerjs-pro/collaboration-comment-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-database-memory:
     devDependencies:
@@ -55,11 +55,11 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-database-testkit
       '@univerjs-pro/collaboration-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-database-postgres:
     dependencies:
@@ -74,11 +74,11 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-database-testkit
       '@univerjs-pro/collaboration-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       pg:
         specifier: ^8.16.0
         version: 8.23.1
@@ -96,11 +96,59 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-database-testkit
       '@univerjs-pro/collaboration-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
+
+  packages/collaboration-exchange-endpoint:
+    devDependencies:
+      '@univerjs-pro/collaboration-database-memory':
+        specifier: workspace:*
+        version: link:../collaboration-database-memory
+      '@univerjs-pro/collaboration-exchange-service':
+        specifier: workspace:*
+        version: link:../collaboration-exchange-service
+      '@univerjs-pro/collaboration-file-memory':
+        specifier: workspace:*
+        version: link:../collaboration-file-memory
+      '@univerjs-pro/collaboration-file-service':
+        specifier: workspace:*
+        version: link:../collaboration-file-service
+      '@univerjs-pro/collaboration-service':
+        specifier: 1.4.0
+        version: 1.4.0
+      '@univerjs-pro/collaboration-transport-node':
+        specifier: 1.4.0
+        version: 1.4.0
+      '@univerjs-pro/exchange-node':
+        specifier: 1.4.0
+        version: 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol':
+        specifier: 1.4.0
+        version: 1.4.0
+
+  packages/collaboration-exchange-service:
+    devDependencies:
+      '@univerjs-pro/collaboration-database-memory':
+        specifier: workspace:*
+        version: link:../collaboration-database-memory
+      '@univerjs-pro/collaboration-file-memory':
+        specifier: workspace:*
+        version: link:../collaboration-file-memory
+      '@univerjs-pro/collaboration-file-service':
+        specifier: workspace:*
+        version: link:../collaboration-file-service
+      '@univerjs-pro/collaboration-service':
+        specifier: 1.4.0
+        version: 1.4.0
+      '@univerjs-pro/exchange-node':
+        specifier: 1.4.0
+        version: 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol':
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-file-blob-local:
     devDependencies:
@@ -138,6 +186,9 @@ importers:
       '@types/pg':
         specifier: ^8.15.0
         version: 8.23.1
+      '@univerjs-pro/collaboration-database-postgres':
+        specifier: workspace:*
+        version: link:../collaboration-database-postgres
       '@univerjs-pro/collaboration-file-database-testkit':
         specifier: workspace:*
         version: link:../../testkits/collaboration-file-database-testkit
@@ -177,11 +228,11 @@ importers:
         specifier: workspace:*
         version: link:../collaboration-file-service
       '@univerjs-pro/collaboration-transport-node':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-file-memory:
     devDependencies:
@@ -198,8 +249,8 @@ importers:
   packages/collaboration-file-service:
     devDependencies:
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-history-database-memory:
     devDependencies:
@@ -207,11 +258,11 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-history-database-testkit
       '@univerjs-pro/collaboration-history-service':
-        specifier: 1.3.1
-        version: 1.3.1(rxjs@7.8.2)
+        specifier: 1.4.0
+        version: 1.4.0(rxjs@7.8.2)
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   packages/collaboration-history-database-sqlite:
     dependencies:
@@ -229,14 +280,14 @@ importers:
         specifier: workspace:*
         version: link:../../testkits/collaboration-history-database-testkit
       '@univerjs-pro/collaboration-history-service':
-        specifier: 1.3.1
-        version: 1.3.1(rxjs@7.8.2)
+        specifier: 1.4.0
+        version: 1.4.0(rxjs@7.8.2)
       '@univerjs-pro/collaboration-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   testkits/collaboration-comment-database-testkit:
     dependencies:
@@ -245,11 +296,11 @@ importers:
         version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
     devDependencies:
       '@univerjs-pro/collaboration-comment-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   testkits/collaboration-database-testkit:
     dependencies:
@@ -258,11 +309,11 @@ importers:
         version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
     devDependencies:
       '@univerjs-pro/collaboration-service':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
   testkits/collaboration-file-blob-testkit:
     dependencies:
@@ -291,11 +342,11 @@ importers:
         version: 4.1.12(@types/node@24.19.2)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@24.19.2))
     devDependencies:
       '@univerjs-pro/collaboration-history-service':
-        specifier: 1.3.1
-        version: 1.3.1(rxjs@7.8.2)
+        specifier: 1.4.0
+        version: 1.4.0(rxjs@7.8.2)
       '@univerjs/protocol':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.4.0
+        version: 1.4.0
 
 packages:
 
@@ -494,6 +545,10 @@ packages:
   '@noble/ed25519@3.1.0':
     resolution: {integrity: sha512-pfcObRY3CtvwfaG9Mt5XqZdKmAQppl37tHUeuBhDUbiwJBCVY4/A4lbMvb1xKhMDx96AqAqZpMWuBX1HulhX4g==}
 
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/hashes@2.2.0':
     resolution: {integrity: sha512-IYqDGiTXab6FniAgnSdZwgWbomxpy9FtYvLKs7wCUs2a8RkITG+DFGO1DM9cr+E3/RgADRpFjrKVaJ1z6sjtEg==}
     engines: {node: '>= 20.19.0'}
@@ -669,315 +724,380 @@ packages:
   '@types/pg@8.23.1':
     resolution: {integrity: sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A==}
 
-  '@univerjs-pro/bases-dashboard@1.3.1':
-    resolution: {integrity: sha512-ZQEu5yMlpnXdFhfar51zyqwJvbY8Z1szrQfNmWe9ObBoLRy7WJKW1vtRkqVhZG02mUc6fMCiYl0xp4Dk53ULpg==}
+  '@univerjs-pro/bases-dashboard@1.4.0':
+    resolution: {integrity: sha512-IwpBSGLAdCgajybiWIJJdABX4Az18f07H+XWQfWf+m2sDGFsn6uEk9DIdG7AIQKE9YXGPq/fCDQhmfYHD6pcEw==}
 
-  '@univerjs-pro/bases-thread-comment@1.3.1':
-    resolution: {integrity: sha512-wms3vzl92IJghQlHPiV8LAWFR9sZaQx8Yha/zwGKFDGGLxYQYsgTH5Z0SLGZMgqbw2IRWQ3Rx/+mk2VyVQWlPw==}
+  '@univerjs-pro/bases-thread-comment@1.4.0':
+    resolution: {integrity: sha512-k5qtEhjRAcViKyuTt5+Zm+h3OokKZmIuQZn8jD1QqlpwSEN0fH7RqyB6EDOhBDJbG80/Hw8NYNgRbS9KJYl+2w==}
 
-  '@univerjs-pro/bases@1.3.1':
-    resolution: {integrity: sha512-SR9i230fcvzKsMRONy4AAAMYgnW2vGa5p5wqJPWO0hDz+ipZ2As25JaKCOgL0ZiQCXCo/A5VOsyhjhxcpLADWQ==}
+  '@univerjs-pro/bases@1.4.0':
+    resolution: {integrity: sha512-LjcdVSBV9lcUoqeat1bDjoy5RFnANazowh8URbH/PmaSojVXNa4IH6rkkXapCAb5ER1vDPy0ab75RKPgVBrm9g==}
 
-  '@univerjs-pro/boards-chart@1.3.1':
-    resolution: {integrity: sha512-SBnPknTcmmzIkSxDBqzs4BF5jF8dBP54ljfonmyZUYv/1RvLDTkpL9+1d1UD0LYQf5l7jP7leIzsdArTmn/K3w==}
+  '@univerjs-pro/boards-chart@1.4.0':
+    resolution: {integrity: sha512-lahwYkNtxfb9hqvcXM+NHVth4qdlEU5Ikm65a1CUsVpiy6PtJQgxwAyMOWOFTpu0mhsxa17FoCb7DJnaeqQ7tQ==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/boards-mind@1.3.1':
-    resolution: {integrity: sha512-XkJljyZxQRzKzxsIFC3QsXc5FZXq7OJ40wqRit0Qvsy+AxFY7ABA0lw40ctMAgsesxclYJu1SYqlf6KHEHKKsQ==}
+  '@univerjs-pro/boards-mind@1.4.0':
+    resolution: {integrity: sha512-EcGbTyV7u8V+eJ+FZVSdmPiXjpY5v1zZ4Ey/8TNda8FslkyGWn5/fiSV7tKO809H4F4YB4xssvrsKcfZtppQlg==}
 
-  '@univerjs-pro/boards-table@1.3.1':
-    resolution: {integrity: sha512-pDV2Yz0D9HA1L3dGHRha1V8MhcTTkuV7Yd8IVgEMiLVAGMHVDHg9tlPhGefkxFy27SFfgtYNGKwzVOzYNaf2hQ==}
+  '@univerjs-pro/boards-table@1.4.0':
+    resolution: {integrity: sha512-p30cq6G6k8gTUXqAH5U3c/EvoOm3EPowifkuYzhIquPWF10qBCm+4SPq7f2bChMjt+Zki/DI1KF1iF2spvbmEg==}
 
-  '@univerjs-pro/boards-thread-comment@1.3.1':
-    resolution: {integrity: sha512-Nwxfb78xl+MIXh48yNzq6Y8dBVkvwXpPOkScjK02MiMZUC/qRZhU/z2FOJ6kxmgpm3BNEauvut3fMCpQsjqz4Q==}
+  '@univerjs-pro/boards-thread-comment@1.4.0':
+    resolution: {integrity: sha512-pjtXIr8msqfBUNkWkdV1commvG7tviDPkE0ldSeGwKC+MGUMs9N5a+3JuOmNCrggBsPWMAKIAUTX1RKfqgp7Mw==}
 
-  '@univerjs-pro/boards@1.3.1':
-    resolution: {integrity: sha512-MHighLKiGSHUEr1SjfTNpfhz8rx7Y1wRDfamEQ5LnWO4AqXslChqgK+9YD9SM6kDhlXnhWFZuHdT3vXjVs3Qdw==}
+  '@univerjs-pro/boards@1.4.0':
+    resolution: {integrity: sha512-n81lQ8GyKXu3KgcPW0uvLI4AewOYW8gEbALq72Zo56dBv6mW/czv5j2cmMoY4GKV5AKhE+sCxq+ni0IqSkVjYQ==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/chart-embed@1.3.1':
-    resolution: {integrity: sha512-BCaB8q/saSAbexrq3y0Mwm595gNZuuZyIoSMdq8KPHT0Y7Z0zbLXFH0A2dOL2DWdgHSUD4faXG8ZYPtkibUXlg==}
+  '@univerjs-pro/chart-embed@1.4.0':
+    resolution: {integrity: sha512-YDpoMpAIMw+oZoC2aLmrgLI16JQC7RpnY26LyjHEXRuD9cotxtvMdLKNa32dlQwkdIj2IIVqalfLaWIBYMtT9Q==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/collaboration-comment-service@1.3.1':
-    resolution: {integrity: sha512-WQIbjCEPXiK8ormY6sT4jcSoe0VeVBil2nUGuUhHuPg73oAkoLzFU6+zCojfpcPsNNOLoqkqhzI4TiNH8do/xQ==}
+  '@univerjs-pro/collaboration-comment-service@1.4.0':
+    resolution: {integrity: sha512-RSfs1iZcGHSXsyDOKze9K8P36efMPBmWV0//P3pd9MoBQxkPZ5Clh22VmtMY8/SwWUdPIr4eSvqcUaV9Ig5gvg==}
 
-  '@univerjs-pro/collaboration-history-service@1.3.1':
-    resolution: {integrity: sha512-68LR43/a2F8vuoG9j0y2/cKPIz4WS9D6RcEFDQ1aCZDsYT4eHg0WYKA6DGeA6wpnA/ANlPztdw8+PLBPD6IC9Q==}
+  '@univerjs-pro/collaboration-history-service@1.4.0':
+    resolution: {integrity: sha512-Fv3sxYylv+D767d5ZSodGhGzYxVufDOoJS+jnLfDww7hPMeSTwp/BtOhAv3GajRLY1BGsXUNQSMCyDNjxQGbDA==}
 
-  '@univerjs-pro/collaboration-service@1.3.1':
-    resolution: {integrity: sha512-TswZQTB6/WgBBVHjQvcrlfgm6p63/AnBzSUKDUss7tKfWbhmVldhEAzbgVVCmhvirzUoU+JwS3qIQ/SQAKXCxg==}
+  '@univerjs-pro/collaboration-service@1.4.0':
+    resolution: {integrity: sha512-IucIqoycI1Kh9C2rCKM8WMurCbpsokmRg8pZhdgnDaCHAuPYvrHRxo0CifoAHnngI+qU8QsN0DyHgS6hJwfCUQ==}
 
-  '@univerjs-pro/collaboration-transport-node@1.3.1':
-    resolution: {integrity: sha512-DNc0CcJPlnucCTAQ4HFXfxwytjItmeZwX1TeHpehdsM2UxGa1eSvaOF5/lhqfYsBYZwzdeMudVICcuYtiOTDUw==}
+  '@univerjs-pro/collaboration-transport-node@1.4.0':
+    resolution: {integrity: sha512-uIJI+xnK/PVSSqahBkhtWuTkpicSbvYBLbEd2l9Fa1FjC1P5JYWrq0UIf5LewXAVemyduWBhmChHXZcdyqpUMQ==}
 
-  '@univerjs-pro/collaboration@1.3.1':
-    resolution: {integrity: sha512-S8hpkug034CjkDhwskBMgu4oBa6vJL+3lA1I/2mqwfxrW52YgJWKYYtecVIyIhTtdQBdsxHcvgmji8i54Iiliw==}
+  '@univerjs-pro/collaboration@1.4.0':
+    resolution: {integrity: sha512-28Wwb1r4qiiNPBgPKCkafNgcV43a2ingQNzqnLHXggtIycnozpe9FpOdSEuptAJJv7w3+zgf+CltLBZMo7rTUw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/docs-callout@1.3.1':
-    resolution: {integrity: sha512-AelN9tudU0w38t5gHR9mTxmqnAV/8J4DsFruUN6Ed9dgc+a+jMQ7FBVKZP2AFu661Ve2FkPCJIC4VicI4FLi0A==}
+  '@univerjs-pro/docs-callout@1.4.0':
+    resolution: {integrity: sha512-KC0r1Qxl9IUpbZLRMRI3Odn5sgDXs7h3yE54StJ0PogksrJc79JpKaDOgcnepJbkUup625wWgwfg5zYA7XiS1A==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/docs-chart@1.3.1':
-    resolution: {integrity: sha512-dNqpyYH9MCor4hQotVx61HRPn/C1ldo6CeNR0oMSPtUJoBJrZidocnTYBSnbH+V+EPG6PqmME2mpRZ5HFZJejg==}
+  '@univerjs-pro/docs-chart@1.4.0':
+    resolution: {integrity: sha512-us0re7NnA0PdGyI1jsJ+LYxjso58hsEzd2cSDX7Uk3MpwRmeqVqmADCpE50Kpw6dH4aPfz1CF3N7Q8068aUIvw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/docs-code@1.3.1':
-    resolution: {integrity: sha512-hwJjOipDanhBVCenv18+/QKm/PIhsJ+9O9g4G76X4/5jR2skzSF/wLqwX/C7dza2sHX6B/f4gxLGcNZ0/bWqpA==}
+  '@univerjs-pro/docs-code@1.4.0':
+    resolution: {integrity: sha512-r+9mEaYJ39f42aNIPaY/OHnhmzP18DoqZ/ykygWAMVZfQQYLz7CgVzaVO6aormb4pKemkSOSzjCFd7UO0wsswg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/docs-latex@1.3.1':
-    resolution: {integrity: sha512-0KYl4o0gbo2BcPDyQsXtdqtYB8ilQ3UkvXS1l5+hFi4zcgZvGeVZg7oMYv7P5HbDRCq0UOufYdK5t22oIBhw2A==}
+  '@univerjs-pro/docs-latex@1.4.0':
+    resolution: {integrity: sha512-sPym9JYjVneQrHaPJcp4ZBk+4Zw+0001BaPXZPF2ynbSA8oMn821m207Ebp1HmmOAURdaoVb1e04Q3BON1pteA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/docs-shape@1.3.1':
-    resolution: {integrity: sha512-eU0IVvhQMeDSS4r+j8QuDZksoHJLKGVG6JwLVG+jK2Z82ie1lRHy0lRxDZzVc6OXLQP4cWekUaozqHCcoXhvAA==}
+  '@univerjs-pro/docs-shape@1.4.0':
+    resolution: {integrity: sha512-WU9DRzaFfNXeBNa8IdKYByDcIOm/ZrVBR/GUeIGUmGsb/UEGDp1d0Yy5ZS+pBU1lq0RvDQRju9477fA5tIqbGg==}
 
-  '@univerjs-pro/docs-table@1.3.1':
-    resolution: {integrity: sha512-0qB+cJT+iQqvmQSMSLy9+FdMXUzMm7sNHPKLYJsAwp2NVeACs5SQydlfTdbKIsxHfcTB/vYR1GC3wucMoD7b+g==}
+  '@univerjs-pro/docs-table@1.4.0':
+    resolution: {integrity: sha512-aMLQAZgf2DfH/xpEcHDmi3u8dxEiUQCfgDbcgs3PCL5EcNj7SX0caVa/1wB0B8B5SpJyii43Z5h3BGDvvqJlkw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/embed@1.3.1':
-    resolution: {integrity: sha512-ciF8fTnxcYZZ7ZwxGYqEeYfDXsJXWmZsT85UheJpcUPDBEb0q4gOoSUjwsAhWgizrxW0lR50eT0TIgM6YoDD/g==}
+  '@univerjs-pro/embed@1.4.0':
+    resolution: {integrity: sha512-TzDVhKo4jzVUJaINLYoRqmuvZgj7ThSDK68pKrEItDHQw10wNCBW/t1uItTcnl7UDeFiEkCBVxqRHyzbU0Dn6Q==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/engine-chart@1.3.1':
-    resolution: {integrity: sha512-74EWREj5Mz4GsfIEn3WkKHXqTm5ZrmFNFtdcEmLH+ymwgARh5/QTXmYB2lcqL213DzGqrE/j/tOfo2NI3Lhqbg==}
+  '@univerjs-pro/engine-chart@1.4.0':
+    resolution: {integrity: sha512-cFP7zG9W04co+PKAQHBrlrDXrbbhPpD7PPtos6eeH/+Oqyvi1S7nqyqaEkinbcntcpWMtlr1aLwF+BexneAYeQ==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/engine-formula-rust-binding-darwin-arm64@1.0.4':
-    resolution: {integrity: sha512-CnjQcRMT9gnc9k55Dgyjrsy0RtMrMaVFGU62PILvnTiP9B6Fs2weihpekAxrVAoeKvs1rZbUnO8DNhIPQAM0EQ==}
+  '@univerjs-pro/engine-formula-rust-binding-darwin-arm64@1.1.0':
+    resolution: {integrity: sha512-sckbAwQFbG5CBLStFgec8pxuPbA0XyIRVcGTT2StFoUkPFB0CfmwFC5KmQe0pitZGuCzysLKRw6RY0ZgTGfzgw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@univerjs-pro/engine-formula-rust-binding-darwin-x64@1.0.4':
-    resolution: {integrity: sha512-D3fyDOb5m4qr634IkmYkVmPBMU24JkSX6W6y93fTH1P4dZ7JBcTBH0fOlQVOSPQrGYca3DbZVutxW4AQjBxDZQ==}
+  '@univerjs-pro/engine-formula-rust-binding-darwin-x64@1.1.0':
+    resolution: {integrity: sha512-bCaMaDU7acPDz/MbJmrlZ4nx5uCPv9zAzQbdPS0IiSf1Ul16CLpF7OcT6rH2h611gCBqyMYiAi4XCRBhJsZqlQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu@1.0.4':
-    resolution: {integrity: sha512-rUclW5PtSWmff4O2ui90o8I6WuqFwdJYp5ITbWZzDdiP9xCA/QKjh59oTSz0HzhHGPavPwUBrTG2zlFPlMKwDQ==}
+  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu@1.1.0':
+    resolution: {integrity: sha512-voEfzYRsE73flHWzORyksOmP+xM2mAznWMh3a3xZmD7OZp6Vu9/zvqh3S0mv7BMUr6KDkF9iVz0J1MrKDhf+8g==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu@1.0.4':
-    resolution: {integrity: sha512-xiMZhrBtdbojxkImQuDgjKuzUTxbI6JVmPsFT1uuWnmYnsJ7AqWexNLWJBOX31Yc34mJaJ3Q/2XO+QdZdY5URA==}
+  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-musl@1.1.0':
+    resolution: {integrity: sha512-QSK4ZoalEBrqtYawaZaObhhSmqczquZCpDj91fBYBEJKptrCoXejd2eXS2vt/LXpxW+JR0CqDYndz5lOuYootw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu@1.1.0':
+    resolution: {integrity: sha512-o6VKV9ilCmrvI6YTzZoxDnYXnT6D4JEkPcN/g9FXeVfCTHRkk1iG+THp8v9YAxT1GpHrdFBlbPDoug6vhn+KnQ==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc@1.0.4':
-    resolution: {integrity: sha512-uhXjip8VtR9RY7fvsrFa9hfsq90HgWCrNTgK4uvZUE+BlffjgJ20Vx6VY+uhYtw5F6mZM0sjJTAMxwcCe83gKw==}
+  '@univerjs-pro/engine-formula-rust-binding-linux-x64-musl@1.1.0':
+    resolution: {integrity: sha512-o9sUVgeo6G//lcc3ukcLedq+AC8e8xESsdETnOXWUfEp/lS+Zsorx+4hmaG3eOsHZu77mjwYqTtCn824e8FRAQ==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc@1.1.0':
+    resolution: {integrity: sha512-0kLzqwr0LYzFv4WO9faT8N5hC2v1owjEhEl5o/ubjQA51THkQ8w66Qzg45Aoo34X6dOem9niSpAxa06PP6l3EQ==}
     cpu: [x64]
     os: [win32]
 
-  '@univerjs-pro/engine-formula-rust-binding@1.0.4':
-    resolution: {integrity: sha512-Eaor9DgG3GClsulxtPWlB2Q7+xq0k2uQbCbT7CpDTljY0mCxRF2iY47c6Q/zU8CLsneuQLQo36VMJYxL4QafMg==}
+  '@univerjs-pro/engine-formula-rust-binding@1.1.0':
+    resolution: {integrity: sha512-8OV6eCv2lBXyk6NieiBpOd5S8Kvsiqiph9KKBICxf7GZA1CKsiz1cR5nN7O7gbRokSBMoDF1wZxwDCzBIHiOHA==}
 
-  '@univerjs-pro/engine-formula-rust@1.3.1':
-    resolution: {integrity: sha512-ldTZRxQoVMQr8gv6Jo1hm8pUwDgEFjxwFd3AygBgWHk8yoHMRJqGSZ6x2H9ZaGEuqadB0JODVPnuXqVKBEv+dw==}
+  '@univerjs-pro/engine-formula-rust@1.4.0':
+    resolution: {integrity: sha512-u1vDm8xsGhy5QVDaCTcJ1GV0dwI1WIpiMwYrjDYFRmmDdQJH8DOE46Ipo/H5oHcSWCh/pjoMULwX9/CZdHdFjw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/engine-formula@1.3.1':
-    resolution: {integrity: sha512-dxAEJywOABY6SiscfgkKr1u4c9BKKPRaSWTQJMUBRmnRMNnHmMqM+4FsfCRiTzvD2qAnv++mxyv7vUsc1bTXOw==}
+  '@univerjs-pro/engine-formula@1.4.0':
+    resolution: {integrity: sha512-q9xkPgjpYk4mA8GDvhwtjxp8Ob8HiG0jwArinaP0ASQkigQ6Z5Blanj2iJwypidsyMpJrym9ysux1lna1aN/9g==}
 
-  '@univerjs-pro/engine-pivot@1.3.1':
-    resolution: {integrity: sha512-nVn0qr5g9iJKlGZrmRFB+k0ET3fVdGNltnZ1sbVDHjU/OKc2BbB2kkzNHZoWROjTUZ+xUElUsywvvDHlA2Awow==}
+  '@univerjs-pro/engine-pivot@1.4.0':
+    resolution: {integrity: sha512-1w3/q8EqV/Zrf38jm/WH7YCs+J+YzF3d4dPdyc1vjjA0d+n0wd39gicK/RTDZ5b4INpMeKQqlwUKBcSxQaEYBA==}
 
-  '@univerjs-pro/engine-shape@1.3.1':
-    resolution: {integrity: sha512-KA79GJEmnMZbmscOJ4/avou6RnmMKRlhyyDfEyiSfC4re7V8wXcXrqJtFrJYph5JR1GgmxbWkHlL6IbOl3oC+Q==}
+  '@univerjs-pro/engine-shape@1.4.0':
+    resolution: {integrity: sha512-1nPJrz7RhdesHTkxD3enX5MJxrgw3jLSQkPc/YPloI5IgKhUU7nuJLkIWjS0LeAMYdEzDRUzJ4XwDZxsrqkjiw==}
 
-  '@univerjs-pro/license@1.3.1':
-    resolution: {integrity: sha512-uQaeFef+gK07gLIcoocU6hQ4SuwDszrSr6c6sfHv5rMgRiKGaG18TkgumkqPlZ3uDnyzuD8yXEB3vBpaId1pYQ==}
+  '@univerjs-pro/exchange-node-binding-darwin-arm64@1.1.0':
+    resolution: {integrity: sha512-zgQLAhPsHA12ocskVRDzQc+uvRGMRLbRArKUfiHrMQpprJBz65Mm+mFs9qSQTqffJGptAQrU3tq09ht4DGklxw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@univerjs-pro/exchange-node-binding-darwin-x64@1.1.0':
+    resolution: {integrity: sha512-0Lp9B36kdtq2RVF76vUR/lbIPi3SyAYYHiRYwPFXi9bYCX0kzmM3q43AyQLwslcbUgfwdU3niU47LmQrCn41og==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-gnu@1.1.0':
+    resolution: {integrity: sha512-fv9NI8Fc3m1Ay6HWrenEtK2rOhTRVOul6bIg/rYEXVQlPHYrSkIBqM+qZPr2HIWqYZJvE8owcz373amDBDgxgQ==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-musl@1.1.0':
+    resolution: {integrity: sha512-D0lRwvc/HC5mELlA+IZ1UIuO+6oNExeg9mUwUxRYpOunS6xgxIU+WphmoZ/QFbIzFnDfXj65gkDLwFPs+bN20Q==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-gnu@1.1.0':
+    resolution: {integrity: sha512-n4lc8j0+lmzAp2CGE6hlHNMbhRquEajJGfILSD0vqa4tlNfiQJJWxYU1GP/Ligvqmh/gc5J1BROhT9laVyDd8A==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-musl@1.1.0':
+    resolution: {integrity: sha512-3YkJ4yGlKWMpSJUnNj34usohJGcv70E8GqUHjxp7P5DfoOf1OA6YCbXiKUqje6z+d7PRYqygeX1n5rOdLdhESw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@univerjs-pro/exchange-node-binding-win32-x64-msvc@1.1.0':
+    resolution: {integrity: sha512-QahIhbQh33QwiYZxDaKfhXolDJ94IWVVuWiQD0rpjTcpepwx5MGK3zz8Cq3C4H7pP2mImU+xFGcWCZzqtWXikA==}
+    cpu: [x64]
+    os: [win32]
+
+  '@univerjs-pro/exchange-node-binding@1.1.0':
+    resolution: {integrity: sha512-RaZ9FB79DnnoeH5+dl7eqKVqj98/rkzdIsUlBJjrDfm7nE0b6bDofud+RST8PRDt1ffarAkzyY7Reun0TvMPgg==}
+
+  '@univerjs-pro/exchange-node@1.4.0':
+    resolution: {integrity: sha512-3Y5loThjyhcpSgenqOXLxMd/J3nNEuj3mYi/nWCWDO4eEWV4FqTuKPeIfk+m5uRFDLIPUxklTJTVmaMm0xqdQw==}
+    peerDependencies:
+      '@univerjs-pro/exchange-pdf-node-binding': ~1.1.0
+    peerDependenciesMeta:
+      '@univerjs-pro/exchange-pdf-node-binding':
+        optional: true
+
+  '@univerjs-pro/ink@1.4.0':
+    resolution: {integrity: sha512-I1qXGZEMzI0aUMrzSxxYdZeue3/bsETVeamUVF9LZHc/h8X9A+uFycDCHcDoliuAO+I93OaprkN9TVbrTC9JLw==}
+
+  '@univerjs-pro/license@1.4.0':
+    resolution: {integrity: sha512-ektdqtWPjPIHqwk6QVRzTEb49UQD2wHpFWafcD+xvtuO81YxjDgQB7e+mVB+MT7XvCu8dORqscjXZbuuJzN/uw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/pdfs@1.3.1':
-    resolution: {integrity: sha512-1VSbxfTJnUSBkAozFzw+oVwY2ZXUtbbXAp63o2ekOUS2T9Hhsdk/b9G7FJXDPwTr9Fo32Wn/fz+yfAH/tru0Sg==}
+  '@univerjs-pro/pdfs@1.4.0':
+    resolution: {integrity: sha512-fsfP+qaG/cUnHuEoPxewFs29uVSi6yqbHGJ2UaNsSPy9CM+ZbWH+KfuCiZc7fM9EPyfvEVFiMegnGRjYFhyLpA==}
 
-  '@univerjs-pro/pivot-cache@1.3.1':
-    resolution: {integrity: sha512-At8K+ZWfcoS2pLREHJpH6J9W78zA44N+1OatHQ3gCSq0/BXv/PIDIgJuuLaR2IzC5qlKqbKhmoxl8Jiu4Gfq6A==}
+  '@univerjs-pro/pivot-cache@1.4.0':
+    resolution: {integrity: sha512-BILoqlr/pV8FYDYdaaJfDj2ttGxkP+Nypwh2DH62kbH6IWoaDfgYWYnHJgQKR9B8dZfetE0hNviC+85mDRFm5A==}
     peerDependencies:
-      '@univerjs-pro/embed': 1.3.1
-      '@univerjs-pro/engine-pivot': 1.3.1
+      '@univerjs-pro/embed': 1.4.0
+      '@univerjs-pro/engine-pivot': 1.4.0
 
-  '@univerjs-pro/pivot-chart@1.3.1':
-    resolution: {integrity: sha512-9CSdD6lS7P6i/FLbFNQTm8yWe4wkdUD1GWOK4XCrCqsjvg7lzl2URGQSgjvh9vhrEvVapR+ltZyY3nE4ZpI87w==}
-    peerDependencies:
-      rxjs: '>=7.0.0'
-
-  '@univerjs-pro/shape-editor@1.3.1':
-    resolution: {integrity: sha512-aKLaSRYL79wgj2ww5gzKFF4YEXFrvcRnT5x2tVrdoQuv1qA/GDai7fPE/nQCKARu3AguvJY1dgbaBhbzNnSHZg==}
+  '@univerjs-pro/pivot-chart@1.4.0':
+    resolution: {integrity: sha512-rUDeH9GcP8PRpJDAGooahCWBrmFMn0tHD8UwaXgjClLTbq/Cocu1q1oalWWLqR8scfZXf12wzdF0Hqdo4y7SFg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-chart@1.3.1':
-    resolution: {integrity: sha512-hYcpVio4H/zd6bXJgXA5107/fVSTve3ris2wF11wJuv2IPcz7+Ekf68FvoDZfxDYdo/nnGVsp6V3HTJy/TlH4w==}
+  '@univerjs-pro/shape-editor@1.4.0':
+    resolution: {integrity: sha512-vwjp0OGoa2YGsmW1UI66adezWpKHAvq6thjg5BkjTS0+mWLO6oNL2/0A+XXmp20ac6IAl4mtEf+of8tZwHTMpg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-outline@1.3.1':
-    resolution: {integrity: sha512-moHXK/OaqRSHbBADR5TGLG6ZVoMwPjqNTUyf+NhAYfrT+GLxtQrG9+N3R+ZcedOZfPEnGZ3YyDLRPHMwcSQmqQ==}
+  '@univerjs-pro/sheets-chart@1.4.0':
+    resolution: {integrity: sha512-p9x/3EoBS4wLCVRhfjCJzs5ZgE5JBTH3Y5KDaK0Ap9WtRJ8LjP9avSnzmHxJMojlqTXOpi5M13AkCL/f2aXBdw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-pivot-chart@1.3.1':
-    resolution: {integrity: sha512-emNdw0pRoQsE1ASaElp3KW5pmD8zJnMeuVF8wJzMP5l7E9imR+W3bRlEUXzubj4VVhZ4fjjTQX6b5rUxMQiy8A==}
+  '@univerjs-pro/sheets-outline@1.4.0':
+    resolution: {integrity: sha512-EHsI1mcgezmUH+bqemuzvm6Ywb6qL5Ia4tiWhXsrwddjGd1dBwRWaPuXu2NsW9tyEoHxhDjRqmm/jGPnOCyWnw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-pivot@1.3.1':
-    resolution: {integrity: sha512-hYOE2wsYg5XWgvLZhZgikWpr6wPpqi0hnLXVgjzu8BBBOitLV+ma6ZeR4z4bm6cxnN8TnWsmuYIUi4OqnvXHZA==}
+  '@univerjs-pro/sheets-pivot-chart@1.4.0':
+    resolution: {integrity: sha512-TS9joqDF7xhbn1Coz3KtfwJxxI0MGl1MZV/KmaX6ulyEU85bdD7zXfzHH2rXE+5DdVdkO5k5mQzKffh8RfX7ag==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-shape@1.3.1':
-    resolution: {integrity: sha512-7Ym1QS9tX6ALd4OMlXgE2Gg7a98CVN1uDBrRw5qF8wFbTbXluwoFelPqClf/d6TgeXNiYEfn1UzEKSrdjkc+iA==}
-
-  '@univerjs-pro/sheets-slicer@1.3.1':
-    resolution: {integrity: sha512-WXWPeDBJ6Eb8M08sI67l5Hf24gb4d1L8CJt/XJU2sJYlnCBxTMAlEe4CsUSNTUsLoS63yhL7a5wVjyTGqcIhTA==}
+  '@univerjs-pro/sheets-pivot@1.4.0':
+    resolution: {integrity: sha512-Z39letXsiqa0B2SoJ9QS7JxcxgeEayeNZo2K+ZNOjWiAujrh+4uzuxL5iNNR0AQLet62BNJsbFhkonV8MmqUNw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/sheets-sparkline@1.3.1':
-    resolution: {integrity: sha512-TNXrxawuiljarLZGr8BW+cOBCi5ujqeGXPzJOA37rsJxsq++muKfSkHA5vN0R7SLUhXnkTU0tESChMaZnTx/Nw==}
+  '@univerjs-pro/sheets-shape@1.4.0':
+    resolution: {integrity: sha512-mgn79RiPefi/X44SiehHbrgbKze4P0KOlApT3bjpkSFBUVJJlv74E7/gdDtzbjh1IouNmD+5vej6hG6KgxKySQ==}
+
+  '@univerjs-pro/sheets-slicer@1.4.0':
+    resolution: {integrity: sha512-H8EC3YhfPoJukqHI9vhwqVGZKD759atJvLcfAwO0k81mag0yqkkWGihQVQVzxPwNJjmneKD/PKE3CIsdsIJzmA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/slicer@1.3.1':
-    resolution: {integrity: sha512-pMpElyFOQKWbneNAW843RsbwCm+c+WVWN+rqLuxLGWBJQ0d0W7f8yv7iwhekjlN7+77QJdElffBLQDg2EVl9fw==}
-
-  '@univerjs-pro/slides-chart@1.3.1':
-    resolution: {integrity: sha512-2/txWLACzu63tX33Photv0G+TIG5/HzYxrKsrqF+8kZSw67nuuHhvGmluzL2SmZ9KXKfgWFk0HNRa8tD7CPOIA==}
+  '@univerjs-pro/sheets-sparkline@1.4.0':
+    resolution: {integrity: sha512-vcZ0SEUHj+Rh/8+DcOkX4WzAd1Db5zo21xr4ZqF1V0LDBHhvRhJ0jlPyZm3yqzwNggk8MZFviNByBvAbyVygfA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/slides-table@1.3.1':
-    resolution: {integrity: sha512-kyqbCb7Emzb9xvdlVbGh9VR7fNtL4Woeln9XfQ13hvscaXpYP1kvfXeZMgrcs34exq4j/UiurRRtgrPvUBVVGQ==}
+  '@univerjs-pro/slicer@1.4.0':
+    resolution: {integrity: sha512-ppRohkpw93ax0xp0OOU1B38oPyw4+cVED0yvzTI1JB88epFq+RRLsMxFm89IDfZ3pZi13D1GxrI9kiAK4QA9Dw==}
 
-  '@univerjs-pro/slides-thread-comment@1.3.1':
-    resolution: {integrity: sha512-36rH9ivKH46qM2MW+7DkAqmU4HgLkDEDUzFNye4wPcv7XRXNAiGIOfsIf04KF7s7HQDmJxvQBt9zURG59QoqLA==}
-
-  '@univerjs-pro/slides@1.3.1':
-    resolution: {integrity: sha512-wjbeingiqCk7XaXEJQ245Ad6NYB72x9w3t2XpRqmJzmffp5r6UGCRFVhg2w2MYob7GCHWoW/HXNkL3DSrKeEHA==}
+  '@univerjs-pro/slides-chart@1.4.0':
+    resolution: {integrity: sha512-2yeXujyjZ4TPG4BZ4AmOAd5XkQNzzMM2zrR6i80rI6SNGVVoPRvHhdPDv1I2T8cF+uerAm+rpdNh5W0xsWJ8eA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs-pro/thread-comment-resource@1.3.1':
-    resolution: {integrity: sha512-ggyT9tR71whx2tuZk4zD4dv/4Sf4ddFXwlsrXhdaNjl/VfhNq6cQWs4fvzDdcyTnWe/aHy/1t3z8t+Oa12f7tQ==}
+  '@univerjs-pro/slides-table@1.4.0':
+    resolution: {integrity: sha512-X0elUoDuso9uOI2L5b6lZjOGlHDGbY3PfH33vRo+n/mhho2shaM7N+5F4dsdClqEP0qemeTJRNrLtmG6gtyxBQ==}
 
-  '@univerjs/core@1.3.1':
-    resolution: {integrity: sha512-5+Ud6ul0DVJJT9CEwLq/ig2gBdsCeTTRd8qoiiGpq0FdyhZPfMzr9ZS7fffgi7glzsJGoU5yTKZxq4bRrQTI2A==}
+  '@univerjs-pro/slides-thread-comment@1.4.0':
+    resolution: {integrity: sha512-Wa4SDPVCyZG1UcN7xq1PRsiZp+vlCQt31Sq0I3E4F/nXbCj1dwF3/EclygKPKd177j9lVHSV/v6b7iac8mmU9w==}
+
+  '@univerjs-pro/slides@1.4.0':
+    resolution: {integrity: sha512-RuTruLhC1XHtF+wcJZNDn/B14cb0h7YN2LeYWsZf1irILXkEdWV/ZVsosfFKeupSOKJH2QHJaQHsnbv5YIRztw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/data-validation@1.3.1':
-    resolution: {integrity: sha512-JkkU5f1K9PfbRcPAVlbYpkmv/Kx7sLbaOxv02o482kllsqeTl3TN/P2wIkSGCkfPUn+vHZRof7JaTVCzt48gYg==}
+  '@univerjs-pro/thread-comment-resource@1.4.0':
+    resolution: {integrity: sha512-0yMLbuO1uIEaluGxI2jb7LE9MRFa3GVIPLpD8WLp3w2x8XzYpXoDzgABGhLgoa3xVaKGzDGQEsl3XkvXENn73Q==}
+
+  '@univerjs/core@1.4.0':
+    resolution: {integrity: sha512-xZTeE/wsGvms9gppCS4yTyJ1XzZBVd0sxF1yG1k686eZApQox+/mtn511JREU37e6gsRRZvkHdKS1Ga/8Dvu0Q==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/docs-drawing@1.3.1':
-    resolution: {integrity: sha512-uRNEVNk/AQ/kUJ7hVIU2Twd1EM5Wfzdm2lNXRq0c/fH4i3TIqOs7zZBnwJakuuKGMDso8bextnY3Kb7w8O/D/g==}
-
-  '@univerjs/docs-hyper-link@1.3.1':
-    resolution: {integrity: sha512-UvD0XW+osZrhYem1CAXPaPnagpoHxxfjWwmh0ziKgHIul6uikiZGBGdn37pSTisQqfNtGeU7SycasfTy33WvKw==}
-
-  '@univerjs/docs-thread-comment@1.3.1':
-    resolution: {integrity: sha512-Tge+lHfqNLZ/XEQxfyFJ73jxmDDVSfTpkRwOveVszBz+WxCCHjOAWFIER2/F4ar+ILgIvRhidY4ohb/2EOk4YQ==}
-
-  '@univerjs/docs@1.3.1':
-    resolution: {integrity: sha512-sWQytQgPXX5YKzCoyypUO2GLDJthbcB65BYNDj3/py8+xH3KaxmvK9vd22aqRU3/kbby/W55QYpIIlQ5AiaUCw==}
+  '@univerjs/data-validation@1.4.0':
+    resolution: {integrity: sha512-w367Ps5dbj/xVuARHJaVeqO788LsZFIeEzJ3gQ6V7+L4pYaQIQghw6PospEh168+Wp9+2OVn0jPr9fnhk7i7CA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/drawing@1.3.1':
-    resolution: {integrity: sha512-Inl01SBkOn4wb8Z8+L1W3Sg/r5J+OwAktMS+bvr5rWqgiYm8TOLU9bO1s9+3cpnVrDsYtXnP0pQq/j6J9RViGw==}
+  '@univerjs/docs-drawing@1.4.0':
+    resolution: {integrity: sha512-B3lDfBh1r/qdWW+o4DD8OfCOD6/WSCo6a9OrrMuJex6Z9nq7Bfl8imk4Q41PwDa0Hb19HnXPJK3FmNScszVKfA==}
+
+  '@univerjs/docs-hyper-link@1.4.0':
+    resolution: {integrity: sha512-r7zX/RANpR57uu1UW0tn9m1ewrJhoLHE2A2jYQvKYew1AIM0cQiGQSB0c7kxorgU6CoNIHsPbARqUQtcY3p5pQ==}
+
+  '@univerjs/docs-thread-comment@1.4.0':
+    resolution: {integrity: sha512-r0IGrK5kRPyLFs6pMUn0H94hlIdIVHpPda72sp1i0a8ev1nIv437b/F5wO+4Sd0T4np++Sf/WhxV3Nrv6p5P4w==}
+
+  '@univerjs/docs@1.4.0':
+    resolution: {integrity: sha512-Z+5Et6gOKDfwPKHbI2VmenJl6WZtNYu4vUZsAtkrXFhbsh1Rh2Rx4r6ijNV9+i8lCQ0bigOZg5wN2nSubcMAKQ==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/engine-formula@1.3.1':
-    resolution: {integrity: sha512-tPn+97hk9YL9qQL274Ceqt5bpUbPOhgKUOwxMkzRBsD1ZJPH3x36N82Tky6dPKl5gNqvGwKJZXLhXgwEHCUnyQ==}
+  '@univerjs/drawing@1.4.0':
+    resolution: {integrity: sha512-gY1Y3BQuuiwgWYwNiuPrRtTllKKAqqzGGjwvdq9L68TAG1ire3TYPM2Lf+MAgjYcXk8tUthE9+O5leVph/bB9w==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/engine-render@1.3.1':
-    resolution: {integrity: sha512-P+0y7uSt/XZ2VolY0b8JHrne3rRcydxuRLEEsk3SqxfxV5mp0q2lxgVwZIBBXhfzVF4khrwGiiGk+JI0U42J8A==}
+  '@univerjs/engine-formula@1.4.0':
+    resolution: {integrity: sha512-OiIgBy9m0hD2MmZbF1zk9avoE8bRKgMF8VPfqT6i+HhhfsxFZ2iECgYk85mJmTSG6SXVwrgg7KqI760WbFEeKA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/protocol@1.3.1':
-    resolution: {integrity: sha512-x1laHGmuN8Q4r2M8VFDsviSQRMAxHOFmUXO+O3h4DAiab903MXaHJkCkuyHtvzTMndMfRmLMwFXq/RzwDzMJ7A==}
-
-  '@univerjs/rpc@1.3.1':
-    resolution: {integrity: sha512-O1Ovvdb+avHsbIOvqnlX5/XLq5KtKAo489ciYzDjnsN3WpWFthbnmkxWLHwzdzMwLF4Pq8Dvas8ouoEBDXHLlQ==}
+  '@univerjs/engine-render@1.4.0':
+    resolution: {integrity: sha512-lamcdKakINNvK6qmbCspcuBuHcJjNZaPO58iLL8Y6XsOP8ZqpeVHXTWtyVDoegOVhbWzLCPgeuaf8R+zv/T9wA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-conditional-formatting@1.3.1':
-    resolution: {integrity: sha512-uGUsWwgNzt6I4aWkG728H3cCP3eQCZZl1WHaQCl6CmGKgqh9eV9cTEJz9WBuXalzxytC1JgrevUCgIBnpPqakg==}
+  '@univerjs/protocol@1.4.0':
+    resolution: {integrity: sha512-3huWRbcDZwO1DWM4jJOSYgZFFoG5GuEaSPLe0kXM4RKoEpBFnwFTtXQCMDglLx2j4DHgA26m/cwMIZPpBPqWvA==}
+
+  '@univerjs/rpc@1.4.0':
+    resolution: {integrity: sha512-R2IOoDK1d0RIkE08yUhaHIZ+OQlRS/Hn8HvclH+1pvoOjaEJgflj5PgZD2zHERnW0KNl3v0fEvqvNkSUhCNNLg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-drawing@1.3.1':
-    resolution: {integrity: sha512-Jc6IZFGc8xd7+cIOSLJCdE9XIFjuLy0+GYd/t020kyzRHjQKbH1T9DiBas8x18F3YjWqgDOaV2c1T+jJB9dXow==}
-
-  '@univerjs/sheets-filter@1.3.1':
-    resolution: {integrity: sha512-aTPMM/cHdUcqQQVeHWFGKpBGBsL+eue2JlbMWvyh3nJBzNhfOd4hr5y3gaCCCaSJR+h7FI/ncszc1jfro9YAQg==}
+  '@univerjs/sheets-conditional-formatting@1.4.0':
+    resolution: {integrity: sha512-lmBwJ9shvgiHFAY1z0unKk9FANj1D29l3odCXQxLwGUzATe3guZO/9TCdsS6wsuH+UzbVowjd8ThJl55xD9KNw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-formula@1.3.1':
-    resolution: {integrity: sha512-snB3ttEQxi3Vbp+Ki4OoTDKGBod95Ia2uCxFk5h9RhZiCkfuYP9CkuqkTNf6Pc1py46fWv/eMS5Bmv35C684tw==}
+  '@univerjs/sheets-drawing@1.4.0':
+    resolution: {integrity: sha512-LdF6T3t9Nhnzchh1vGnTPuQGe8niSg+yaWw7B/RiDYxXzDkbPZ555GG3xT8VdxfEAiKkXlpYaWOfJt+27ot6Hg==}
+
+  '@univerjs/sheets-filter@1.4.0':
+    resolution: {integrity: sha512-x4C4e47BbgOCTNEK6T+LVn9Z690Tv58KM3Dms/4anQlaJhwaaPjxA64xEjo+T/Yg3aB+8lKoPA3rD5CiXRBsJw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-hyper-link@1.3.1':
-    resolution: {integrity: sha512-RMmvpeUND3ELFUTkXOia/U3k4kvhqvFrJ4dmZuB7aX7iuuksxZBAjbwJqq8pNazyA89Pa3oTlFqDNt/DGaf9TQ==}
+  '@univerjs/sheets-formula@1.4.0':
+    resolution: {integrity: sha512-RFvQABbMBeWjVrl7mqO9mgyjHqec86K6J4XhLv15W98k8Bvv0wfzJpKVRCPBJ94kYBq7joglsfPCsKXHyuoGCg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-note@1.3.1':
-    resolution: {integrity: sha512-GQeHB17hQ2IX5gMZ53l9fBSmrgH9NTnyuPbiPGl8ytG+hQ3YX8rmGQJKO8rlSDr9i4ATmPECo3k2VcmwTqBSwA==}
+  '@univerjs/sheets-hyper-link@1.4.0':
+    resolution: {integrity: sha512-jHzk769hbI8sRM0YshKc4yTtLL9qmSXnUH1J2OnZlPwnpgr9xUFPIUEp7OPStVafass4ubmjcu21XHJsPN5Ovg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-sort@1.3.1':
-    resolution: {integrity: sha512-cXRVn0IncgYkCq0kK26/AYa27rw5nt8L+HZLw46k5fvOEaVTdU+11QuogLwrp7ZnR2lGoUTQLd80QmCv6Ix9JA==}
-
-  '@univerjs/sheets-table@1.3.1':
-    resolution: {integrity: sha512-lLdwlYNUaGdgyOPjQd125uyTHaXw6DioRyBR6PQ7imvMKMk2gfyC+sbddG1Et4VQv4RKzyXV7E/dEuFBU9pyZQ==}
+  '@univerjs/sheets-note@1.4.0':
+    resolution: {integrity: sha512-srB3DHeSW+SnqOyjn2lv34Inmn7d7HcVThzYSXuhhWJYEAZEKGzn+aqaje3Wp7vUFwBVhHwuVnm/6E5IgvWdPg==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets-thread-comment@1.3.1':
-    resolution: {integrity: sha512-qk5vro3rAAiz1ScV/2/0n20WBFD0dl7yql89vH8naXi8YFGPnwspYHHAhFC/EuFuFoxAijfzgpQ+RVWs5BeqPA==}
+  '@univerjs/sheets-sort@1.4.0':
+    resolution: {integrity: sha512-GpRI4ufkLk8IAXs+2rY4kgfK1aBGHHRD7xsx9D+I3VICp6DQILWQVpsxC0DIiDcZd/b1OZvuLr174/GkWVuENg==}
+
+  '@univerjs/sheets-table@1.4.0':
+    resolution: {integrity: sha512-qLSAkSMNZgMJhAR0cG/oxS3rDbcb+324tFaLFQ/frYmVV9KUxE/vXUGsIA/GV3DXSUudlWtkDvi+ATrnThzTOw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/sheets@1.3.1':
-    resolution: {integrity: sha512-ENjgyzvOqSU7Fn2DJrqNFWpiW3nJVlbhSvx7mI5MkAj2QLDgzxbpPawByYuSR/EB32x6/r8mN9e0+GUSmxmVmw==}
+  '@univerjs/sheets-thread-comment@1.4.0':
+    resolution: {integrity: sha512-LKftPrZh6p4i8j5iDML5WySNhftfhp1KB6IRU0OF0EUdkWxRUgpM0DOZiIA1kH6QKDeghG0YuaaWaR7fcBhRBw==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
-  '@univerjs/themes@1.3.1':
-    resolution: {integrity: sha512-ucpdqiIex1QiQh7ZohtsLDCdb+Q9qLMfnx5ijQ48ChDFk75Ao/ja9HpFnrJemLNZIqm5x4W7sDBkUwIOz1IOUQ==}
+  '@univerjs/sheets@1.4.0':
+    resolution: {integrity: sha512-a70g8gQ41ZbHf31w32PTQ6RAGt4J3z3WSQidPATsGU4gi03NC5B52Z2c5wOxVZRLlGEU9doPvWVIsHrekBcLwg==}
+    peerDependencies:
+      rxjs: '>=7.0.0'
 
-  '@univerjs/thread-comment@1.3.1':
-    resolution: {integrity: sha512-QKCxMRRzGBxmuIO6nNaUEfS405SuLA0liUBnAicjdyPHw9tgUm5PuMEQdr7kDC9KkhF7t7u5QEDwlZ0gfubFPw==}
+  '@univerjs/themes@1.4.0':
+    resolution: {integrity: sha512-5Ipb6KiXU3LRJpq5BDewMnXJJXMyExl6cIcfFnJj7nz/tBJiYTyhMNF3AWXEYEXeWjvwgGuPZE12eHw7+tZRdA==}
+
+  '@univerjs/thread-comment@1.4.0':
+    resolution: {integrity: sha512-VQPSdoYJjWtOwdCaPOYLjZUbP6jhOsWB36puKm5OQiIuSjI9AkuP4NGPNGY0J2kGhFXApBWvJF5KgTe+MQrjOA==}
     peerDependencies:
       rxjs: '>=7.0.0'
 
@@ -1851,6 +1971,8 @@ snapshots:
 
   '@noble/ed25519@3.1.0': {}
 
+  '@noble/hashes@1.8.0': {}
+
   '@noble/hashes@2.2.0': {}
 
   '@oxc-project/types@0.156.0': {}
@@ -1976,576 +2098,644 @@ snapshots:
       pg-protocol: 1.16.1
       pg-types: 2.2.0
 
-  '@univerjs-pro/bases-dashboard@1.3.1':
+  '@univerjs-pro/bases-dashboard@1.4.0':
     dependencies:
-      '@univerjs-pro/bases': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/shape-editor': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/bases': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/shape-editor': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/bases-thread-comment@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/bases-thread-comment@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/bases': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/bases': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/bases@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/bases@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/boards-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/boards-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/chart-embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/chart-embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/boards-mind@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/boards-mind@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/boards-table@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/boards-table@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides-table': 1.3.1
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides-table': 1.4.0
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/boards-thread-comment@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/boards-thread-comment@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/boards@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/boards@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/ink': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/chart-embed@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/chart-embed@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/collaboration-comment-service@1.3.1':
+  '@univerjs-pro/collaboration-comment-service@1.4.0':
     dependencies:
-      '@univerjs-pro/collaboration-service': 1.3.1
-      '@univerjs/protocol': 1.3.1
+      '@univerjs-pro/collaboration-service': 1.4.0
+      '@univerjs/protocol': 1.4.0
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/collaboration-history-service@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/collaboration-history-service@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/collaboration': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/collaboration-service': 1.3.1
-      '@univerjs/protocol': 1.3.1
+      '@univerjs-pro/collaboration': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/collaboration-service': 1.4.0
+      '@univerjs/protocol': 1.4.0
     transitivePeerDependencies:
       - '@univerjs-pro/embed'
       - react
       - rxjs
 
-  '@univerjs-pro/collaboration-service@1.3.1':
+  '@univerjs-pro/collaboration-service@1.4.0':
     dependencies:
-      '@univerjs-pro/bases': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/bases-dashboard': 1.3.1
-      '@univerjs-pro/bases-thread-comment': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-mind': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-table': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-thread-comment': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/collaboration': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/docs-callout': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/docs-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/docs-code': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/docs-latex': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/docs-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/docs-table': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-formula-rust': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/pdfs': 1.3.1
-      '@univerjs-pro/sheets-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-outline': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-pivot': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/sheets-pivot-chart': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/sheets-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-slicer': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/sheets-sparkline': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides-table': 1.3.1
-      '@univerjs-pro/slides-thread-comment': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/thread-comment-resource': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/data-validation': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs-drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs-hyper-link': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs-thread-comment': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-conditional-formatting': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-filter': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-hyper-link': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-note': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-sort': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-table': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-thread-comment': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/bases': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/bases-dashboard': 1.4.0
+      '@univerjs-pro/bases-thread-comment': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-mind': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-table': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-thread-comment': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/collaboration': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/docs-callout': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/docs-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/docs-code': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/docs-latex': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/docs-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/docs-table': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula-rust': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/pdfs': 1.4.0
+      '@univerjs-pro/sheets-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-outline': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot-chart': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-slicer': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-sparkline': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides-table': 1.4.0
+      '@univerjs-pro/slides-thread-comment': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/thread-comment-resource': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/data-validation': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs-drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs-hyper-link': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs-thread-comment': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-conditional-formatting': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-filter': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-hyper-link': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-note': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-sort': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-table': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-thread-comment': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/collaboration-transport-node@1.3.1':
+  '@univerjs-pro/collaboration-transport-node@1.4.0':
     dependencies:
       ws: 8.22.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@univerjs-pro/collaboration@1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)':
+  '@univerjs-pro/collaboration@1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/bases': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-mind': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards-table': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/pdfs': 1.3.1
-      '@univerjs-pro/sheets-outline': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-slicer': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/slicer': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides-table': 1.3.1
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/data-validation': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-conditional-formatting': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-filter': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-hyper-link': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-table': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/bases': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-mind': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards-table': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/pdfs': 1.4.0
+      '@univerjs-pro/sheets-outline': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot-chart': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-slicer': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/slicer': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides-table': 1.4.0
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/data-validation': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-conditional-formatting': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-filter': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-hyper-link': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-table': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
       uuid: 14.0.3
     transitivePeerDependencies:
       - '@univerjs-pro/embed'
       - react
 
-  '@univerjs-pro/docs-callout@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-callout@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/docs-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/chart-embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs-drawing': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/chart-embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs-drawing': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/docs-code@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-code@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/docs-latex@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-latex@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/docs-shape@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-shape@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs-drawing': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs-drawing': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/docs-table@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/docs-table@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/embed@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/embed@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/bases': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/boards': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/bases': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/engine-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/engine-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/engine-formula-rust-binding-darwin-arm64@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-darwin-arm64@1.1.0':
     optional: true
 
-  '@univerjs-pro/engine-formula-rust-binding-darwin-x64@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-darwin-x64@1.1.0':
     optional: true
 
-  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu@1.1.0':
     optional: true
 
-  '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-linux-arm64-musl@1.1.0':
     optional: true
 
-  '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu@1.1.0':
     optional: true
 
-  '@univerjs-pro/engine-formula-rust-binding@1.0.4':
+  '@univerjs-pro/engine-formula-rust-binding-linux-x64-musl@1.1.0':
+    optional: true
+
+  '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc@1.1.0':
+    optional: true
+
+  '@univerjs-pro/engine-formula-rust-binding@1.1.0':
     optionalDependencies:
-      '@univerjs-pro/engine-formula-rust-binding-darwin-arm64': 1.0.4
-      '@univerjs-pro/engine-formula-rust-binding-darwin-x64': 1.0.4
-      '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu': 1.0.4
-      '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu': 1.0.4
-      '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc': 1.0.4
+      '@univerjs-pro/engine-formula-rust-binding-darwin-arm64': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-darwin-x64': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-linux-arm64-gnu': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-linux-arm64-musl': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-linux-x64-gnu': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-linux-x64-musl': 1.1.0
+      '@univerjs-pro/engine-formula-rust-binding-win32-x64-msvc': 1.1.0
 
-  '@univerjs-pro/engine-formula-rust@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/engine-formula-rust@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-formula-rust-binding': 1.0.4
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula-rust-binding': 1.1.0
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/engine-formula@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/engine-formula@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/engine-pivot@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/engine-pivot@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/engine-shape@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/engine-shape@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/license@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/exchange-node-binding-darwin-arm64@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-darwin-x64@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-gnu@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-arm64-musl@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-gnu@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-linux-x64-musl@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding-win32-x64-msvc@1.1.0':
+    optional: true
+
+  '@univerjs-pro/exchange-node-binding@1.1.0':
+    optionalDependencies:
+      '@univerjs-pro/exchange-node-binding-darwin-arm64': 1.1.0
+      '@univerjs-pro/exchange-node-binding-darwin-x64': 1.1.0
+      '@univerjs-pro/exchange-node-binding-linux-arm64-gnu': 1.1.0
+      '@univerjs-pro/exchange-node-binding-linux-arm64-musl': 1.1.0
+      '@univerjs-pro/exchange-node-binding-linux-x64-gnu': 1.1.0
+      '@univerjs-pro/exchange-node-binding-linux-x64-musl': 1.1.0
+      '@univerjs-pro/exchange-node-binding-win32-x64-msvc': 1.1.0
+
+  '@univerjs-pro/exchange-node@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/boards': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/collaboration': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/exchange-node-binding': 1.1.0
+      '@univerjs-pro/pdfs': 1.4.0
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+    transitivePeerDependencies:
+      - '@univerjs-pro/embed'
+      - react
+      - rxjs
+
+  '@univerjs-pro/ink@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+    transitivePeerDependencies:
+      - react
+      - rxjs
+
+  '@univerjs-pro/license@1.4.0(rxjs@7.8.2)':
     dependencies:
       '@noble/ed25519': 3.1.0
       '@noble/hashes': 2.2.0
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/pdfs@1.3.1':
+  '@univerjs-pro/pdfs@1.4.0':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/pivot-cache@1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.3.1(rxjs@7.8.2))':
+  '@univerjs-pro/pivot-cache@1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.4.0(rxjs@7.8.2))':
     dependencies:
-      '@univerjs-pro/embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/pivot-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/pivot-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/shape-editor@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/shape-editor@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/sheets-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/sheets-outline@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-outline@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/sheets-pivot-chart@1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-pivot-chart@1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/pivot-cache': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.3.1(rxjs@7.8.2))
-      '@univerjs-pro/pivot-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-pivot': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
-      rxjs: 7.8.2
-    transitivePeerDependencies:
-      - '@univerjs-pro/embed'
-      - react
-
-  '@univerjs-pro/sheets-pivot@1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)':
-    dependencies:
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/pivot-cache': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.3.1(rxjs@7.8.2))
-      '@univerjs-pro/slicer': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-filter': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/pivot-cache': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.4.0(rxjs@7.8.2))
+      '@univerjs-pro/pivot-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - '@univerjs-pro/embed'
       - react
 
-  '@univerjs-pro/sheets-shape@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-pivot@1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
-    transitivePeerDependencies:
-      - react
-      - rxjs
-
-  '@univerjs-pro/sheets-slicer@1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)':
-    dependencies:
-      '@univerjs-pro/engine-pivot': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/sheets-pivot': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/sheets-pivot-chart': 1.3.1(@univerjs-pro/embed@1.3.1(rxjs@7.8.2))(rxjs@7.8.2)
-      '@univerjs-pro/slicer': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-conditional-formatting': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets-table': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/pivot-cache': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(@univerjs-pro/engine-pivot@1.4.0(rxjs@7.8.2))
+      '@univerjs-pro/slicer': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-filter': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - '@univerjs-pro/embed'
       - react
 
-  '@univerjs-pro/sheets-sparkline@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-shape@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      rxjs: 7.8.2
-    transitivePeerDependencies:
-      - react
-
-  '@univerjs-pro/slicer@1.3.1(rxjs@7.8.2)':
-    dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/slides-chart@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/sheets-slicer@1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/chart-embed': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-chart': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/engine-pivot': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/sheets-pivot-chart': 1.4.0(@univerjs-pro/embed@1.4.0(rxjs@7.8.2))(rxjs@7.8.2)
+      '@univerjs-pro/slicer': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-conditional-formatting': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets-table': 1.4.0(rxjs@7.8.2)
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - '@univerjs-pro/embed'
+      - react
+
+  '@univerjs-pro/sheets-sparkline@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/slides-table@1.3.1':
+  '@univerjs-pro/slicer@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      rxjs: 7.8.2
-    transitivePeerDependencies:
-      - react
-
-  '@univerjs-pro/slides-thread-comment@1.3.1(rxjs@7.8.2)':
-    dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/slides': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs-pro/slides@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/slides-chart@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs-pro/engine-shape': 1.3.1(rxjs@7.8.2)
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
+      '@univerjs-pro/chart-embed': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-chart': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs-pro/thread-comment-resource@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/slides-table@1.4.0':
     dependencies:
-      '@univerjs-pro/license': 1.3.1(rxjs@7.8.2)
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - react
+
+  '@univerjs-pro/slides-thread-comment@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/slides': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/core@1.3.1(rxjs@7.8.2)':
+  '@univerjs-pro/slides@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/themes': 1.3.1
+      '@univerjs-pro/engine-shape': 1.4.0(rxjs@7.8.2)
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - react
+
+  '@univerjs-pro/thread-comment-resource@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs-pro/license': 1.4.0(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
+    transitivePeerDependencies:
+      - react
+      - rxjs
+
+  '@univerjs/core@1.4.0(rxjs@7.8.2)':
+    dependencies:
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/themes': 1.4.0
       '@wendellhu/redi': 1.1.3
       async-lock: 1.4.1
       fast-diff: 1.3.0
@@ -2557,190 +2747,191 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@univerjs/data-validation@1.3.1(rxjs@7.8.2)':
+  '@univerjs/data-validation@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/docs-drawing@1.3.1(rxjs@7.8.2)':
+  '@univerjs/docs-drawing@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/docs-hyper-link@1.3.1(rxjs@7.8.2)':
+  '@univerjs/docs-hyper-link@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/docs-thread-comment@1.3.1(rxjs@7.8.2)':
+  '@univerjs/docs-thread-comment@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/docs@1.3.1(rxjs@7.8.2)':
+  '@univerjs/docs@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/drawing@1.3.1(rxjs@7.8.2)':
+  '@univerjs/drawing@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@noble/hashes': 1.8.0
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/engine-formula@1.3.1(rxjs@7.8.2)':
+  '@univerjs/engine-formula@1.4.0(rxjs@7.8.2)':
     dependencies:
       '@flatten-js/interval-tree': 1.1.3
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
       decimal.js: 10.6.0
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/engine-render@1.3.1(rxjs@7.8.2)':
+  '@univerjs/engine-render@1.4.0(rxjs@7.8.2)':
     dependencies:
       '@floating-ui/dom': 1.8.0
       '@floating-ui/utils': 0.2.12
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       franc-min: 6.2.0
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/protocol@1.3.1':
+  '@univerjs/protocol@1.4.0':
     dependencies:
       '@grpc/grpc-js': 1.14.7
 
-  '@univerjs/rpc@1.3.1(rxjs@7.8.2)':
+  '@univerjs/rpc@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-conditional-formatting@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-conditional-formatting@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-drawing@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-drawing@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/drawing': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/drawing': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/sheets-filter@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-filter@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-formula@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-formula@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-hyper-link@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-hyper-link@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/docs': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/docs': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-note@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-note@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-sort@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-sort@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
     transitivePeerDependencies:
       - react
       - rxjs
 
-  '@univerjs/sheets-table@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-table@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets-thread-comment@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets-thread-comment@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/sheets': 1.3.1(rxjs@7.8.2)
-      '@univerjs/thread-comment': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/sheets': 1.4.0(rxjs@7.8.2)
+      '@univerjs/thread-comment': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/sheets@1.3.1(rxjs@7.8.2)':
+  '@univerjs/sheets@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-formula': 1.3.1(rxjs@7.8.2)
-      '@univerjs/engine-render': 1.3.1(rxjs@7.8.2)
-      '@univerjs/protocol': 1.3.1
-      '@univerjs/rpc': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-formula': 1.4.0(rxjs@7.8.2)
+      '@univerjs/engine-render': 1.4.0(rxjs@7.8.2)
+      '@univerjs/protocol': 1.4.0
+      '@univerjs/rpc': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react
 
-  '@univerjs/themes@1.3.1': {}
+  '@univerjs/themes@1.4.0': {}
 
-  '@univerjs/thread-comment@1.3.1(rxjs@7.8.2)':
+  '@univerjs/thread-comment@1.4.0(rxjs@7.8.2)':
     dependencies:
-      '@univerjs/core': 1.3.1(rxjs@7.8.2)
+      '@univerjs/core': 1.4.0(rxjs@7.8.2)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - react

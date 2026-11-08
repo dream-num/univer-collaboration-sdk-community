@@ -28,7 +28,7 @@ export interface FileRecord {
   readonly createdAt: number;
 }
 
-// ---- HTTP layer (built-in ownership check and middleware) ----
+// ---- Checked operations (built-in ownership check and middleware) ----
 
 /** @public */
 export interface UploadInput {
@@ -69,7 +69,7 @@ export interface DownloadInput {
 /** @public */
 export interface DownloadRequest extends DownloadInput {}
 
-// ---- Trusted layer (for trusted server code such as Exchange and the application; no checks, no middleware) ----
+// ---- Direct operations (for server code such as Exchange and the application; no checks, no middleware) ----
 
 /** @public */
 export interface CreateFileInput {

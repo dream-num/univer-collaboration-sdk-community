@@ -13,7 +13,9 @@ const SCHEMA_COMPONENT = "file";
 const SCHEMA_VERSION = 1;
 // Nodes that start together serialize schema creation on one transaction-level advisory lock; the
 // value has no meaning beyond being fixed for this database.
-const SCHEMA_LOCK_KEY = 0x756e_6669;
+// Every collaboration adapter that initializes the shared `collaboration` schema takes this lock, so nodes
+// and components starting together create the schema and the version table once.
+const SCHEMA_LOCK_KEY = 0x636f_6c6c;
 
 interface FileRow {
   readonly file_id: string;
@@ -36,7 +38,7 @@ export interface PostgresFileDatabaseAdapterOptions {
  * Postgres metadata adapter for single-node and multi-node deployments. One record per `fileID`,
  * so `delete` always releases the record's own `blobKey`. Create it with
  * `PostgresFileDatabaseAdapter.create()`, which creates the schema on first use and records it in
- * `collaboration_schema_versions` under the `file` component.
+ * `collaboration.schema_versions` under the `file` component.
  * @public
  */
 export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
@@ -53,7 +55,7 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
   async create(record: FileRecord, _context: FileDatabaseContext): Promise<void> {
     try {
       await this._pool.query(
-        `INSERT INTO collaboration_files
+        `INSERT INTO collaboration.files
          (file_id, name, size, content_type, source, assign, blob_key, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
         [
@@ -84,7 +86,7 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
   // One DELETE ... RETURNING removes and returns the record atomically; one-to-one storage releases its own blobKey.
   async delete(fileID: string, _context: FileDatabaseContext): Promise<DeleteFileDatabaseResult | null> {
     const result = await this._pool.query<FileRow>(
-      `DELETE FROM collaboration_files WHERE file_id = $1 RETURNING ${COLUMNS}`,
+      `DELETE FROM collaboration.files WHERE file_id = $1 RETURNING ${COLUMNS}`,
       [fileID]
     );
     const row = result.rows[0];
@@ -141,13 +143,14 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
 
   private async _ensureSchema(client: PoolClient): Promise<void> {
     await client.query(`
-      CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
+      CREATE SCHEMA IF NOT EXISTS collaboration;
+      CREATE TABLE IF NOT EXISTS collaboration.schema_versions (
         component TEXT PRIMARY KEY,
         version INTEGER NOT NULL CHECK (version >= 1)
       )
     `);
     const { rows } = await client.query<{ version: number }>(
-      "SELECT version FROM collaboration_schema_versions WHERE component = $1",
+      "SELECT version FROM collaboration.schema_versions WHERE component = $1",
       [SCHEMA_COMPONENT],
     );
     const version = rows[0]?.version;
@@ -158,7 +161,7 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
 
     // file_id uses the "C" collation so keyset cursors compare by byte value regardless of the database locale.
     await client.query(`
-      CREATE TABLE collaboration_files (
+      CREATE TABLE collaboration.files (
         file_id TEXT COLLATE "C" PRIMARY KEY,
         name TEXT NOT NULL,
         size BIGINT NOT NULL,
@@ -170,12 +173,15 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
       )
     `);
     await client.query(
-      "CREATE INDEX collaboration_files_source_created ON collaboration_files(source, created_at, file_id)"
+      "CREATE INDEX files_source_created ON collaboration.files(source, created_at, file_id)"
     );
     await client.query(
-      "CREATE INDEX collaboration_files_source_assign_created ON collaboration_files(source, assign, created_at, file_id)"
+      "CREATE INDEX files_source_assign_created ON collaboration.files(source, assign, created_at, file_id)"
     );
-    await client.query("INSERT INTO collaboration_schema_versions (component, version) VALUES ($1, $2)", [
+    // No query uses this index yet: it is in version 1 so content sharing needs no schema migration.
+    // It stays non-unique because shared content means several rows with one blob_key.
+    await client.query("CREATE INDEX files_blob_key ON collaboration.files(blob_key)");
+    await client.query("INSERT INTO collaboration.schema_versions (component, version) VALUES ($1, $2)", [
       SCHEMA_COMPONENT,
       SCHEMA_VERSION,
     ]);
@@ -183,7 +189,7 @@ export class PostgresFileDatabaseAdapter implements IFileDatabaseAdapter {
 }
 
 const COLUMNS = "file_id, name, size, content_type, source, assign, blob_key, created_at";
-const SELECT_COLUMNS = `SELECT ${COLUMNS} FROM collaboration_files`;
+const SELECT_COLUMNS = `SELECT ${COLUMNS} FROM collaboration.files`;
 
 // BIGINT columns arrive as strings from node-postgres.
 function rowToRecord(row: FileRow): FileRecord {

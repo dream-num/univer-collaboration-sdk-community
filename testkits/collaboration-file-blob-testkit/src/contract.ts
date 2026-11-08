@@ -84,10 +84,10 @@ export function fileBlobStoreContract(name: string, createHarness: FileBlobStore
 
     it("writes a multi-chunk stream and reports the bytes actually written", async () => {
       const { store } = await create();
-      const put = await store.put({ fileID: "file-a", contentType: "text/plain", content: chunks("he", "llo", " 世界") }, context);
+      const put = await store.put({ fileID: "file-a", contentType: "text/plain", content: chunks("he", "llo", " wörld 🌍") }, context);
       expect(put.blobKey).not.toBe("");
-      expect(put.size).toBe(encoder.encode("hello 世界").byteLength);
-      expect(await readAll(await store.open(put.blobKey, context))).toBe("hello 世界");
+      expect(put.size).toBe(encoder.encode("hello wörld 🌍").byteLength);
+      expect(await readAll(await store.open(put.blobKey, context))).toBe("hello wörld 🌍");
     });
 
     it("accepts empty content", async () => {

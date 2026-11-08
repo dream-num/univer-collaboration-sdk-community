@@ -1,6 +1,7 @@
 {
   "name": "@univerjs-pro/collaboration-file-blob-testkit",
   "version": "0.0.0",
+  "private": true,
   "description": "Contract tests for Univer Collaboration IFileBlobStore implementations",
   "license": "Apache-2.0",
   "repository": {
@@ -15,20 +16,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "publishConfig": {
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    }
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
     "coverage": "vitest run --coverage --passWithNoTests"

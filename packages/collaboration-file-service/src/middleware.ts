@@ -32,7 +32,7 @@ export type FileMiddleware<TContext> = (
 ) => void | Promise<void>;
 
 /**
- * Lifecycle stages of the HTTP-facing Service methods. Trusted-layer methods never run middleware.
+ * Lifecycle stages of the checked Service operations. Direct operations never run middleware.
  * @public
  */
 export type FileMiddlewareAction = "upload" | "signUrl" | "download";

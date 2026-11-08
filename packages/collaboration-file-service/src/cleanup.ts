@@ -1,9 +1,10 @@
+import { FileSource } from "@univerjs/protocol";
 import type { FileCallContext } from "./common.js";
 import type { CleanupInput, CleanupResult } from "./types.js";
 
 /**
- * Enables the built-in cleanup timer. Omit the whole option to run `cleanupExpiredFiles` from the
- * application's own scheduler instead.
+ * Tunes the built-in cleanup timer, which runs by default. Pass `cleanup: false` to the Service to
+ * run `cleanupExpiredFiles` from the application's own scheduler instead.
  * @public
  */
 export interface FileCleanupOptions extends CleanupInput {
@@ -12,9 +13,18 @@ export interface FileCleanupOptions extends CleanupInput {
    * so nodes started together by a rolling deploy stay desynchronized; later rounds are evenly spaced.
    */
   readonly intervalMs?: number;
-  /** Identity the timer uses for adapter calls; the Service has no built-in system user. */
-  readonly context: FileCallContext;
+  /**
+   * Identity the timer uses for adapter calls; defaults to `{ userID: FILE_CLEANUP_USER_ID }`. Set it
+   * when adapters or audit logs need to attribute cleanup to a specific identity.
+   */
+  readonly context?: FileCallContext;
 }
+
+/**
+ * The `userID` the built-in cleanup timer uses when `cleanup.context` is not set.
+ * @public
+ */
+export const FILE_CLEANUP_USER_ID = "system:file-cleanup";
 
 // Defaults match the Univer server.
 export const CLEANUP_DEFAULTS = Object.freeze({
@@ -25,8 +35,8 @@ export const CLEANUP_DEFAULTS = Object.freeze({
   batchGapMs: 1000,
 });
 
-// Only temporary sources are cleaned: HttpImport = 1, HttpExport = 2.
-export const CLEANUP_SOURCES: readonly number[] = Object.freeze([1, 2]);
+// Only temporary sources are cleaned.
+export const CLEANUP_SOURCES: readonly number[] = Object.freeze([FileSource.HttpImport, FileSource.HttpExport]);
 
 type CleanupRunner = (context: FileCallContext, input: CleanupInput) => Promise<CleanupResult>;
 
@@ -50,8 +60,8 @@ export class FileCleanupScheduler {
     this._started = true;
     const interval = this._options.intervalMs ?? CLEANUP_DEFAULTS.intervalMs;
     if (!Number.isSafeInteger(interval) || interval <= 0) throw new TypeError("cleanup.intervalMs must be a positive integer");
-    if (typeof this._options.context?.userID !== "string" || this._options.context.userID.length === 0) {
-      throw new TypeError("cleanup.context.userID is required");
+    if (this._options.context !== undefined && (typeof this._options.context.userID !== "string" || this._options.context.userID.length === 0)) {
+      throw new TypeError("cleanup.context.userID must be a non-empty string");
     }
     const initialDelay = interval + Math.floor(Math.random() * interval);
     this._initialTimer = setTimeout(() => {
@@ -74,7 +84,7 @@ export class FileCleanupScheduler {
 
   private _tick(): void {
     if (this._inFlight) return;
-    const { context, intervalMs: _ignored, ...input } = this._options;
+    const { context = { userID: FILE_CLEANUP_USER_ID }, intervalMs: _ignored, ...input } = this._options;
     this._inFlight = this._run(context, input)
       .catch((error) => this._onError(error))
       .finally(() => {

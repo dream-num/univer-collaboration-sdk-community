@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-database-postgres",
-  "version": "0.0.0",
+  "version": "1.4.0",
   "description": "PostgreSQL IFileDatabaseAdapter for Univer Collaboration built on node-postgres",
   "license": "Apache-2.0",
   "repository": {
@@ -15,19 +15,6 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "publishConfig": {
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "README.zh-CN.md"
-  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -39,9 +26,10 @@
     "pg": "^8.11.0"
   },
   "devDependencies": {
-    "@univerjs-pro/collaboration-file-service": "workspace:*",
     "@types/pg": "^8.15.0",
+    "@univerjs-pro/collaboration-database-postgres": "workspace:*",
     "@univerjs-pro/collaboration-file-database-testkit": "workspace:*",
+    "@univerjs-pro/collaboration-file-service": "workspace:*",
     "pg": "^8.16.0"
   }
 }

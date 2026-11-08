@@ -28,8 +28,9 @@ await pool.end();
 
 ## 存储契约
 
-- 文件元数据保存在 pool `search_path` 下的 `collaboration_files`，每个 `fileID` 一行；删除一行时总会释放它的 `blobKey`。
-- schema 版本 `('file', 1)` 记录在共享的 `collaboration_schema_versions`。多个节点同时启动时只初始化一次：
+- 文件元数据保存在 `collaboration.files`，每个 `fileID` 一行；删除一行时总会释放它的 `blobKey`。`collaboration` schema
+  与其他协同适配器共用，不依赖 pool 的 `search_path`，角色只需要 database 上的 `CREATE` 权限。
+- schema 版本 `('file', 1)` 记录在共享的 `collaboration.schema_versions`。多个节点或组件同时启动时只初始化一次：
   建表在事务中、持有 advisory lock 时执行。
 - 空 schema 会自动初始化；版本不为 1 的 file schema 会被拒绝。
 - `file_id` 使用 `"C"` collation，因此按 `(created_at, file_id)` 的 keyset 分页不受数据库 locale 影响。

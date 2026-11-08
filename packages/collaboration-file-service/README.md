@@ -18,11 +18,7 @@ pnpm add \
 ```ts
 const database = new SQLiteFileDatabaseAdapter({ filename: './data/collaboration.sqlite' });
 const blobStore = new LocalFileBlobStore({ directory: './data/files' });
-const fileService = new UniverFileService({
-  database,
-  blobStore,
-  cleanup: { context: { userID: 'system:file-cleanup' } },
-});
+const fileService = new UniverFileService({ database, blobStore });
 
 fileService.use('upload', async (ctx, next) => {
   if (ctx.request.source === FileSource.UnitEmbedded) {
@@ -54,7 +50,7 @@ Metadata and content are separate contracts, so each can follow the storage the 
 
 Every method takes a caller context `{ userID, customData? }`. `userID` is required. `customData` is shared by every middleware and adapter call of one Service call; the Service creates an empty object when it is omitted.
 
-**HTTP layer.** `@univerjs-pro/collaboration-file-endpoint` calls these. They apply the built-in ownership rules and run middleware.
+**Checked operations.** `@univerjs-pro/collaboration-file-endpoint` calls these on behalf of end users. They apply the built-in ownership rules and run middleware.
 
 | Method | Result |
 | --- | --- |
@@ -62,7 +58,7 @@ Every method takes a caller context `{ userID, customData? }`. `userID` is requi
 | `signUrl({ fileID }, ctx)` | `{ record, direct? }`; `direct` is present when the blob store signed a direct link |
 | `openDownload({ fileID }, ctx)` | `{ record, content }` |
 
-**Trusted layer.** These are for trusted server code such as an import/export service or the application itself. They skip the ownership rules and middleware; `source` and `assign` are the caller's responsibility. Never expose them to HTTP clients.
+**Direct operations.** These read and write files directly, for server code such as an import/export service or the application itself. They skip the ownership rules and middleware; `source` and `assign` are the caller's responsibility. Never expose them to HTTP clients.
 
 | Method | Result |
 | --- | --- |
@@ -71,7 +67,7 @@ Every method takes a caller context `{ userID, customData? }`. `userID` is requi
 | `openFile(fileID, ctx)` | `{ record, content }` |
 | `deleteFile(fileID, ctx)` | `true` when a record was deleted |
 | `listFiles({ source, assign?, createdBefore?, limit, cursor? }, ctx)` | `{ records, nextCursor }`, ordered by `(createdAt, fileID)`; `nextCursor` is `null` on the last page |
-| `cleanupExpiredFiles(ctx, options?)` | `{ scanned, deleted, failed }` |
+| `cleanupExpiredFiles(options, ctx)` | `{ scanned, deleted, failed }` |
 
 Content is an `AsyncIterable<Uint8Array>` in both directions. Each upload gets a new `fileID` (`randomUUID()`); content is never overwritten. `FileRecord.size` is the number of bytes actually written.
 
@@ -87,7 +83,7 @@ The built-in check runs before middleware, so middleware can only narrow access.
 
 ## Middleware
 
-`use(action, middleware)` returns a `Disposable`. Middleware calls `next()` to continue or throws `FileError('PERMISSION_DENIED')` to reject. `ctx.request` and `ctx.record` are read-only. Trusted-layer methods never run middleware.
+`use(action, middleware)` returns a `Disposable`. Middleware calls `next()` to continue or throws `FileError('PERMISSION_DENIED')` to reject. `ctx.request` and `ctx.record` are read-only. Direct operations never run middleware.
 
 | Action | Runs | Visible fields | Typical use |
 | --- | --- | --- | --- |
@@ -99,11 +95,11 @@ Each action runs once per call and is never retried. Proxy download URLs are not
 
 ## Expired file cleanup
 
-`cleanupExpiredFiles` deletes `HttpImport` and `HttpExport` files older than the retention period, page by page. Passing `cleanup` to the constructor starts a built-in timer; omit it to call the method from your own scheduler.
+`cleanupExpiredFiles` deletes `HttpImport` and `HttpExport` files older than the retention period, page by page. The Service runs it on a built-in timer by default; pass `cleanup` options to tune the timer, or `cleanup: false` to call the method from your own scheduler, for example once per tenant.
 
 | Option | Default |
 | --- | --- |
-| `context` | required with `cleanup`; the identity used for adapter calls |
+| `context` | `{ userID: FILE_CLEANUP_USER_ID }`, the identity adapters see for cleanup calls |
 | `intervalMs` | 60 minutes; the first run starts after a random delay in `[intervalMs, 2 × intervalMs)` |
 | `retentionMs` | 2 hours |
 | `batchSize` | 100 |
