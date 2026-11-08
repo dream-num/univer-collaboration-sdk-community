@@ -159,8 +159,10 @@ export class SQLiteFileDatabaseAdapter implements IFileDatabaseAdapter {
     return row?.version;
   }
 
-  // The two indexes serve cleanup (by source) and listing a Unit's files (by source and assign);
-  // both end with (created_at, file_id) for keyset paging.
+  // The two source indexes serve cleanup (by source) and listing a Unit's files (by source and assign);
+  // both end with (created_at, file_id) for keyset paging. No query uses the blob_key index yet: it is in
+  // version 1 so content sharing needs no schema migration, and it stays non-unique because shared
+  // content means several rows with one blob_key.
   private _createSchema(): void {
     this._database.exec(`
       CREATE TABLE collaboration_files (
@@ -177,6 +179,8 @@ export class SQLiteFileDatabaseAdapter implements IFileDatabaseAdapter {
         ON collaboration_files(source, created_at, file_id);
       CREATE INDEX collaboration_files_source_assign_created
         ON collaboration_files(source, assign, created_at, file_id);
+      CREATE INDEX collaboration_files_blob_key
+        ON collaboration_files(blob_key);
       INSERT INTO collaboration_schema_versions (component, version)
       VALUES ('${SCHEMA_COMPONENT}', ${SCHEMA_VERSION});
     `);

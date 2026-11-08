@@ -56,6 +56,19 @@ describe("SQLiteFileDatabaseAdapter", () => {
     }
   });
 
+  it("indexes blob_key without requiring it to be unique", async () => {
+    const adapter = new SQLiteFileDatabaseAdapter({ filename });
+    await adapter.create({ ...record, fileID: "a", blobKey: "shared" }, context);
+    await adapter.create({ ...record, fileID: "b", blobKey: "shared" }, context);
+    await adapter.dispose();
+    const inspect = new Database(filename);
+    try {
+      expect(inspect.prepare("SELECT name FROM sqlite_master WHERE type = 'index' AND name = 'collaboration_files_blob_key'").all()).toHaveLength(1);
+    } finally {
+      inspect.close();
+    }
+  });
+
   it("rejects a different file schema version", async () => {
     await new SQLiteFileDatabaseAdapter({ filename }).dispose();
     const database = new Database(filename);

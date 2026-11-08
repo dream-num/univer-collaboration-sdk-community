@@ -1,12 +1,14 @@
 # @univerjs-pro/collaboration-file-blob-testkit
 
+English | [简体中文](./README.zh-CN.md)
+
 Contract tests for `IFileBlobStore` implementations of the Univer Collaboration SDK. Every store in
 [univer-collaboration-sdk-community](https://github.com/dream-num/univer-collaboration-sdk-community)
 passes this suite, and a store for your own object storage should too.
 
-```bash
-pnpm add -D @univerjs-pro/collaboration-file-blob-testkit vitest
-```
+The testkit is not published to npm. It lives in this repository as a private workspace package:
+depend on it with `workspace:*` from a package in this workspace, or copy its `src/` directory into
+your project. It runs on Vitest.
 
 ```ts
 import { fileBlobStoreContract } from '@univerjs-pro/collaboration-file-blob-testkit';

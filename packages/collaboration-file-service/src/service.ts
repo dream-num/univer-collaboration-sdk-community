@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { FileSource } from "@univerjs/protocol";
 import type { Disposable, FileCallContext, FileContext, FileCustomData } from "./common.js";
 import { FileCleanupScheduler, CLEANUP_DEFAULTS, CLEANUP_SOURCES, type FileCleanupOptions } from "./cleanup.js";
 import type { IFileBlobStore } from "./blob-store.js";
@@ -34,8 +35,11 @@ import type {
 export interface UniverFileServiceOptions {
   readonly database: IFileDatabaseAdapter;
   readonly blobStore: IFileBlobStore;
-  /** Present → the built-in cleanup timer starts; absent → the application schedules cleanup. */
-  readonly cleanup?: FileCleanupOptions;
+  /**
+   * The built-in cleanup timer runs by default. Pass options to tune it, or `false` to run
+   * `cleanupExpiredFiles` from the application's own scheduler.
+   */
+  readonly cleanup?: FileCleanupOptions | false;
   /** Receives cleanup failures and content-delete failures that leave orphan objects. */
   readonly logger?: FileServiceLogger;
 }
@@ -50,33 +54,28 @@ export interface FileServiceLogger {
 }
 
 /**
- * The File Service contract. HTTP-facing methods run the built-in ownership check and middleware;
- * trusted-layer methods are for trusted server code (Exchange, the application) and run neither.
+ * The File Service contract. Checked operations run the built-in ownership check and middleware;
+ * direct operations read and write files for server code (Exchange, the application) and run neither.
  * @public
  */
 export interface IUniverFileService {
   use<K extends FileMiddlewareAction>(action: K, middleware: FileMiddlewareMap[K]): Disposable;
 
-  // HTTP layer
+  // Checked operations
   upload(input: UploadInput, context: FileCallContext): Promise<FileRecord>;
   signUrl(input: SignUrlInput, context: FileCallContext): Promise<SignUrlResult>;
   openDownload(input: DownloadInput, context: FileCallContext): Promise<OpenDownloadResult>;
 
-  // Trusted layer
+  // Direct operations
   createFile(input: CreateFileInput, context: FileCallContext): Promise<FileRecord>;
   getFile(fileID: string, context: FileCallContext): Promise<FileRecord | null>;
   openFile(fileID: string, context: FileCallContext): Promise<OpenFileResult>;
   deleteFile(fileID: string, context: FileCallContext): Promise<boolean>;
   listFiles(input: ListFilesInput, context: FileCallContext): Promise<ListFilesResult>;
-  cleanupExpiredFiles(context: FileCallContext, input?: CleanupInput): Promise<CleanupResult>;
+  cleanupExpiredFiles(input: CleanupInput, context: FileCallContext): Promise<CleanupResult>;
 
   dispose(): Promise<void>;
 }
-
-// Source values the built-in ownership rules apply to.
-const SOURCE_HTTP_IMPORT = 1;
-const SOURCE_HTTP_EXPORT = 2;
-const SOURCE_UNIT_EMBEDDED = 3;
 
 /**
  * Orchestrates metadata and content: write order, delete order, built-in ownership rules,
@@ -102,10 +101,10 @@ export class UniverFileService implements IUniverFileService {
     this._database = options.database;
     this._blobStore = options.blobStore;
     this._logger = options.logger ?? console;
-    if (options.cleanup) {
+    if (options.cleanup !== false) {
       this._cleanupScheduler = new FileCleanupScheduler(
-        options.cleanup,
-        (context, input) => this.cleanupExpiredFiles(context, input),
+        options.cleanup ?? {},
+        (context, input) => this.cleanupExpiredFiles(input, context),
         (error) => this._logger.error("File cleanup round failed", { error })
       );
       this._cleanupScheduler.start();
@@ -117,15 +116,15 @@ export class UniverFileService implements IUniverFileService {
     return this._middleware.use(action, middleware);
   }
 
-  // ---------------------------------------------------------------- HTTP layer
+  // ---------------------------------------------------------- Checked operations
 
   upload(input: UploadInput, context: FileCallContext): Promise<FileRecord> {
     return this._call(async () => {
       const source = normalizeSource(input.source);
       // HttpImport / HttpExport force assign to the uploader; UnitEmbedded requires a unitID.
       const assign =
-        source === SOURCE_HTTP_IMPORT || source === SOURCE_HTTP_EXPORT ? context.userID : input.assign;
-      if (source === SOURCE_UNIT_EMBEDDED && !assign) {
+        source === FileSource.HttpImport || source === FileSource.HttpExport ? context.userID : input.assign;
+      if (source === FileSource.UnitEmbedded && !assign) {
         throw invalidRequest("UnitEmbedded upload requires assign (unitID)");
       }
       const request: UploadRequest = Object.freeze({
@@ -180,7 +179,7 @@ export class UniverFileService implements IUniverFileService {
     });
   }
 
-  // ---------------------------------------------------------------- Trusted layer
+  // ----------------------------------------------------------- Direct operations
 
   createFile(input: CreateFileInput, context: FileCallContext): Promise<FileRecord> {
     return this._call(() => {
@@ -229,7 +228,7 @@ export class UniverFileService implements IUniverFileService {
     });
   }
 
-  cleanupExpiredFiles(context: FileCallContext, input: CleanupInput = {}): Promise<CleanupResult> {
+  cleanupExpiredFiles(input: CleanupInput, context: FileCallContext): Promise<CleanupResult> {
     return this._call(async () => {
       const request: CleanupRequest = Object.freeze({
         sources: CLEANUP_SOURCES,
@@ -318,7 +317,7 @@ export class UniverFileService implements IUniverFileService {
     const record = await this._storage("get", () => this._database.get(fileID, ctx));
     if (!record) throw fileNotFound(fileID);
     if (
-      (record.source === SOURCE_HTTP_IMPORT || record.source === SOURCE_HTTP_EXPORT) &&
+      (record.source === FileSource.HttpImport || record.source === FileSource.HttpExport) &&
       record.assign !== ctx.userID
     ) {
       throw permissionDenied("File belongs to another user");

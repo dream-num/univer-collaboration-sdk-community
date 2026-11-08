@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  FILE_CLEANUP_USER_ID,
   FileError,
   UniverFileService,
   type DeleteFileDatabaseResult,
@@ -136,7 +137,8 @@ const logger = { warn: vi.fn(), error: vi.fn() };
 function setup(options: { signing?: boolean } = {}) {
   const database = new FakeDatabase();
   const blobStore = new FakeBlobStore(options);
-  const service = new UniverFileService({ database, blobStore, logger });
+  // Most tests exercise the methods directly; the timer has its own tests below.
+  const service = new UniverFileService({ database, blobStore, logger, cleanup: false });
   return { database, blobStore, service };
 }
 
@@ -169,7 +171,7 @@ describe("UniverFileService construction", () => {
     expect(() => new UniverFileService({ database } as never)).toThrow(TypeError);
   });
 
-  it("requires a cleanup identity when the timer is enabled", () => {
+  it("rejects an explicit cleanup identity without a userID", () => {
     expect(
       () =>
         new UniverFileService({
@@ -377,7 +379,7 @@ describe("cleanupExpiredFiles", () => {
       ["embedded-old", 3, old],
       ["undefined-old", 0, old],
     ]);
-    const result = await service.cleanupExpiredFiles({ userID: "cleanup" }, { batchGapMs: 0 });
+    const result = await service.cleanupExpiredFiles({ batchGapMs: 0 }, { userID: "cleanup" });
     expect(result).toEqual({ scanned: 2, deleted: 2, failed: 0 });
     expect([...database.records.keys()].sort()).toEqual(["embedded-old", "import-new", "undefined-old"]);
   });
@@ -391,7 +393,7 @@ describe("cleanupExpiredFiles", () => {
       Array.from({ length: 6 }, (_, index) => [`f${index}`, 1, old + index] as [string, number, number])
     );
     database.failDelete.add("f0");
-    const result = await service.cleanupExpiredFiles(alice, { batchSize: 2, maxPerRun: 5, batchGapMs: 0 });
+    const result = await service.cleanupExpiredFiles({ batchSize: 2, maxPerRun: 5, batchGapMs: 0 }, alice);
     expect(result).toEqual({ scanned: 5, deleted: 4, failed: 1 });
     expect([...database.records.keys()].sort()).toEqual(["f0", "f5"]);
   });
@@ -401,7 +403,7 @@ describe("cleanupExpiredFiles", () => {
     await seed(service, database, [["old", 1, 1]]);
     database.contexts.length = 0;
     blobStore.contexts.length = 0;
-    await service.cleanupExpiredFiles({ userID: "ops" }, { batchGapMs: 0 });
+    await service.cleanupExpiredFiles({ batchGapMs: 0 }, { userID: "ops" });
     const contexts = [...database.contexts, ...blobStore.contexts];
     expect(contexts.length).toBeGreaterThan(0);
     for (const context of contexts) {
@@ -413,14 +415,14 @@ describe("cleanupExpiredFiles", () => {
   it("skips a run while another one is in progress in the same process", async () => {
     const { database, service } = setup();
     await seed(service, database, [["old", 1, 1]]);
-    const first = service.cleanupExpiredFiles(alice, { batchGapMs: 0 });
-    expect(await service.cleanupExpiredFiles(alice)).toEqual({ scanned: 0, deleted: 0, failed: 0 });
+    const first = service.cleanupExpiredFiles({ batchGapMs: 0 }, alice);
+    expect(await service.cleanupExpiredFiles({}, alice)).toEqual({ scanned: 0, deleted: 0, failed: 0 });
     expect((await first).deleted).toBe(1);
   });
 
   it("validates per-run options", async () => {
     const { service } = setup();
-    expect((await rejection(service.cleanupExpiredFiles(alice, { batchSize: 0 }))).code).toBe("INVALID_REQUEST");
+    expect((await rejection(service.cleanupExpiredFiles({ batchSize: 0 }, alice))).code).toBe("INVALID_REQUEST");
   });
 
   it("runs from the built-in timer after a randomized first delay", async () => {
@@ -442,6 +444,34 @@ describe("cleanupExpiredFiles", () => {
     await vi.advanceTimersByTimeAsync(1000);
     expect(listSpy.mock.calls.length).toBeGreaterThan(calls);
     expect(listSpy.mock.calls[0]![1].userID).toBe("timer");
+    await service.dispose();
+    vi.restoreAllMocks();
+  });
+
+  it("runs by default with the built-in identity", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const database = new FakeDatabase();
+    const listSpy = vi.spyOn(database, "list");
+    const service = new UniverFileService({ database, blobStore: new FakeBlobStore(), logger });
+    await vi.advanceTimersByTimeAsync(60 * 60 * 1000 - 1);
+    expect(listSpy).not.toHaveBeenCalled();
+    // Let the default batch gaps elapse too, so the round finishes before dispose waits for it.
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(listSpy).toHaveBeenCalled();
+    expect(listSpy.mock.calls[0]![1].userID).toBe(FILE_CLEANUP_USER_ID);
+    expect(listSpy.mock.calls[0]![1].customData).toEqual({});
+    await service.dispose();
+    vi.restoreAllMocks();
+  });
+
+  it("does not start the timer with cleanup: false", async () => {
+    vi.useFakeTimers();
+    const database = new FakeDatabase();
+    const listSpy = vi.spyOn(database, "list");
+    const service = new UniverFileService({ database, blobStore: new FakeBlobStore(), logger, cleanup: false });
+    await vi.advanceTimersByTimeAsync(3 * 60 * 60 * 1000);
+    expect(listSpy).not.toHaveBeenCalled();
     await service.dispose();
     vi.restoreAllMocks();
   });

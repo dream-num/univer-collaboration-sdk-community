@@ -21,11 +21,7 @@ pnpm add \
 ```ts
 const database = new SQLiteFileDatabaseAdapter({ filename: './data/collaboration.sqlite' });
 const blobStore = new LocalFileBlobStore({ directory: './data/files' });
-const fileService = new UniverFileService({
-  database,
-  blobStore,
-  cleanup: { context: { userID: 'system:file-cleanup' } },
-});
+const fileService = new UniverFileService({ database, blobStore });
 
 fileService.use('upload', async (ctx, next) => {
   if (ctx.request.source === FileSource.UnitEmbedded) {
@@ -58,7 +54,7 @@ await blobStore.dispose();
 每个方法都接收调用方上下文 `{ userID, customData? }`。`userID` 必填。同一次 Service 调用中的所有
 middleware 和 adapter 调用共享同一个 `customData`；省略时 Service 创建一个空对象。
 
-**HTTP 层**：由 `@univerjs-pro/collaboration-file-endpoint` 调用，执行内置归属规则和 middleware。
+**受控操作**：由 `@univerjs-pro/collaboration-file-endpoint` 替终端用户调用，执行内置归属规则和 middleware。
 
 | 方法 | 返回 |
 | --- | --- |
@@ -66,7 +62,7 @@ middleware 和 adapter 调用共享同一个 `customData`；省略时 Service �
 | `signUrl({ fileID }, ctx)` | `{ record, direct? }`；blob store 签发了直链时带 `direct` |
 | `openDownload({ fileID }, ctx)` | `{ record, content }` |
 
-**可信层**：供可信的服务端代码使用，例如导入导出服务或应用自身。不执行归属规则和 middleware，
+**直接操作**：直接读写文件，供服务端代码使用，例如导入导出服务或应用自身。不执行归属规则和 middleware，
 `source` 与 `assign` 由调用方负责。不得直接暴露给 HTTP 客户端。
 
 | 方法 | 返回 |
@@ -76,7 +72,7 @@ middleware 和 adapter 调用共享同一个 `customData`；省略时 Service �
 | `openFile(fileID, ctx)` | `{ record, content }` |
 | `deleteFile(fileID, ctx)` | 删除了记录时为 `true` |
 | `listFiles({ source, assign?, createdBefore?, limit, cursor? }, ctx)` | `{ records, nextCursor }`，按 `(createdAt, fileID)` 升序；最后一页的 `nextCursor` 为 `null` |
-| `cleanupExpiredFiles(ctx, options?)` | `{ scanned, deleted, failed }` |
+| `cleanupExpiredFiles(options, ctx)` | `{ scanned, deleted, failed }` |
 
 内容在读写两个方向都是 `AsyncIterable<Uint8Array>`。每次上传生成新的 `fileID`（`randomUUID()`），
 内容不会被覆盖。`FileRecord.size` 是实际写入的字节数。
@@ -96,7 +92,7 @@ Unit ID 作为 `assign` 调用 `listFiles`。
 ## Middleware
 
 `use(action, middleware)` 返回 `Disposable`。middleware 调用 `next()` 继续，或抛出
-`FileError('PERMISSION_DENIED')` 拒绝。`ctx.request` 与 `ctx.record` 只读。可信层方法不会执行 middleware。
+`FileError('PERMISSION_DENIED')` 拒绝。`ctx.request` 与 `ctx.record` 只读。直接操作不会执行 middleware。
 
 | Action | 执行时机 | 可见字段 | 典型用途 |
 | --- | --- | --- | --- |
@@ -109,12 +105,13 @@ Unit ID 作为 `assign` 调用 `listFiles`。
 
 ## 过期文件清理
 
-`cleanupExpiredFiles` 分页删除超过保留时长的 `HttpImport` 与 `HttpExport` 文件。构造时传入
-`cleanup` 会启动内置定时器；不传时由应用自己的调度器调用该方法。
+`cleanupExpiredFiles` 分页删除超过保留时长的 `HttpImport` 与 `HttpExport` 文件。Service 默认用内置定时器
+执行它；传 `cleanup` 选项可调整定时器，传 `cleanup: false` 则不启动，由应用自己的调度器调用该方法，例如按租户
+逐个执行。
 
 | 选项 | 默认值 |
 | --- | --- |
-| `context` | 传 `cleanup` 时必填，是 adapter 调用使用的身份 |
+| `context` | `{ userID: FILE_CLEANUP_USER_ID }`，adapter 在清理调用中看到的身份 |
 | `intervalMs` | 60 分钟；首轮在 `[intervalMs, 2 × intervalMs)` 内随机延迟后执行 |
 | `retentionMs` | 2 小时 |
 | `batchSize` | 100 |

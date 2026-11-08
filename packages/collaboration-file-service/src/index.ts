@@ -26,6 +26,7 @@ export type {
   SignUrlMiddlewareContext,
   UploadMiddlewareContext,
 } from "./middleware.js";
+export { FILE_CLEANUP_USER_ID } from "./cleanup.js";
 export type { FileCleanupOptions } from "./cleanup.js";
 export type {
   CleanupInput,

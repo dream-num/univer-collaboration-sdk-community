@@ -1,12 +1,14 @@
 # @univerjs-pro/collaboration-file-database-testkit
 
+English | [简体中文](./README.zh-CN.md)
+
 Contract tests for `IFileDatabaseAdapter` implementations of the Univer Collaboration SDK. Every
 adapter in [univer-collaboration-sdk-community](https://github.com/dream-num/univer-collaboration-sdk-community)
 passes this suite, and an adapter for your own storage should too.
 
-```bash
-pnpm add -D @univerjs-pro/collaboration-file-database-testkit vitest
-```
+The testkit is not published to npm. It lives in this repository as a private workspace package:
+depend on it with `workspace:*` from a package in this workspace, or copy its `src/` directory into
+your project. It runs on Vitest.
 
 ```ts
 import { fileDatabaseAdapterContract } from '@univerjs-pro/collaboration-file-database-testkit';

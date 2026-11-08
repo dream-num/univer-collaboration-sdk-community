@@ -36,6 +36,12 @@ describe.skipIf(POSTGRES_URL === undefined)("PostgresDatabaseAdapter", () => {
     expect(rows).toEqual([{ component: "core", version: 1 }]);
   });
 
+  it("initializes once when several nodes start together", async () => {
+    await Promise.all(Array.from({ length: 4 }, () => PostgresDatabaseAdapter.create({ pool })));
+    const { rows } = await pool.query("SELECT component, version FROM collaboration.schema_versions");
+    expect(rows).toEqual([{ component: "core", version: 1 }]);
+  });
+
   it("rejects a different core schema version", async () => {
     await pool.query(`
       CREATE SCHEMA collaboration;

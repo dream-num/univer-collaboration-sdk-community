@@ -22,6 +22,9 @@ import type { IChangeset, ISheetBlock, ISnapshot } from "@univerjs/protocol";
 
 const SCHEMA_COMPONENT = "core";
 const SCHEMA_VERSION = 1;
+// Every collaboration adapter that initializes the shared `collaboration` schema takes this lock, so nodes
+// and components starting together create the schema and the version table once.
+const SCHEMA_LOCK_KEY = 0x636f_6c6c;
 
 interface PayloadRow {
   readonly payload: Buffer;
@@ -379,6 +382,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
 
   private async _initializeSchema(): Promise<void> {
     await this._transaction(async (client) => {
+      await client.query("SELECT pg_advisory_xact_lock($1)", [SCHEMA_LOCK_KEY]);
       await client.query(`
         CREATE SCHEMA IF NOT EXISTS collaboration;
         CREATE TABLE IF NOT EXISTS collaboration.schema_versions (

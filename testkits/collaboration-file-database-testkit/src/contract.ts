@@ -70,7 +70,7 @@ export function fileDatabaseAdapterContract(
     it("stores and reads back every field", async () => {
       const adapter = await create();
       const stored = record("file-a", {
-        name: "报表 2026.xlsx",
+        name: "Übersicht 2026.xlsx",
         size: 0,
         contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         source: 2,

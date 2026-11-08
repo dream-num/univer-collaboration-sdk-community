@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-memory",
-  "version": "0.0.0",
+  "version": "1.4.0",
   "description": "In-process IFileDatabaseAdapter and IFileBlobStore for Univer Collaboration tests and demos",
   "license": "Apache-2.0",
   "repository": {
@@ -15,19 +15,6 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "publishConfig": {
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "README.zh-CN.md"
-  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
