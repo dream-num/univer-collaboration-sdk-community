@@ -18,6 +18,7 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | [`@univerjs-pro/collaboration-database-memory`](./packages/collaboration-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
 | [`@univerjs-pro/collaboration-database-sqlite`](./packages/collaboration-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
 | [`@univerjs-pro/collaboration-database-postgres`](./packages/collaboration-database-postgres/README.zh-CN.md) | 基于 `node-postgres` 的 PostgreSQL 适配器 |
+| [`@univerjs-pro/collaboration-database-postgres-s3`](./packages/collaboration-database-postgres-s3/README.zh-CN.md) | PostgreSQL 适配器，Sheet block 存放在 S3 兼容存储桶中 |
 
 ### Thread Comment 数据库适配器
 
@@ -25,6 +26,7 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | --- | --- |
 | [`@univerjs-pro/collaboration-comment-database-memory`](./packages/collaboration-comment-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
 | [`@univerjs-pro/collaboration-comment-database-sqlite`](./packages/collaboration-comment-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
+| [`@univerjs-pro/collaboration-comment-database-postgres`](./packages/collaboration-comment-database-postgres/README.zh-CN.md) | 使用 PostgreSQL 存储评论和回复 |
 
 ### History 数据库适配器
 
@@ -32,6 +34,14 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | --- | --- |
 | [`@univerjs-pro/collaboration-history-database-memory`](./packages/collaboration-history-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
 | [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
+| [`@univerjs-pro/collaboration-history-database-postgres`](./packages/collaboration-history-database-postgres/README.zh-CN.md) | 使用 PostgreSQL 存储 History 记录 |
+
+### Worktree 数据库适配器
+
+| 包 | 说明 |
+| --- | --- |
+| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
+| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
 
 ### File
 
@@ -77,5 +87,6 @@ PostgreSQL 测试在 `UNIVER_COLLAB_POSTGRES_URL` 指向可连接的服务器时
 | `IDatabaseAdapter` | [`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) |
 | `ICommentDatabaseAdapter` | [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md) |
 | `IHistoryDatabaseAdapter` | [`collaboration-history-database-testkit`](./testkits/collaboration-history-database-testkit/README.md) |
+| `IWorktreeDatabaseAdapter` | [`collaboration-worktree-database-testkit`](./testkits/collaboration-worktree-database-testkit/README.zh-CN.md) |
 | `IFileDatabaseAdapter` | [`collaboration-file-database-testkit`](./testkits/collaboration-file-database-testkit/README.md) |
 | `IFileBlobStore` | [`collaboration-file-blob-testkit`](./testkits/collaboration-file-blob-testkit/README.md) |
