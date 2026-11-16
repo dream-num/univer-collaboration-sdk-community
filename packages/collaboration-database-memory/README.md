@@ -28,7 +28,15 @@ await database.dispose();
 
 Pass the Adapter to `UniverCollabService` as `dbAdapter`.
 
+## Storage contract
+
 It follows the same collaboration persistence contract as the SQLite and PostgreSQL Adapters, including revision CAS, revisioned snapshots, Sheet blocks, and atomic Unit lifecycle batches. Submission idempotency is resolved by the Service from continuous changeset history, not by the Adapter.
+
+Unit records and confirmed changesets carry application `metadata`. A successful `commitChangeset()`
+atomically saves the complete `unitMetadata`, `changeset.metadata` and new head. The Service supplies
+both metadata objects on every commit; defaults and drafts belong to the Service. Metadata must be
+JSON-serializable objects.
+`getUnit()` and `getChangesets()` return isolated copies of the saved metadata.
 
 ## Limitations
 

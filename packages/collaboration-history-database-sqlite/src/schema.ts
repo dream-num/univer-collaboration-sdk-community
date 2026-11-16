@@ -1,6 +1,13 @@
 export const HISTORY_SCHEMA_COMPONENT = "history";
 export const HISTORY_SCHEMA_VERSION = 2;
 
+export const SCHEMA_VERSIONS_SQL = `
+  CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
+    component TEXT PRIMARY KEY,
+    version INTEGER NOT NULL CHECK (version >= 1)
+  );
+`;
+
 // Shared by the adapter and the v1 to v2 migration so a migrated database matches a fresh one exactly.
 export const HISTORY_TABLE_SQL = `
   CREATE TABLE collaboration_history_records (

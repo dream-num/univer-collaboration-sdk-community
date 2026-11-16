@@ -39,13 +39,23 @@ await database.dispose();
 
 - 不主动修改 `journal_mode`；需要 WAL、checkpoint 或备份策略时由应用在打开前配置。
 - 核心表使用 `collaboration_` 前缀；协议对象以 MessagePack `BLOB` 保存。
-- schema 版本以 `('core', 3)` 写入 `collaboration_schema_versions`，该表与其他 Univer 协同
+- schema 版本以 `('core', 4)` 写入 `collaboration_schema_versions`，该表与其他 Univer 协同
   组件共用，不占用 `PRAGMA user_version`。
 - changeset 标量列和 submission unique constraint 提供数据库级完整性；提交只做 revision
   CAS，不按 submission key 点查。
-- 空库会自动初始化；版本不为 3 的核心 schema 会被拒绝，见下文的迁移一节。
+- 空库会自动初始化；版本不为 4 的核心 schema 会被拒绝，见下文的迁移一节。
 
 本实现适合本地应用和中小规模单 Node 部署。
+
+## 应用元数据
+
+`UnitRecord.metadata` 和 `ChangesetRecord.metadata` 使用 `Record<string, unknown>`，只接受 JSON 值。
+创建时保存 `record.metadata`，通过 `getUnit()` 和 `getChangesets()` 读取已保存的值。
+`commitChangeset()` 必须接收完整的 `unitMetadata` 和 `changeset.metadata`，并与新 head
+原子保存。metadata 的默认值和草稿由 Service 在每次提交前统一准备。
+
+软删除和恢复保留 metadata；hard delete 删除 changeset 并清空 Unit metadata。
+保存 snapshot 不修改 metadata。
 
 ## 迁移
 
@@ -55,7 +65,8 @@ await database.dispose();
 | --- | --- |
 | v1 | 1.0.0-rc |
 | v2 | 1.0.0 至 1.3.x |
-| v3 | 本版本 |
+| v3 | 1.4.x |
+| v4 | 1.5.0 起 |
 
 先停止写入，然后由 `migrateSQLiteCore` 备份文件并补齐所有缺少的步骤：
 
@@ -63,7 +74,7 @@ await database.dispose();
 import { migrateSQLiteCore } from '@univerjs-pro/collaboration-database-sqlite';
 
 const result = await migrateSQLiteCore({ filename: './data/collaboration.sqlite' });
-// { from: 2, to: 3, backupFilename: './data/collaboration.sqlite.v2.backup' }
+// { from: 2, to: 4, backupFilename: './data/collaboration.sqlite.v2.backup' }
 ```
 
 备份是在任何改动之前写到数据库旁边的一致副本，可用 `backupFilename` 指定路径；已有的备份文件永远不会被
@@ -91,3 +102,8 @@ v3 以 MessagePack `BLOB` 保存协议对象而不再是 JSON 文本，删除状
 `deleted_status` 与 `deleted_at_ms` 中，并移除 tombstone 表和显式索引。每条 v2 tombstone 变成一行
 hard delete 标记，继续占住该 Unit ID；标记行使用占位值（Sheet 类型、revision 1、创建者 `anonymous`、
 清除时间作为创建时间），读取接口永远不会返回它。
+
+### v4 新增的数据
+
+v4 为 Unit 和 changeset 增加 metadata。已有记录初始化为 `{}`，不从文档内容推导 metadata，
+changeset payload 保持不变。

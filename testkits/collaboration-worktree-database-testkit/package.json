@@ -1,0 +1,29 @@
+{
+  "name": "@univerjs-pro/collaboration-worktree-database-testkit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Contract tests for Univer Collaboration IWorktreeDatabaseAdapter implementations",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "testkits/collaboration-worktree-database-testkit"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@univerjs-pro/collaboration-database-testkit": "workspace:*",
+    "@univerjs-pro/collaboration-worktree-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
+  },
+  "peerDependencies": {
+    "vitest": ">=4.1.0"
+  }
+}

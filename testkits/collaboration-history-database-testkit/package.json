@@ -22,12 +22,12 @@
     "coverage": "vitest run --coverage --passWithNoTests"
   },
   "peerDependencies": {
-    "@univerjs-pro/collaboration-history-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0",
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2",
     "vitest": ">=4.1.0"
   },
   "devDependencies": {
-    "@univerjs-pro/collaboration-history-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

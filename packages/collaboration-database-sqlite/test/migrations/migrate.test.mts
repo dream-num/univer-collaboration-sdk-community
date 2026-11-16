@@ -46,16 +46,16 @@ describe("migrateSQLiteCore", () => {
       resolveUnitCreation: () => ({ creatorID: "creator", createdAt: 1700000000000 }),
     });
 
-    expect(result).toEqual({ from: 1, to: 3, backupFilename: `${filename}.v1.backup` });
+    expect(result).toEqual({ from: 1, to: 4, backupFilename: `${filename}.v1.backup` });
     // The backup is a consistent copy of the v1 file, not a byte copy of a possibly dirty one.
     expect(dumpDatabase(result.backupFilename!)).toEqual(before);
     expect((await stat(result.backupFilename!)).size).toBe(original.length);
-    expect(query(filename, "SELECT version FROM collaboration_schema_versions WHERE component = 'core'")).toEqual([{ version: 3 }]);
+    expect(query(filename, "SELECT version FROM collaboration_schema_versions WHERE component = 'core'")).toEqual([{ version: 4 }]);
 
     const adapter = new SQLiteDatabaseAdapter({ filename });
     try {
       await expect(adapter.getUnit(context, "active")).resolves.toEqual({
-        unitID: "active", type, headRevision: 1, creatorID: "creator", createdAt: 1700000000000,
+        unitID: "active", type, headRevision: 1, creatorID: "creator", createdAt: 1700000000000, metadata: {},
       });
     } finally {
       await adapter.dispose();
@@ -65,7 +65,7 @@ describe("migrateSQLiteCore", () => {
   it("migrates a v2 database to the backup path the caller chose", async () => {
     seedV2();
     const backupFilename = join(directory, "before-upgrade.sqlite");
-    await expect(migrateSQLiteCore({ filename, backupFilename })).resolves.toEqual({ from: 2, to: 3, backupFilename });
+    await expect(migrateSQLiteCore({ filename, backupFilename })).resolves.toEqual({ from: 2, to: 4, backupFilename });
     expect(query(backupFilename, "SELECT version FROM collaboration_schema_versions")).toEqual([{ version: 2 }]);
     const adapter = new SQLiteDatabaseAdapter({ filename });
     try {
@@ -78,9 +78,9 @@ describe("migrateSQLiteCore", () => {
   it("does nothing and writes no backup for a current database", async () => {
     await new SQLiteDatabaseAdapter({ filename }).dispose();
     const before = dumpDatabase(filename);
-    await expect(migrateSQLiteCore({ filename })).resolves.toEqual({ from: 3, to: 3 });
+    await expect(migrateSQLiteCore({ filename })).resolves.toEqual({ from: 4, to: 4 });
     expect(dumpDatabase(filename)).toEqual(before);
-    await expect(stat(`${filename}.v3.backup`)).rejects.toThrow();
+    await expect(stat(`${filename}.v4.backup`)).rejects.toThrow();
   });
 
   it("refuses to overwrite an existing backup and leaves the database unchanged", async () => {
@@ -106,7 +106,7 @@ describe("migrateSQLiteCore", () => {
 
     exec(filename, `UPDATE collaboration_snapshots SET payload_json = '${encodeLegacy(createSnapshot("active", type, 1))}'`);
     await expect(migrateSQLiteCore({ filename, ...resolvers })).resolves.toEqual({
-      from: 2, to: 3, backupFilename: `${filename}.v2.backup`,
+      from: 2, to: 4, backupFilename: `${filename}.v2.backup`,
     });
   });
 
@@ -121,7 +121,7 @@ describe("migrateSQLiteCore", () => {
   it("rejects a database written by a newer package", async () => {
     exec(filename, `
       CREATE TABLE collaboration_schema_versions (component TEXT PRIMARY KEY, version INTEGER NOT NULL);
-      INSERT INTO collaboration_schema_versions VALUES ('core', 4);
+      INSERT INTO collaboration_schema_versions VALUES ('core', 5);
     `);
     await expect(migrateSQLiteCore({ filename })).rejects.toThrow("newer than this package supports");
   });

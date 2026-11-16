@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { decode } from "@msgpack/msgpack";
 import Database from "libsql";
 import {
   createChangeset,
@@ -34,13 +35,16 @@ describe("SQLiteDatabaseAdapter", () => {
     const initialBlock = { ...createSheetBlock("block-1", 1), data: Buffer.from([0, 128, 255]) };
     const adapter = new SQLiteDatabaseAdapter({ filename });
     await adapter.createUnit(context, {
-      record: { ...createUnitRecord(unitID, type), creatorID: "creator", createdAt: 1700000000123 },
+      record: { ...createUnitRecord(unitID, type), creatorID: "creator", createdAt: 1700000000123, metadata: { name: "Initial" } },
       snapshot: createSnapshot(unitID, type, 1),
       sheetBlocks: [initialBlock],
     });
     const changeset = createChangeset({ unitID, type, revision: 2, sid: "persistent-sid", reqId: 1 });
     changeset.createTime = 1700000000;
-    const committed = await adapter.commitChangeset(context, { changeset });
+    const committed = await adapter.commitChangeset(context, {
+      changeset: { ...changeset, metadata: { actor: "editor", operation: { source: "import" } } },
+      unitMetadata: { name: "Renamed", tags: ["sales"] },
+    });
     const latestSnapshot = createSnapshot(unitID, type, 2);
     const latestBlock = createSheetBlock("block-2", 2);
     await adapter.saveSnapshot(context, { snapshot: latestSnapshot, sheetBlocks: [latestBlock] });
@@ -50,7 +54,10 @@ describe("SQLiteDatabaseAdapter", () => {
     try {
       await expect(reopened.getUnit(context, unitID)).resolves.toEqual({
         unitID, type, headRevision: 2, creatorID: "creator", createdAt: 1700000000123,
+        metadata: { name: "Renamed", tags: ["sales"] },
       });
+      const stored = await reopened.getChangesets(context, unitID, { from: 1 });
+      expect(stored?.[0]?.metadata).toEqual({ actor: "editor", operation: { source: "import" } });
       await expect(reopened.getSnapshot(context, unitID)).resolves.toEqual(latestSnapshot);
       await expect(reopened.getChangesets(context, unitID, { from: 1 })).resolves.toEqual([
         committed.status === "committed" ? committed.changeset : null,
@@ -68,12 +75,20 @@ describe("SQLiteDatabaseAdapter", () => {
     const database = new Database(filename);
     try {
       const row = database
-        .prepare("SELECT created_at_ms FROM collaboration_changesets WHERE unit_id = ? AND revision = 2")
-        .get(unitID) as { created_at_ms: number };
+        .prepare("SELECT created_at_ms, payload, metadata FROM collaboration_changesets WHERE unit_id = ? AND revision = 2")
+        .get(unitID) as { created_at_ms: number; payload: Buffer; metadata: string };
       expect(committed.status === "committed" && committed.changeset.createTime).toBe(
         Math.floor(row.created_at_ms / 1000),
       );
       expect(committed.status === "committed" && committed.changeset.createTime).not.toBe(1700000000);
+      expect(JSON.parse(row.metadata)).toEqual({ actor: "editor", operation: { source: "import" } });
+      const protocolChangeset = decode(row.payload) as Record<string, unknown>;
+      expect(protocolChangeset).not.toHaveProperty("metadata");
+      expect({ ...protocolChangeset, metadata: JSON.parse(row.metadata) }).toEqual(
+        committed.status === "committed" ? committed.changeset : null,
+      );
+      expect(database.prepare("SELECT revision FROM collaboration_changesets WHERE json_extract(metadata, '$.actor') = ?")
+        .all("editor")).toEqual([{ revision: 2 }]);
     } finally {
       database.close();
     }
@@ -93,19 +108,66 @@ describe("SQLiteDatabaseAdapter", () => {
 
       const results = await Promise.all([
         writer.commitChangeset(context, {
-          changeset: createChangeset({ unitID, type, revision: 2, sid: "sid-a", reqId: 1 }),
+          changeset: {
+            ...createChangeset({ unitID, type, revision: 2, sid: "sid-a", reqId: 1 }),
+            metadata: { actor: "a" },
+          },
+          unitMetadata: { winner: "a" },
         }),
         reader.commitChangeset(context, {
-          changeset: createChangeset({ unitID, type, revision: 2, sid: "sid-b", reqId: 1 }),
+          changeset: {
+            ...createChangeset({ unitID, type, revision: 2, sid: "sid-b", reqId: 1 }),
+            metadata: { actor: "b" },
+          },
+          unitMetadata: { winner: "b" },
         }),
       ]);
       expect(results.filter((result) => result.status === "committed")).toHaveLength(1);
       expect(results.filter((result) => result.status === "revision-mismatch")).toEqual([
         { status: "revision-mismatch", actualHeadRevision: 2 },
       ]);
+      const winner = results[0]?.status === "committed" ? "a" : "b";
+      await expect(reader.getUnit(context, unitID)).resolves.toMatchObject({ metadata: { winner } });
+      const stored = await reader.getChangesets(context, unitID, { from: 1 });
+      expect(stored?.[0]?.metadata).toEqual({ actor: winner });
     } finally {
       await writer.dispose();
       await reader.dispose();
+    }
+  });
+
+  it("rolls back changeset metadata when the Unit update fails", async () => {
+    const unitID = "metadata-rollback";
+    const type = UniverType.UNIVER_DOC;
+    const adapter = new SQLiteDatabaseAdapter({ filename });
+    try {
+      await adapter.createUnit(context, {
+        record: { ...createUnitRecord(unitID, type), metadata: { name: "Initial" } },
+        snapshot: createSnapshot(unitID, type, 1),
+      });
+      const database = new Database(filename);
+      try {
+        database.exec(`
+          CREATE TRIGGER reject_unit_update BEFORE UPDATE ON collaboration_units
+          WHEN NEW.head_revision = 2 BEGIN SELECT RAISE(ABORT, 'reject metadata commit'); END;
+        `);
+      } finally {
+        database.close();
+      }
+
+      await expect(adapter.commitChangeset(context, {
+        changeset: {
+          ...createChangeset({ unitID, type, revision: 2, sid: "rollback", reqId: 1 }),
+          metadata: { actor: "must not persist" },
+        },
+        unitMetadata: { name: "Must not persist" },
+      })).rejects.toThrow("reject metadata commit");
+      await expect(adapter.getUnit(context, unitID)).resolves.toMatchObject({
+        headRevision: 1, metadata: { name: "Initial" },
+      });
+      await expect(adapter.getChangesets(context, unitID, { from: 1 })).resolves.toEqual([]);
+    } finally {
+      await adapter.dispose();
     }
   });
 
@@ -117,6 +179,7 @@ describe("SQLiteDatabaseAdapter", () => {
       const initial = createSnapshot(unitID, type, 1);
       await adapter.createUnit(context, { record: createUnitRecord(unitID, type), snapshot: initial });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: createChangeset({ unitID, type, revision: 2, sid: "sid-rollback", reqId: 1 }),
       });
 
@@ -151,7 +214,7 @@ describe("SQLiteDatabaseAdapter", () => {
     );
   });
 
-  it("initializes the core v3 schema and keeps other component versions", async () => {
+  it("initializes the core v4 schema and keeps other component versions", async () => {
     const database = new Database(filename);
     database.exec(`
       CREATE TABLE collaboration_schema_versions (
@@ -171,7 +234,7 @@ describe("SQLiteDatabaseAdapter", () => {
         .prepare("SELECT component, version FROM collaboration_schema_versions ORDER BY component")
         .all();
       expect(versions).toEqual([
-        { component: "core", version: 3 },
+        { component: "core", version: 4 },
         { component: "worktree", version: 3 },
       ]);
       const tables = inspect
@@ -210,7 +273,10 @@ describe("SQLiteDatabaseAdapter", () => {
     const adapter = new SQLiteDatabaseAdapter({ filename });
     for (const unitID of [softID, hardID]) {
       await adapter.createUnit(context, {
-        record: createUnitRecord(unitID, type),
+        record: {
+          ...createUnitRecord(unitID, type),
+          metadata: unitID === hardID ? { privateNote: "erase with the Unit" } : {},
+        },
         snapshot: createSnapshot(unitID, type, 1),
       });
     }
@@ -222,6 +288,7 @@ describe("SQLiteDatabaseAdapter", () => {
     try {
       await expect(
         stale.commitChangeset(context, {
+          unitMetadata: {},
           changeset: createChangeset({ unitID: hardID, type, revision: 2, sid: "stale", reqId: 1 }),
         }),
       ).rejects.toMatchObject({ code: "UNIT_NOT_FOUND" });
@@ -267,6 +334,8 @@ describe("SQLiteDatabaseAdapter", () => {
         `)
         .get(hardID, hardID);
       expect(counts).toMatchObject({ snapshots: 0, markers: 1 });
+      expect(database.prepare("SELECT metadata FROM collaboration_units WHERE unit_id = ?").get(hardID))
+        .toMatchObject({ metadata: "{}" });
     } finally {
       database.close();
     }

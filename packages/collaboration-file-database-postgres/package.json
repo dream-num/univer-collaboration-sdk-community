@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-database-postgres",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "PostgreSQL IFileDatabaseAdapter for Univer Collaboration built on node-postgres",
   "license": "Apache-2.0",
   "repository": {

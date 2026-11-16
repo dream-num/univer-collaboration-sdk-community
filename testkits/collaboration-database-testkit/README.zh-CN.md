@@ -20,7 +20,8 @@ databaseAdapterContract('MyDatabase', async () => {
 ```
 
 工厂在每个测试前运行一次，返回一个全新的空适配器。`createUnitRecord`、`createSnapshot`、
-`createChangeset`、`createSheetBlock` 和 `createDatabaseContext` 为你自己的测试构造合法的协议对象。
+`createChangeset`、`createSheetBlock` 和 `createDatabaseContext` 为你自己的测试构造合法的协议对象和服务端记录。
+`createUnitRecord` 与 `createChangeset` 默认包含空 `metadata`。
 
 ## 契约要点
 
@@ -30,6 +31,8 @@ databaseAdapterContract('MyDatabase', async () => {
   非法值以 `INVALID_REQUEST` 失败，数据库保持不变。
 - `commitChangeset` 在同一个原子边界内检查 head、写入 changeset 并更新 head。适配器把 `createTime`
   赋为持久化时刻的 Unix 秒，不修改输入对象，并返回它实际存储的 changeset。
+- 每次提交必须提供 Service 准备的完整 `unitMetadata` 和 `ChangesetRecord.metadata`，在同一
+  revision CAS 边界保存；CAS 失败时两者都保持不变。修改输入或读取结果不能影响已保存的 metadata。
 - `deleteUnits` 与 `recoverUnits` 收到的 `unitIDs` 由 Service 保证非空、不含空字符串、不含重复。
   一个批次整体成功或整体失败。
 - `getChangesets` 把 `to: 0` 视为显式上界并返回 `[]`，只有省略 `to` 才是无上界。不可见的 Unit 返回

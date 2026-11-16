@@ -37,6 +37,64 @@ await fileService.dispose();
 
 缺少必填选项时构造函数抛 `TypeError`。释放时先释放 Exchange，再释放 File Service 和协同 Service。
 
+## 导入与导出的核心
+
+一次导入是一次转换加一次协同 Service 调用，导出也是。以 XLSX 文件和 Sheet 为例：
+
+```ts
+const unitID = randomUUID();
+const imported = await importBufferToSnapshot(bytes, {
+  type: UniverInstanceType.UNIVER_SHEET,
+  format: ExchangeFormat.XLSX,
+  fileName,
+  unitId: unitID,
+  formulaCalculation: FormulaCalculationMode.FORCED,
+  files: { store: storeEmbeddedFile },
+});
+
+await collabService.createUnitFromSnapshot(
+  {
+    snapshot: { ...imported.snapshot, unitID, type: UniverType.UNIVER_SHEET, rev: 1 },
+    sheetBlocks: imported.sheetBlocks,
+  },
+  context
+);
+```
+
+```ts
+const data = await collabService.getUnitLoadDataWithBlocks(
+  { unitID, type: UniverType.UNIVER_SHEET, revision: 0 },
+  context
+);
+
+// `materializer` 是一个 `UnitSnapshotMaterializer` 实例，创建一次后复用。
+const head =
+  data.changesets.length === 0
+    ? { snapshot: data.snapshot, sheetBlocks: [...data.sheetBlocks] }
+    : await materializer.materializeSnapshot(data);
+
+const xlsx = await exportSnapshotToBuffer(head, {
+  type: UniverInstanceType.UNIVER_SHEET,
+  format: ExchangeFormat.XLSX,
+  // 快照已经算过：导入时、协同 Service 保存快照时，或 `materializeSnapshot` 中。这里不需要再计算。
+  formulaCalculation: FormulaCalculationMode.NO,
+  files: { load: loadEmbeddedFile },
+});
+```
+
+示例中的 `files.store` 和 `files.load` 可以用 SDK 的 [File Service](../collaboration-file-service/README.zh-CN.md) 存取图片和附件，也可以对接应用自己的文件存储。
+
+本 Service 的其余部分处理这两段调用周边的事情：
+
+| 方面 | 本 Service 做的事 |
+| --- | --- |
+| 任务 | 在后台执行转换，任务只有创建者可以读取。 |
+| 请求 | 校验输入，按类型确定格式并转换前端选项。 |
+| 文件 | 检查源文件属于调用方，把导入的图片和附件存为新 Unit 的文件，导出时再读回，并删除临时文件。 |
+| 权限 | 执行协同 Service 的 middleware 和自己的 `import`、`export` middleware。 |
+| 快照 JSON | 导入为 JSON 文件而不是 Unit（`outputType: 2`），以及导出客户端快照（`jsonID`）。 |
+| OLE 附件 | 把已存储的附件转成在线 Unit，以及在导出中嵌入在线 Unit。 |
+
 ## 支持的转换
 
 | 类型 | 导入 | 导出 |
@@ -47,11 +105,38 @@ await fileService.dispose();
 | Base | xls、xlsx、csv、tsv | xlsx、csv |
 | PDF | pdf | pdf |
 
-导入格式由上传文件的文件名决定。Board 会被拒绝。使用 PDF 时安装 `@univerjs-pro/exchange-pdf-node-binding`，并在启动时执行 `import '@univerjs-pro/exchange-node/pdf'`；否则 PDF 任务以 `UNSUPPORTED_FORMAT` 失败。
+导入格式由上传文件的文件名决定。Board 会被拒绝。
+
+Sheet 的公式在导入时计算，导出时不计算。XLSX 导入重算全部公式；XLS、CSV、TSV 导入暂不重算。导出按快照中已有的结果写出，没有结果的公式导出后没有值。
+
+按 `unitID` 导出时，最近一次快照之后没有 changeset 就直接使用该快照，否则回放这些 changeset 并重新计算。
+
+### 启用 PDF Unit（可选）
+
+导入和导出任务的 `type` 均使用 `UniverType.UNIVER_PDF`。导入将 PDF 文件转换为 PDF Unit 或其快照，导出则将 PDF Unit 或其快照写回 PDF 文件。
+
+要启用这项转换，先安装 PDF binding。
+
+```bash
+pnpm add @univerjs-pro/exchange-pdf-node-binding
+```
+
+在导入导出进程的入口注册 PDF 支持。省略这行时，PDF 任务会以 `UNSUPPORTED_FORMAT` 失败。
+
+```ts
+import '@univerjs-pro/exchange-node/pdf';
+```
 
 ## 许可证与额度
 
-通过 `exchange-node` 配置许可证：设置 `UNIVER_LICENSE` 和 `UNIVER_LICENSE_KEY`，或调用 `configureExchange()`。只传给 `UniverCollabService` 构造参数的许可证不会到达 `exchange-node`。用 `exchange-node` 的 `getExportQuota()` 查询剩余额度。
+在导入导出进程中，将环境变量 `UNIVER_LICENSE` 和 `UNIVER_LICENSE_KEY` 分别设为许可证和密钥文件的完整内容，`exchange-node` 会自动读取。也可以在启动时通过代码配置。
+
+```ts
+import { configureExchange, getExportQuota } from '@univerjs-pro/exchange-node';
+
+await configureExchange({ license, licenseKey });
+const quota = await getExportQuota(); // 按需查询剩余导出额度。
+```
 
 ## 方法
 

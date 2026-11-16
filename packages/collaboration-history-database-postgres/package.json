@@ -1,0 +1,35 @@
+{
+  "name": "@univerjs-pro/collaboration-history-database-postgres",
+  "version": "1.5.2",
+  "description": "PostgreSQL IHistoryDatabaseAdapter for Univer Collaboration built on node-postgres",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-history-database-postgres"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.0",
+    "@univerjs-pro/collaboration-database-postgres": "workspace:*",
+    "@univerjs-pro/collaboration-history-database-testkit": "workspace:*",
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "pg": "^8.16.0"
+  }
+}

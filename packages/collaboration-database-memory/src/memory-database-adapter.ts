@@ -1,5 +1,6 @@
 import {
   CollabError,
+  type ChangesetRecord,
   type CommitChangesetInput,
   type CommitChangesetResult,
   type CreateUnitDatabaseInput,
@@ -17,13 +18,13 @@ import {
   type SubmitDatabaseContext,
   type UnitRecord,
 } from "@univerjs-pro/collaboration-service";
-import type { IChangeset, ISheetBlock, ISnapshot } from "@univerjs/protocol";
+import type { ISheetBlock, ISnapshot } from "@univerjs/protocol";
 
 interface StoredUnit {
   record: UnitRecord;
   status: "active" | "soft-deleted";
   readonly snapshots: Map<number, ISnapshot>;
-  readonly changesets: IChangeset[];
+  readonly changesets: ChangesetRecord[];
   readonly sheetBlocks: Map<string, ISheetBlock>;
 }
 
@@ -33,6 +34,7 @@ interface StoredUnit {
  * Reads and writes copy protocol objects so stored data stays isolated from caller mutations.
  * Every method runs synchronously inside its `async` body, which gives each call the atomicity
  * a database implementation must provide with a transaction.
+ * @public
  */
 export class MemoryDatabaseAdapter implements IDatabaseAdapter {
   private readonly _units = new Map<string, StoredUnit>();
@@ -63,7 +65,7 @@ export class MemoryDatabaseAdapter implements IDatabaseAdapter {
     _ctx: DatabaseContext,
     unitID: string,
     range: { readonly from: number; readonly to?: number },
-  ): Promise<readonly IChangeset[] | null> {
+  ): Promise<readonly ChangesetRecord[] | null> {
     if (range.from < 0 || (range.to !== undefined && range.to < 0)) {
       throw new CollabError("INVALID_REQUEST", "Changeset range revisions cannot be negative");
     }
@@ -129,9 +131,10 @@ export class MemoryDatabaseAdapter implements IDatabaseAdapter {
 
     // The persisted time replaces any caller-provided value; the input object is left unchanged.
     const changeset = structuredClone(input.changeset);
+    const unitMetadata = structuredClone(input.unitMetadata);
     changeset.createTime = Math.floor(Date.now() / 1000);
     unit.changesets.push(changeset);
-    unit.record = { ...unit.record, headRevision: changeset.revision };
+    unit.record = { ...unit.record, headRevision: changeset.revision, metadata: unitMetadata };
     return {
       status: "committed",
       changeset: structuredClone(changeset),
@@ -152,7 +155,8 @@ export class MemoryDatabaseAdapter implements IDatabaseAdapter {
       throw new CollabError("INVALID_REQUEST", "Snapshot does not match the stored unit head");
     }
     for (const block of sheetBlocks) {
-      unit.sheetBlocks.set(block.id, block);
+      // A block ID identifies its content; a stored block is kept as it is.
+      if (!unit.sheetBlocks.has(block.id)) unit.sheetBlocks.set(block.id, block);
     }
     unit.snapshots.set(snapshot.rev, snapshot);
   }

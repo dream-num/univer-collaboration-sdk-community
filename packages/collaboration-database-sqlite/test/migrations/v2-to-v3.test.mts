@@ -11,6 +11,7 @@ import {
 import { UniverType } from "@univerjs/protocol";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SQLiteDatabaseAdapter, migrateSQLiteCoreV2ToV3 } from "../../src/index.js";
+import { migrateSQLiteCoreV3ToV4 } from "../../src/migrations/v3-to-v4.js";
 import { addApplicationObjects, createV1Database, createV2Database, dumpDatabase, encodeLegacy, exec, query } from "./fixtures.mjs";
 
 describe("migrateSQLiteCoreV2ToV3", () => {
@@ -97,10 +98,11 @@ describe("migrateSQLiteCoreV2ToV3", () => {
     expect(query(filename, "PRAGMA foreign_key_check")).toEqual([]);
     expect(query(filename, "PRAGMA integrity_check")).toEqual([{ integrity_check: "ok" }]);
 
+    await migrateSQLiteCoreV3ToV4({ filename });
     const adapter = new SQLiteDatabaseAdapter({ filename });
     try {
       await expect(adapter.getUnit(context, "active")).resolves.toEqual({
-        unitID: "active", type, headRevision: 2, creatorID: "alice", createdAt: 1000,
+        unitID: "active", type, headRevision: 2, creatorID: "alice", createdAt: 1000, metadata: {},
       });
       await expect(adapter.getSnapshot(context, "active")).resolves.toEqual(latestSnapshot);
       await expect(adapter.getSnapshot(context, "active", { revision: 1 })).resolves.toEqual(createSnapshot("active", type, 1));
@@ -119,7 +121,7 @@ describe("migrateSQLiteCoreV2ToV3", () => {
       await expect(adapter.recoverUnits(context, { unitIDs: ["gone"] })).rejects.toMatchObject({ code: "INVALID_REQUEST" });
       await expect(
         adapter.createUnit(context, {
-          record: { unitID: "gone", type, headRevision: 1, creatorID: "carol", createdAt: 4000 },
+          record: { unitID: "gone", type, headRevision: 1, creatorID: "carol", createdAt: 4000, metadata: {} },
           snapshot: createSnapshot("gone", type, 1),
         }),
       ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
@@ -182,6 +184,7 @@ describe("migrateSQLiteCoreV2ToV3", () => {
     expect(query(filename, "SELECT COUNT(*) AS count FROM collaboration_snapshots")).toEqual([{ count: 208 }]);
     expect(query(filename, "SELECT COUNT(*) AS count FROM collaboration_changesets")).toEqual([{ count: 616 }]);
 
+    await migrateSQLiteCoreV3ToV4({ filename });
     const adapter = new SQLiteDatabaseAdapter({ filename });
     try {
       const unitID = "unit-'0204";

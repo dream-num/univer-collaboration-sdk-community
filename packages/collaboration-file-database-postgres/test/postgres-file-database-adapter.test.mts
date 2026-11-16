@@ -61,7 +61,7 @@ if (url === undefined) {
         "SELECT component, version FROM collaboration.schema_versions ORDER BY component"
       );
       expect(versions.rows).toEqual([
-        { component: "core", version: 1 },
+        { component: "core", version: 2 },
         { component: "file", version: 1 },
       ]);
       const tables = await pool.query<{ table_name: string }>(

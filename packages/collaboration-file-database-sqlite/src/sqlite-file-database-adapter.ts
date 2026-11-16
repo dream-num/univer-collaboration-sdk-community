@@ -9,8 +9,7 @@ import {
   type ListFilesResult,
 } from "@univerjs-pro/collaboration-file-service";
 
-const SCHEMA_COMPONENT = "file";
-const SCHEMA_VERSION = 1;
+import { FILE_SCHEMA_SQL, SCHEMA_COMPONENT, SCHEMA_VERSION, SCHEMA_VERSIONS_SQL } from "./schema.js";
 
 interface FileRow {
   readonly file_id: string;
@@ -137,12 +136,7 @@ export class SQLiteFileDatabaseAdapter implements IFileDatabaseAdapter {
 
   private _initializeSchema(): void {
     this._transaction(() => {
-      this._database.exec(`
-        CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
-          component TEXT PRIMARY KEY,
-          version INTEGER NOT NULL CHECK (version >= 1)
-        );
-      `);
+      this._database.exec(SCHEMA_VERSIONS_SQL);
       const version = this._readSchemaVersion();
       if (version === SCHEMA_VERSION) return;
       if (version !== undefined) {
@@ -159,28 +153,9 @@ export class SQLiteFileDatabaseAdapter implements IFileDatabaseAdapter {
     return row?.version;
   }
 
-  // The two source indexes serve cleanup (by source) and listing a Unit's files (by source and assign);
-  // both end with (created_at, file_id) for keyset paging. No query uses the blob_key index yet: it is in
-  // version 1 so content sharing needs no schema migration, and it stays non-unique because shared
-  // content means several rows with one blob_key.
   private _createSchema(): void {
     this._database.exec(`
-      CREATE TABLE collaboration_files (
-        file_id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        size INTEGER NOT NULL,
-        content_type TEXT NOT NULL,
-        source INTEGER NOT NULL,
-        assign TEXT NOT NULL,
-        blob_key TEXT NOT NULL,
-        created_at INTEGER NOT NULL
-      );
-      CREATE INDEX collaboration_files_source_created
-        ON collaboration_files(source, created_at, file_id);
-      CREATE INDEX collaboration_files_source_assign_created
-        ON collaboration_files(source, assign, created_at, file_id);
-      CREATE INDEX collaboration_files_blob_key
-        ON collaboration_files(blob_key);
+      ${FILE_SCHEMA_SQL}
       INSERT INTO collaboration_schema_versions (component, version)
       VALUES ('${SCHEMA_COMPONENT}', ${SCHEMA_VERSION});
     `);

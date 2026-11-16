@@ -1,5 +1,5 @@
 import { FileSource } from "@univerjs-pro/collaboration-file-service";
-import { CollabError } from "@univerjs-pro/collaboration-service";
+import { CollabError, UnitSnapshotMaterializer } from "@univerjs-pro/collaboration-service";
 import { exportSnapshotToBuffer, importBufferToSnapshot } from "@univerjs-pro/exchange-node";
 import { UniverType, type ISnapshot } from "@univerjs/protocol";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -150,6 +150,28 @@ describe("createImportTask", () => {
     );
   });
 
+  it("recalculates every formula of an XLSX Sheet import", async () => {
+    const { service, fileService } = createHost();
+    const fileID = await storeFile(fileService, Buffer.from("x"), "a.xlsx");
+
+    await settle(service, await service.createImportTask({ type: UniverType.UNIVER_SHEET, outputType: 1, fileID }, alice));
+
+    expect(importMock.mock.lastCall![1]).toMatchObject({ format: "xlsx", formulaCalculation: "forced" });
+  });
+
+  it.each([
+    ["an XLS Sheet", UniverType.UNIVER_SHEET, "a.xls"],
+    ["a CSV Sheet", UniverType.UNIVER_SHEET, "a.csv"],
+    ["an XLSX Base", UniverType.UNIVER_BASE, "a.xlsx"],
+  ])("does not pass formulaCalculation to the import of %s", async (_case, type, name) => {
+    const { service, fileService } = createHost();
+    const fileID = await storeFile(fileService, Buffer.from("x"), name);
+
+    await settle(service, await service.createImportTask({ type, outputType: 1, fileID }, alice));
+
+    expect(importMock.mock.lastCall![1]).not.toHaveProperty("formulaCalculation");
+  });
+
   it("creates no task and keeps the upload when import middleware rejects", async () => {
     const { service, fileService } = createHost();
     const fileID = await storeFile(fileService, Buffer.from("x"), "a.xlsx");
@@ -164,7 +186,7 @@ describe("createImportTask", () => {
     expect(await fileService.getFile(fileID, alice)).not.toBeNull();
   });
 
-  it("passes files.store only for Unit imports of Sheet, Doc and Slide", async () => {
+  it("passes files.store only for Unit imports of Sheet, Doc, Slide and PDF", async () => {
     const { service, fileService } = createHost();
     const run = async (type: UniverType, outputType: 1 | 2, name: string) => {
       const fileID = await storeFile(fileService, Buffer.from("x"), name);
@@ -175,7 +197,28 @@ describe("createImportTask", () => {
     expect((await run(UniverType.UNIVER_SHEET, 2, "a.xlsx")).files).toBeUndefined();
     expect((await run(UniverType.UNIVER_SHEET, 2, "a.xlsx")).unitId).toBeUndefined();
     expect((await run(UniverType.UNIVER_BASE, 1, "a.xlsx")).files).toBeUndefined();
-    expect((await run(UniverType.UNIVER_PDF, 1, "a.pdf")).files).toBeUndefined();
+    expect((await run(UniverType.UNIVER_PDF, 1, "a.pdf")).files).toBeDefined();
+    expect((await run(UniverType.UNIVER_PDF, 2, "a.pdf")).files).toBeUndefined();
+  });
+
+  it("stores PDF images as UnitEmbedded files and keeps PDF fonts inline", async () => {
+    const { service, fileService } = createHost();
+    const fileID = await storeFile(fileService, Buffer.from("x"), "a.pdf");
+    await settle(service, await service.createImportTask({ type: UniverType.UNIVER_PDF, outputType: 1, fileID }, alice));
+    const { files, unitId } = importMock.mock.lastCall![1] as {
+      files: { store: (file: { name: string; mimeType: string; size: number; bytes: Uint8Array }) => Promise<unknown> };
+      unitId: string;
+    };
+    const bytes = new Uint8Array([1, 2, 3]);
+
+    await expect(files.store({ name: "image_16_0_R", mimeType: "image/png", size: 3, bytes })).resolves.toMatchObject({
+      mode: "reference",
+    });
+    await expect(files.store({ name: "font_10_0_R", mimeType: "font/otf", size: 3, bytes })).resolves.toEqual({
+      mode: "inline",
+    });
+    const embedded = await listFiles(fileService, FileSource.UnitEmbedded, unitId);
+    expect(embedded.map((record) => record.name)).toEqual(["image_16_0_R"]);
   });
 
   it("maps Base and Doc import options to exchange-node names", async () => {
@@ -399,9 +442,22 @@ describe("createExportTask", () => {
     });
   });
 
-  it("materializes a unitID export in-process when the runtime asks for it", async () => {
+  it.each([
+    ["xlsx", {}],
+    ["csv", { options: { sheet: { csv: { sheetId: "s1" } } } }],
+  ])("does not calculate formulas in a Sheet %s export", async (format, extra) => {
+    const host = createHost();
+    const unitID = await createSheetUnit(host);
+
+    await settle(host.service, await host.service.createExportTask({ type: UniverType.UNIVER_SHEET, unitID, format, ...extra }, alice));
+
+    expect(exportMock.mock.lastCall![1]).toMatchObject({ formulaCalculation: "no" });
+  });
+
+  it("exports the stored snapshot without materializing it when no changeset follows it", async () => {
     const host = createHost({ runtime: { execution: { mode: "in-process" } } });
     const unitID = await createSheetUnit(host);
+    const materialize = vi.spyOn(UnitSnapshotMaterializer.prototype, "materializeSnapshot");
 
     const task = await settle(
       host.service,
@@ -409,7 +465,47 @@ describe("createExportTask", () => {
     );
 
     expect(task.status).toBe("done");
-    expect(exportMock.mock.lastCall![0].snapshot.unitID).toBe(unitID);
+    expect(materialize).not.toHaveBeenCalled();
+    expect(exportMock.mock.lastCall![0].snapshot).toMatchObject({ unitID, rev: 1 });
+    materialize.mockRestore();
+  });
+
+  it("materializes a unitID export in-process when changesets follow the stored snapshot", async () => {
+    const host = createHost({ runtime: { execution: { mode: "in-process" } } });
+    const unitID = await createSheetUnit(host);
+    const submitted = await host.collabService.submitChangeset(
+      {
+        changeset: {
+          unitID,
+          type: UniverType.UNIVER_SHEET,
+          baseRev: 1,
+          revision: 2,
+          sid: "session",
+          reqId: 1,
+          userID: "alice",
+          memberID: "member",
+          mutations: [
+            {
+              id: "sheet.mutation.set-range-values",
+              data: JSON.stringify({ unitId: unitID, subUnitId: "s1", cellValue: { 0: { 0: { v: "edited" } } } }),
+            },
+          ],
+        },
+      } as Parameters<typeof host.collabService.submitChangeset>[0],
+      { userID: "alice", memberID: "member" }
+    );
+    expect(submitted.status).toBe("committed");
+    const materialize = vi.spyOn(UnitSnapshotMaterializer.prototype, "materializeSnapshot");
+
+    const task = await settle(
+      host.service,
+      await host.service.createExportTask({ type: UniverType.UNIVER_SHEET, unitID, format: "xlsx" }, alice)
+    );
+
+    expect(task.status).toBe("done");
+    expect(materialize).toHaveBeenCalledTimes(1);
+    expect(exportMock.mock.lastCall![0].snapshot).toMatchObject({ unitID, rev: 2 });
+    materialize.mockRestore();
   });
 
   it("returns the readUnitData rejection in the request and creates no task", async () => {
@@ -476,7 +572,7 @@ describe("createExportTask", () => {
         alice
       )
     );
-    expect(exportMock.mock.lastCall![1]).toEqual({ type: UniverType.UNIVER_SHEET, format: "tsv", csv: { worksheetId: "s1" } });
+    expect(exportMock.mock.lastCall![1]).toEqual({ type: UniverType.UNIVER_SHEET, format: "tsv", formulaCalculation: "no", csv: { worksheetId: "s1" } });
   });
 
   it("decodes a jsonID upload, shows the snapshot to export middleware and deletes the upload", async () => {

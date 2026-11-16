@@ -1,9 +1,10 @@
 import type {
+  ChangesetMetadata,
+  ChangesetRecord,
   SubmitDatabaseContext,
   UnitRecord,
 } from "@univerjs-pro/collaboration-service";
 import type {
-  IChangeset,
   ISheetBlock,
   ISnapshot,
   UniverType,
@@ -30,7 +31,7 @@ export function createUnitRecord(
   unitID: string,
   type: UniverType
 ): UnitRecord {
-  return { unitID, type, headRevision: 1, creatorID: "test-user", createdAt: 1700000000123 };
+  return { unitID, type, headRevision: 1, creatorID: "test-user", createdAt: 1700000000123, metadata: {} };
 }
 
 export function createSnapshot(
@@ -56,8 +57,10 @@ export function createChangeset(input: {
   readonly sid: string;
   readonly reqId: number;
   readonly marker?: string;
-}): IChangeset {
+  readonly metadata?: ChangesetMetadata;
+}): ChangesetRecord {
   return {
+    metadata: input.metadata ?? {},
     unitID: input.unitID,
     type: input.type,
     baseRev: input.revision - 1,

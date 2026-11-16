@@ -4,6 +4,9 @@ import {
   BaseImportMode,
   DocxCompatibilityMode,
   ExchangeFormat,
+  FormulaCalculationMode,
+  type IImportedFile,
+  type IImportFilesOptions,
 } from "@univerjs-pro/exchange-node";
 import { UniverType } from "@univerjs/protocol";
 import { invalidRequest } from "./errors.js";
@@ -42,6 +45,11 @@ export function toImportOptions(type: UniverType, format: ExchangeFormat, option
     const sheet = optionalObject(root?.sheet, "options.sheet");
     assign(result, "minSheetRowCount", optionalCount(sheet?.minSheetRowCount, "options.sheet.minSheetRowCount"));
     assign(result, "minSheetColumnCount", optionalCount(sheet?.minSheetColumnCount, "options.sheet.minSheetColumnCount"));
+    // Formulas are calculated on import and not on export (see toExportOptions): every formula is
+    // recalculated, so the stored snapshot does not depend on the values cached in the file.
+    // TODO: recalculate XLS, CSV and TSV imports as well. exchange-node rejects the option for them
+    // with INVALID_ARGUMENT, so their formulas keep the results the file holds, if any.
+    if (format === ExchangeFormat.XLSX) result.formulaCalculation = FormulaCalculationMode.FORCED;
   } else if (type === UniverType.UNIVER_BASE) {
     const xlsx = optionalObject(optionalObject(root?.base, "options.base")?.xlsx, "options.base.xlsx");
     assign(result, "mode", optionalOneOf(xlsx?.baseMode, BASE_IMPORT_MODES, "options.base.xlsx.baseMode"));
@@ -65,6 +73,10 @@ export function toExportOptions(type: UniverType, format: ExchangeFormat, option
     }
     result.ole = { attachmentSource: "online" };
   }
+  // The counterpart of the recalculation on import (see toImportOptions): formulas are exported with
+  // the results the snapshot holds. The Runtime calculates a snapshot when it saves or materializes
+  // it, so calculating again here would repeat that work.
+  if (type === UniverType.UNIVER_SHEET) result.formulaCalculation = FormulaCalculationMode.NO;
   const csv = format === ExchangeFormat.CSV || format === ExchangeFormat.TSV;
   if (type === UniverType.UNIVER_SHEET && csv) {
     // options.sheet.useImageUrl has no effect: URL images always export as the placeholder.
@@ -85,15 +97,29 @@ export function toExportOptions(type: UniverType, format: ExchangeFormat, option
   return result as ConversionOptions;
 }
 
-/** Whether exchange-node accepts `files` for this import (Sheet, Doc, Slide). */
+// The files checks name what exchange-node rejects, so a newly accepted type gets files and a rejected
+// one fails with INVALID_ARGUMENT instead of silently losing its files.
+
+/** Whether this import passes `files` to exchange-node: every type but Base. */
 export function importStoresFiles(type: UniverType): boolean {
-  return type === UniverType.UNIVER_SHEET || type === UniverType.UNIVER_DOC || type === UniverType.UNIVER_SLIDE;
+  return type !== UniverType.UNIVER_BASE;
 }
 
-/** Whether exchange-node accepts `files` for this export (Sheet XLSX, Doc, Slide, PDF). */
+/** The `files.store` an import passes to exchange-node; PDF fonts stay inline. */
+export function importFileStore(type: UniverType, store: IImportFilesOptions["store"]): IImportFilesOptions["store"] {
+  if (type !== UniverType.UNIVER_PDF) return store;
+  return (file) => (keepsPdfFontInline(file) ? Promise.resolve({ mode: "inline" }) : store(file));
+}
+
+// SDK 1.4.0 workaround: with stored fonts the PDF editor draws most CJK glyphs of subset fonts blank;
+// inline fonts fall back to browser fonts. Remove when stored fonts render CJK text fully.
+function keepsPdfFontInline(file: IImportedFile): boolean {
+  return file.mimeType.startsWith("font/");
+}
+
+/** Whether this export passes `files` (and so `ole`) to exchange-node: every export but Base and CSV/TSV. */
 export function exportLoadsFiles(type: UniverType, format: ExchangeFormat): boolean {
-  if (type === UniverType.UNIVER_SHEET) return format === ExchangeFormat.XLSX;
-  return type === UniverType.UNIVER_DOC || type === UniverType.UNIVER_SLIDE || type === UniverType.UNIVER_PDF;
+  return type !== UniverType.UNIVER_BASE && format !== ExchangeFormat.CSV && format !== ExchangeFormat.TSV;
 }
 
 function assign(target: Record<string, unknown>, key: string, value: unknown): void {

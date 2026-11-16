@@ -1,0 +1,33 @@
+{
+  "name": "@univerjs-pro/collaboration-worktree-database-sqlite",
+  "version": "1.5.2",
+  "description": "SQLite IWorktreeDatabaseAdapter for Univer Collaboration built on libsql",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-worktree-database-sqlite"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@univerjs-pro/collaboration-service": "1.5.2",
+    "@univerjs-pro/collaboration-worktree-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2",
+    "libsql": "^0.5.29"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-worktree-database-testkit": "workspace:*"
+  }
+}

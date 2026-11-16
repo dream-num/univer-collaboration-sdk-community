@@ -3,7 +3,7 @@ import type { CollabContext } from "@univerjs-pro/collaboration-service";
 import { importBufferToSnapshot, type BufferImportOptions } from "@univerjs-pro/exchange-node";
 import type { UniverType } from "@univerjs/protocol";
 import { assertRunning, type JobEnvironment } from "./job-environment.js";
-import { importStoresFiles, type ConversionOptions } from "./options.js";
+import { importFileStore, importStoresFiles, type ConversionOptions } from "./options.js";
 import { encodeSnapshotJson } from "./snapshot-json.js";
 import { IMPORT_OUTPUT_TYPE } from "./import-output-type.js";
 import type { ImportOutputType, ImportTaskResult } from "./types.js";
@@ -52,7 +52,7 @@ export async function runImportJob(job: ImportJob, environment: JobEnvironment):
       ...job.options,
       fileName: job.fileName,
       unitId: unitID,
-      ...(sink ? { files: { store: sink.store } } : {}),
+      ...(sink ? { files: { store: importFileStore(job.type, sink.store) } } : {}),
     } as BufferImportOptions);
     assertRunning(environment);
     await environment.units.create(

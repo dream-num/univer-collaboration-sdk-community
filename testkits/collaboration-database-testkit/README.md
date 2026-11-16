@@ -22,7 +22,8 @@ databaseAdapterContract('MyDatabase', async () => {
 
 The factory runs once per test and returns a fresh, empty adapter. `createUnitRecord`,
 `createSnapshot`, `createChangeset`, `createSheetBlock` and `createDatabaseContext` build valid
-protocol objects for your own tests.
+protocol objects and server-side records for your own tests. `createUnitRecord` and `createChangeset`
+include empty `metadata` by default.
 
 ## Contract notes
 
@@ -35,6 +36,9 @@ are the ones implementations most often get wrong:
 - `commitChangeset` checks the head, writes the changeset and updates the head inside one atomic
   boundary. The adapter assigns `createTime` as the persistence time in Unix seconds, leaves the
   input object unchanged and returns the changeset it stored.
+- Every commit requires complete `unitMetadata` and `ChangesetRecord.metadata`, supplied by the Service.
+  Both commit in the same revision CAS boundary; a failed CAS leaves both unchanged. Inputs and read
+  results cannot mutate stored metadata.
 - `deleteUnits` and `recoverUnits` receive `unitIDs` that the Service guarantees to be non-empty,
   free of empty strings and free of duplicates. A batch succeeds or fails as a whole.
 - `getChangesets` treats `to: 0` as an explicit upper bound and returns `[]`; only an omitted `to`

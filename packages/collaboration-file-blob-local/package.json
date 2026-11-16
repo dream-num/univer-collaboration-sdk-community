@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-blob-local",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "Local directory IFileBlobStore for Univer Collaboration single-node deployments",
   "license": "Apache-2.0",
   "repository": {

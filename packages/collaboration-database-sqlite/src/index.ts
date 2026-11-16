@@ -6,3 +6,4 @@ export { migrateSQLiteCoreV1ToV2 } from "./migrations/v1-to-v2.js";
 export type { SQLiteCoreV1ToV2MigrationOptions } from "./migrations/v1-to-v2.js";
 export { migrateSQLiteCoreV2ToV3 } from "./migrations/v2-to-v3.js";
 export type { SQLiteCoreV2ToV3MigrationOptions } from "./migrations/v2-to-v3.js";
+export { migrateSQLiteCoreV3ToV4 } from "./migrations/v3-to-v4.js";

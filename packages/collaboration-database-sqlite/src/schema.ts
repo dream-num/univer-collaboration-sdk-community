@@ -1,8 +1,14 @@
 export const CORE_SCHEMA_COMPONENT = "core";
-export const CORE_SCHEMA_VERSION = 3;
+export const CORE_SCHEMA_VERSION = 4;
 
-// Shared by the adapter and the v2 to v3 migration so a migrated database matches a fresh one exactly.
-export const CORE_SCHEMA_V3_SQL = `
+export const SCHEMA_VERSIONS_SQL = `
+  CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
+    component TEXT PRIMARY KEY,
+    version INTEGER NOT NULL CHECK (version >= 1)
+  );
+`;
+
+export const CORE_SCHEMA_SQL = `
   CREATE TABLE collaboration_units (
     unit_id TEXT PRIMARY KEY NOT NULL,
     type INTEGER NOT NULL,
@@ -11,6 +17,8 @@ export const CORE_SCHEMA_V3_SQL = `
     created_at_ms INTEGER NOT NULL,
     deleted_at_ms INTEGER,
     deleted_status TEXT CHECK (deleted_status IN ('soft', 'hard')),
+    metadata TEXT NOT NULL DEFAULT '{}'
+      CHECK (json_valid(metadata)),
     CHECK ((deleted_status IS NULL) = (deleted_at_ms IS NULL))
   );
   CREATE TABLE collaboration_snapshots (
@@ -27,6 +35,8 @@ export const CORE_SCHEMA_V3_SQL = `
     req_id INTEGER NOT NULL CHECK (req_id >= 1),
     created_at_ms INTEGER NOT NULL,
     payload BLOB NOT NULL,
+    metadata TEXT NOT NULL DEFAULT '{}'
+      CHECK (json_valid(metadata)),
     PRIMARY KEY (unit_id, revision),
     UNIQUE (unit_id, sid, req_id)
   );

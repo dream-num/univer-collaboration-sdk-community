@@ -1,4 +1,4 @@
-import type { IDatabaseAdapter } from "@univerjs-pro/collaboration-service";
+import type { ChangesetMetadata, IDatabaseAdapter } from "@univerjs-pro/collaboration-service";
 import { UniverType } from "@univerjs/protocol";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
@@ -52,7 +52,7 @@ export function databaseAdapterContract(
         ...createChangeset({ unitID, type: UniverType.UNIVER_SHEET, revision: 2, sid: "time-sid", reqId: 1 }),
         ...(inputTime === undefined ? {} : { createTime: inputTime }),
       };
-      const result = await adapter.commitChangeset(context, { changeset });
+      const result = await adapter.commitChangeset(context, { unitMetadata: {}, changeset });
       expect(result).toEqual({
         status: "committed", headRevision: 2,
         changeset: { ...changeset, createTime: expect.any(Number) },
@@ -112,11 +112,132 @@ export function databaseAdapterContract(
         snapshot,
       })).resolves.toEqual({ status: "already-exists", record });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: createChangeset({ unitID: record.unitID, type: record.type, revision: 2, sid: "creation-facts", reqId: 1 }),
       });
       await adapter.deleteUnits(context, { unitIDs: [record.unitID], hardDelete: false });
       await adapter.recoverUnits(context, { unitIDs: [record.unitID] });
       await expect(adapter.getUnit(context, record.unitID)).resolves.toEqual({ ...record, headRevision: 2 });
+    });
+
+    it("persists independent Unit and changeset metadata with copy isolation", async () => {
+      const context = createDatabaseContext();
+      const unitID = "metadata-isolation";
+      const type = UniverType.UNIVER_DOC;
+      const initial = { name: "Original", details: { tags: ["import"], nullable: null } };
+      const record = { ...createUnitRecord(unitID, type), metadata: initial };
+      const snapshot = createSnapshot(unitID, type, 1);
+      const created = await adapter.createUnit(context, { record, snapshot });
+      initial.details.tags.push("caller-change");
+      (created.record.metadata as { name: string }).name = "result-change";
+      await expect(adapter.getUnit(context, unitID)).resolves.toMatchObject({
+        metadata: { name: "Original", details: { tags: ["import"], nullable: null } },
+      });
+      const duplicate = await adapter.createUnit(context, {
+        record: { ...record, metadata: { name: "Replacement" } }, snapshot,
+      });
+      expect(duplicate.record.metadata.name).toBe("Original");
+
+      const unitMetadata = { name: "Edited", details: { tags: ["edit"] } };
+      const metadata = { actor: "editor", reason: { label: "rename" } };
+      const changeset = createChangeset({ unitID, type, revision: 2, sid: "metadata", reqId: 1, metadata });
+      const committed = await adapter.commitChangeset(context, { changeset, unitMetadata });
+      expect(committed.status).toBe("committed");
+      unitMetadata.details.tags.push("caller-change");
+      metadata.reason.label = "caller-change";
+      const stored = await adapter.getUnit(context, unitID);
+      expect(stored).toMatchObject({
+        headRevision: 2, metadata: { name: "Edited", details: { tags: ["edit"] } },
+      });
+      const storedMetadata = await readChangesetMetadata(adapter, context, unitID, 2);
+      expect(storedMetadata).toEqual({ actor: "editor", reason: { label: "rename" } });
+      (stored!.metadata as { name: string }).name = "read-change";
+      (storedMetadata!.reason as { label: string }).label = "read-change";
+      await expect(adapter.getUnit(context, unitID)).resolves.toMatchObject({ metadata: { name: "Edited" } });
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toEqual({
+        actor: "editor", reason: { label: "rename" },
+      });
+      const history = await adapter.getChangesets(context, unitID, { from: 1 });
+      expect(history).toEqual([{ ...changeset, metadata: { actor: "editor", reason: { label: "rename" } }, createTime: expect.any(Number) }]);
+    });
+
+    it("replaces complete Unit metadata only on successful CAS and preserves historical metadata", async () => {
+      const context = createDatabaseContext();
+      const unitID = "metadata-cas";
+      const type = UniverType.UNIVER_SHEET;
+      await adapter.createUnit(context, {
+        record: { ...createUnitRecord(unitID, type), metadata: { name: "Initial", removed: true } },
+        snapshot: createSnapshot(unitID, type, 1),
+      });
+      const first = createChangeset({ unitID, type, revision: 2, sid: "metadata-first", reqId: 1, metadata: { winner: "first" } });
+      const second = createChangeset({ unitID, type, revision: 2, sid: "metadata-second", reqId: 1, metadata: { winner: "second" } });
+      const results = await Promise.all([
+        adapter.commitChangeset(context, { changeset: first, unitMetadata: { winner: "first" } }),
+        adapter.commitChangeset(context, { changeset: second, unitMetadata: { winner: "second" } }),
+      ]);
+      const winner = results[0].status === "committed" ? "first" : "second";
+      expect(results.map(result => result.status).sort()).toEqual(["committed", "revision-mismatch"]);
+      await expect(adapter.getUnit(context, unitID)).resolves.toMatchObject({ metadata: { winner } });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual({ winner });
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toEqual({ winner });
+      const current = await adapter.getUnit(context, unitID);
+      await adapter.commitChangeset(context, {
+        unitMetadata: current!.metadata,
+        changeset: createChangeset({ unitID, type, revision: 3, sid: "metadata-next", reqId: 1 }),
+      });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual({ winner });
+      await expect(readChangesetMetadata(adapter, context, unitID, 3)).resolves.toEqual({});
+      await adapter.commitChangeset(context, {
+        changeset: createChangeset({ unitID, type, revision: 4, sid: "metadata-clear", reqId: 1 }),
+        unitMetadata: {},
+      });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual({});
+      await adapter.saveSnapshot(context, { snapshot: createSnapshot(unitID, type, 2) });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual({});
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toEqual({ winner });
+      await expect(readChangesetMetadata(adapter, context, unitID, 1)).resolves.toBeNull();
+      await expect(readChangesetMetadata(adapter, context, unitID, 99)).resolves.toBeNull();
+      await expect(readChangesetMetadata(adapter, context, "missing", 2)).resolves.toBeNull();
+    });
+
+    it("preserves application JSON keys that resemble protocol encodings", async () => {
+      const context = createDatabaseContext();
+      const unitID = "metadata-json-keys";
+      const type = UniverType.UNIVER_DOC;
+      const metadata = JSON.parse('{"__proto__":{"application":true},"nested":{"__univerCollaborationBinary":"arbitrary application text"}}');
+      await adapter.createUnit(context, {
+        record: { ...createUnitRecord(unitID, type), metadata },
+        snapshot: createSnapshot(unitID, type, 1),
+      });
+      const changeset = createChangeset({ unitID, type, revision: 2, sid: "metadata-json", reqId: 1, metadata });
+      const current = await adapter.getUnit(context, unitID);
+      const result = await adapter.commitChangeset(context, { unitMetadata: current!.metadata, changeset });
+      expect(result).toMatchObject({ status: "committed", changeset: { metadata } });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual(metadata);
+      expect(await readChangesetMetadata(adapter, context, unitID, 2)).toEqual(metadata);
+    });
+
+    it("preserves metadata through soft deletion and hides it after deletion", async () => {
+      const context = createDatabaseContext();
+      const unitID = "metadata-lifecycle";
+      const type = UniverType.UNIVER_DOC;
+      await adapter.createUnit(context, {
+        record: { ...createUnitRecord(unitID, type), metadata: { name: "Document" } },
+        snapshot: createSnapshot(unitID, type, 1),
+      });
+      const current = await adapter.getUnit(context, unitID);
+      await adapter.commitChangeset(context, {
+        unitMetadata: current!.metadata,
+        changeset: createChangeset({ unitID, type, revision: 2, sid: "metadata-life", reqId: 1, metadata: { source: "app" } }),
+      });
+      await adapter.deleteUnits(context, { unitIDs: [unitID], hardDelete: false });
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toBeNull();
+      await adapter.recoverUnits(context, { unitIDs: [unitID] });
+      expect((await adapter.getUnit(context, unitID))!.metadata).toEqual({ name: "Document" });
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toEqual({ source: "app" });
+      await adapter.deleteUnits(context, { unitIDs: [unitID], hardDelete: true });
+      await expect(adapter.getUnit(context, unitID)).resolves.toBeNull();
+      await expect(readChangesetMetadata(adapter, context, unitID, 2)).resolves.toBeNull();
     });
 
     it("rejects missing or invalid creation facts without creating a Unit", async () => {
@@ -173,9 +294,11 @@ export function databaseAdapterContract(
         reqId: 2,
       });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: revision2,
       });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: revision3,
       });
 
@@ -253,9 +376,11 @@ export function databaseAdapterContract(
         reqId: 2,
       });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: revision2,
       });
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: revision3,
       });
 
@@ -308,29 +433,55 @@ export function databaseAdapterContract(
       await expect(adapter.getSnapshotInfo(context, unitID)).resolves.toEqual({ unitID, type, rev: 1 });
     });
 
-    it("overwrites a snapshot and its blocks saved again at the same revision", async () => {
+    it("stores a block once when later snapshots reference it again", async () => {
+      const context = createDatabaseContext();
+      const unitID = "unit-snapshot-shared-block";
+      const type = UniverType.UNIVER_SHEET;
+      await createUnit(adapter, context, unitID, type);
+      for (const revision of [2, 3]) {
+        await adapter.commitChangeset(context, {
+          unitMetadata: {},
+          changeset: createChangeset({ unitID, type, revision, sid: "sid-shared-block", reqId: revision - 1 }),
+        });
+      }
+
+      // A block ID identifies its content: the unchanged block arrives again under the same ID.
+      const unchanged = createSheetBlock("block-unchanged", 2);
+      const added = createSheetBlock("block-added", 3);
+      await adapter.saveSnapshot(context, { snapshot: createSnapshot(unitID, type, 2), sheetBlocks: [unchanged] });
+      await adapter.saveSnapshot(context, {
+        snapshot: createSnapshot(unitID, type, 3),
+        sheetBlocks: [createSheetBlock("block-unchanged", 2), added],
+      });
+
+      await expect(adapter.getSnapshotInfo(context, unitID)).resolves.toEqual({ unitID, type, rev: 3 });
+      await expect(adapter.getSnapshot(context, unitID, { revision: 2 })).resolves.toEqual(
+        createSnapshot(unitID, type, 2)
+      );
+      await expect(adapter.getSheetBlock(context, unitID, unchanged.id)).resolves.toEqual(unchanged);
+      await expect(adapter.getSheetBlock(context, unitID, added.id)).resolves.toEqual(added);
+    });
+
+    it("overwrites a snapshot saved again at the same revision and keeps every block", async () => {
       const context = createDatabaseContext();
       const unitID = "unit-snapshot-overwrite";
       const type = UniverType.UNIVER_SHEET;
       await createUnit(adapter, context, unitID, type);
       await adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: createChangeset({ unitID, type, revision: 2, sid: "sid-overwrite", reqId: 1 }),
       });
 
       const snapshot = createSnapshot(unitID, type, 2);
-      await adapter.saveSnapshot(context, {
-        snapshot,
-        sheetBlocks: [createSheetBlock("block-shared", 2), createSheetBlock("block-first-only", 2)],
-      });
-      const replaced = createSheetBlock("block-shared", 3);
-      await adapter.saveSnapshot(context, { snapshot, sheetBlocks: [replaced] });
+      const first = createSheetBlock("block-first-only", 2);
+      const second = createSheetBlock("block-second-only", 3);
+      await adapter.saveSnapshot(context, { snapshot, sheetBlocks: [first] });
+      await adapter.saveSnapshot(context, { snapshot, sheetBlocks: [second] });
 
       await expect(adapter.getSnapshot(context, unitID)).resolves.toEqual(snapshot);
       await expect(adapter.getSnapshotInfo(context, unitID)).resolves.toEqual({ unitID, type, rev: 2 });
-      await expect(adapter.getSheetBlock(context, unitID, "block-shared")).resolves.toEqual(replaced);
-      await expect(adapter.getSheetBlock(context, unitID, "block-first-only")).resolves.toEqual(
-        createSheetBlock("block-first-only", 2)
-      );
+      await expect(adapter.getSheetBlock(context, unitID, first.id)).resolves.toEqual(first);
+      await expect(adapter.getSheetBlock(context, unitID, second.id)).resolves.toEqual(second);
     });
 
     it("reports revision-mismatch for stale and ahead revisions without changing the unit", async () => {
@@ -339,16 +490,18 @@ export function databaseAdapterContract(
       const type = UniverType.UNIVER_DOC;
       await createUnit(adapter, context, unitID, type);
       const revision2 = createChangeset({ unitID, type, revision: 2, sid: "sid-mismatch", reqId: 1 });
-      const committed = await adapter.commitChangeset(context, { changeset: revision2 });
+      const committed = await adapter.commitChangeset(context, { unitMetadata: {}, changeset: revision2 });
       expect(committed.status).toBe("committed");
 
       await expect(
         adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: createChangeset({ unitID, type, revision: 2, sid: "sid-stale", reqId: 1 }),
         })
       ).resolves.toEqual({ status: "revision-mismatch", actualHeadRevision: 2 });
       await expect(
         adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: createChangeset({ unitID, type, revision: 4, sid: "sid-ahead", reqId: 1 }),
         })
       ).resolves.toEqual({ status: "revision-mismatch", actualHeadRevision: 2 });
@@ -363,6 +516,7 @@ export function databaseAdapterContract(
       const context = createDatabaseContext();
       await expect(
         adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: createChangeset({
             unitID: "unit-never-created",
             type: UniverType.UNIVER_SHEET,
@@ -397,9 +551,11 @@ export function databaseAdapterContract(
 
       const results = await Promise.all([
         adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: first,
         }),
         adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: second,
         }),
       ]);
@@ -433,6 +589,7 @@ export function databaseAdapterContract(
           reqId: 1,
         });
         await adapter.commitChangeset(context, {
+          unitMetadata: {},
           changeset: revision2,
         });
         const latest = createSnapshot(unitID, type, 2);
@@ -464,6 +621,7 @@ export function databaseAdapterContract(
         ).resolves.toBeNull();
         await expect(
           adapter.commitChangeset(context, {
+            unitMetadata: {},
             changeset: revision2,
           })
         ).rejects.toMatchObject({ code: "UNIT_NOT_FOUND" });
@@ -601,6 +759,7 @@ async function assertPurged(
   ).resolves.toBeNull();
   await expect(
     adapter.commitChangeset(context, {
+      unitMetadata: {},
       changeset: createChangeset({
         unitID,
         type,
@@ -645,4 +804,14 @@ async function createUnit(
     snapshot,
   });
   return snapshot;
+}
+
+async function readChangesetMetadata(
+  adapter: IDatabaseAdapter,
+  context: ReturnType<typeof createDatabaseContext>,
+  unitID: string,
+  revision: number,
+): Promise<ChangesetMetadata | null> {
+  const changesets = await adapter.getChangesets(context, unitID, { from: revision - 1, to: revision });
+  return changesets?.[0]?.metadata ?? null;
 }
