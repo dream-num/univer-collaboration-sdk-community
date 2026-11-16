@@ -20,6 +20,7 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | [`@univerjs-pro/collaboration-database-memory`](./packages/collaboration-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-database-sqlite`](./packages/collaboration-database-sqlite/README.md) | SQLite adapter built on `libsql` |
 | [`@univerjs-pro/collaboration-database-postgres`](./packages/collaboration-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
+| [`@univerjs-pro/collaboration-database-postgres-s3`](./packages/collaboration-database-postgres-s3/README.md) | PostgreSQL adapter that stores Sheet blocks in an S3-compatible bucket |
 
 ### Thread Comment database adapters
 
@@ -27,6 +28,7 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | --- | --- |
 | [`@univerjs-pro/collaboration-comment-database-memory`](./packages/collaboration-comment-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-comment-database-sqlite`](./packages/collaboration-comment-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-comment-database-postgres`](./packages/collaboration-comment-database-postgres/README.md) | PostgreSQL adapter for thread comments and replies |
 
 ### History database adapters
 
@@ -34,6 +36,7 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | --- | --- |
 | [`@univerjs-pro/collaboration-history-database-memory`](./packages/collaboration-history-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-history-database-postgres`](./packages/collaboration-history-database-postgres/README.md) | PostgreSQL adapter for History records |
 
 ### File
 
@@ -53,6 +56,14 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | --- | --- |
 | [`@univerjs-pro/collaboration-exchange-service`](./packages/collaboration-exchange-service/README.md) | Exchange Service: Office and PDF import and export through `exchange-node`, the collaboration Service and the File Service |
 | [`@univerjs-pro/collaboration-exchange-endpoint`](./packages/collaboration-exchange-endpoint/README.md) | HTTP routes the Univer frontend calls for import, export and task status |
+
+### Worktree database adapters
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.md) | In-process adapter for tests and temporary services |
+| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
 
 ## Development
 
@@ -80,5 +91,6 @@ contract against it, and read the matching package here as a reference.
 | `IDatabaseAdapter` | [`collaboration-database-testkit`](./testkits/collaboration-database-testkit/README.md) |
 | `ICommentDatabaseAdapter` | [`collaboration-comment-database-testkit`](./testkits/collaboration-comment-database-testkit/README.md) |
 | `IHistoryDatabaseAdapter` | [`collaboration-history-database-testkit`](./testkits/collaboration-history-database-testkit/README.md) |
+| `IWorktreeDatabaseAdapter` | [`collaboration-worktree-database-testkit`](./testkits/collaboration-worktree-database-testkit/README.md) |
 | `IFileDatabaseAdapter` | [`collaboration-file-database-testkit`](./testkits/collaboration-file-database-testkit/README.md) |
 | `IFileBlobStore` | [`collaboration-file-blob-testkit`](./testkits/collaboration-file-blob-testkit/README.md) |
