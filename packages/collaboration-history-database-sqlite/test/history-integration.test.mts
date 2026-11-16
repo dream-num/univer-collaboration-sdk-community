@@ -39,6 +39,7 @@ it("indexes core persistence in a shared file, reopens it and hides deleted Unit
     await core.createUnit(context, { record, snapshot: createSnapshot("u", record.type, 1) });
     for (let revision = 2; revision <= 4; revision++) {
       await core.commitChangeset(context, {
+        unitMetadata: record.metadata,
         changeset: createChangeset({ unitID: "u", type: record.type, revision, sid: "s", reqId: revision }),
       });
     }

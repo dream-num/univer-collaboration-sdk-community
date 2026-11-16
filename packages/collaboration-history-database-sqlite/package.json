@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-history-database-sqlite",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "SQLite IHistoryDatabaseAdapter for Univer Collaboration built on libsql",
   "license": "Apache-2.0",
   "repository": {
@@ -25,14 +25,14 @@
     "libsql": "^0.5.29"
   },
   "peerDependencies": {
-    "@univerjs-pro/collaboration-history-service": "1.4.0"
+    "@univerjs-pro/collaboration-history-service": "1.5.2"
   },
   "devDependencies": {
     "@univerjs-pro/collaboration-database-sqlite": "workspace:*",
     "@univerjs-pro/collaboration-database-testkit": "workspace:*",
     "@univerjs-pro/collaboration-history-database-testkit": "workspace:*",
-    "@univerjs-pro/collaboration-history-service": "1.4.0",
-    "@univerjs-pro/collaboration-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "@univerjs-pro/collaboration-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

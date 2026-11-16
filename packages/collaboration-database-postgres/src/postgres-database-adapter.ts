@@ -3,6 +3,8 @@ import { Decoder, Encoder } from "@msgpack/msgpack";
 import type { Pool, PoolClient, QueryResult, QueryResultRow } from "pg";
 import {
   CollabError,
+  type ChangesetMetadata,
+  type ChangesetRecord,
   type CommitChangesetInput,
   type CommitChangesetResult,
   type CreateUnitDatabaseInput,
@@ -16,19 +18,28 @@ import {
   type SaveSnapshotInput,
   type SnapshotInfo,
   type SubmitDatabaseContext,
+  type UnitMetadata,
   type UnitRecord,
 } from "@univerjs-pro/collaboration-service";
 import type { IChangeset, ISheetBlock, ISnapshot } from "@univerjs/protocol";
 
-const SCHEMA_COMPONENT = "core";
-const SCHEMA_VERSION = 1;
-// Every collaboration adapter that initializes the shared `collaboration` schema takes this lock, so nodes
-// and components starting together create the schema and the version table once.
-const SCHEMA_LOCK_KEY = 0x636f_6c6c;
+import {
+  CORE_SCHEMA_SQL,
+  SCHEMA_COMPONENT,
+  SCHEMA_LOCK_KEY,
+  SCHEMA_VERSION,
+  SCHEMA_VERSIONS_SQL,
+  readCoreVersion,
+} from "./schema.js";
+import { transaction } from "./transaction.js";
 
 interface PayloadRow {
   readonly payload: Buffer;
 }
+
+type ChangesetRow =
+  | { readonly payload: Buffer; readonly metadata: ChangesetMetadata }
+  | { readonly payload: null; readonly metadata: null };
 
 // BIGINT columns arrive as strings from node-postgres.
 interface UnitRecordRow extends Omit<UnitRecord, "createdAt"> {
@@ -39,6 +50,7 @@ interface UnitRow extends UnitRecordRow {
   readonly deletedStatus: "soft" | "hard" | null;
 }
 
+/** @public */
 export interface PostgresDatabaseAdapterOptions {
   /** Connection pool owned by the application; the adapter never ends it. */
   readonly pool: Pool;
@@ -50,6 +62,7 @@ export interface PostgresDatabaseAdapterOptions {
  *
  * Create instances with {@link PostgresDatabaseAdapter.create}, which initializes an empty
  * `collaboration` schema and rejects one whose core version differs from the one this adapter writes.
+ * @public
  */
 export class PostgresDatabaseAdapter implements IDatabaseAdapter {
   private readonly _encoder = new Encoder({ ignoreUndefined: true });
@@ -67,7 +80,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
   async getUnit(_ctx: DatabaseContext, unitID: string): Promise<UnitRecord | null> {
     const { rows } = await this._query<UnitRecordRow>("get_unit", `
       SELECT unit_id AS "unitID", type, head_revision AS "headRevision",
-        creator_id AS "creatorID", created_at_ms AS "createdAt"
+        creator_id AS "creatorID", created_at_ms AS "createdAt", metadata
       FROM collaboration.units
       WHERE unit_id = $1 AND deleted_status IS NULL
     `, [unitID]);
@@ -101,7 +114,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     return rows[0] ? this._decode<ISnapshot>(rows[0].payload) : null;
   }
 
-  /** Reads metadata with the same selection rules as getSnapshot, without decoding the payload. */
+  /** Reads snapshot info with the same selection rules as getSnapshot, without decoding the payload. */
   async getSnapshotInfo(
     _ctx: DatabaseContext,
     unitID: string,
@@ -134,22 +147,22 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     _ctx: DatabaseContext,
     unitID: string,
     range: { readonly from: number; readonly to?: number },
-  ): Promise<readonly IChangeset[] | null> {
+  ): Promise<readonly ChangesetRecord[] | null> {
     if (range.from < 0 || (range.to !== undefined && range.to < 0)) {
       throw new CollabError("INVALID_REQUEST", "Changeset range revisions cannot be negative");
     }
 
     // LEFT JOIN distinguishes an inaccessible Unit (no rows) from an empty range (one null row).
     const { rows } = range.to === undefined
-      ? await this._query<{ readonly payload: Buffer | null }>("get_changesets", `
-        SELECT c.payload
+      ? await this._query<ChangesetRow>("get_changesets", `
+        SELECT c.payload, c.metadata
         FROM collaboration.units u
         LEFT JOIN collaboration.changesets c ON c.unit_id = u.unit_id AND c.revision > $2
         WHERE u.unit_id = $1 AND u.deleted_status IS NULL
         ORDER BY c.revision
       `, [unitID, range.from])
-      : await this._query<{ readonly payload: Buffer | null }>("get_changesets_in_range", `
-        SELECT c.payload
+      : await this._query<ChangesetRow>("get_changesets_in_range", `
+        SELECT c.payload, c.metadata
         FROM collaboration.units u
         LEFT JOIN collaboration.changesets c
           ON c.unit_id = u.unit_id AND c.revision > $2 AND c.revision <= $3
@@ -158,9 +171,11 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
       `, [unitID, range.from, range.to]);
     if (rows.length === 0) return null;
 
-    const changesets: IChangeset[] = [];
+    const changesets: ChangesetRecord[] = [];
     for (const row of rows) {
-      if (row.payload !== null) changesets.push(this._decode<IChangeset>(row.payload));
+      if (row.payload !== null) {
+        changesets.push(this._decodeChangeset(row.payload, row.metadata));
+      }
     }
     return changesets;
   }
@@ -185,15 +200,16 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     input: CreateUnitDatabaseInput,
   ): Promise<CreateUnitDatabaseResult> {
     validateInitialUnit(input);
+    const metadata = JSON.stringify(input.record.metadata);
     const { record, snapshot, sheetBlocks = [] } = input;
     const blocks = this._encodeBlocks(sheetBlocks);
 
-    return this._transaction(async (client) => {
+    return transaction(this._pool, async (client) => {
       // One statement inserts the Unit, its blocks and its snapshot, or nothing on conflict.
       const result = await this._query("create_unit", `
         WITH created AS (
-          INSERT INTO collaboration.units (unit_id, type, head_revision, creator_id, created_at_ms)
-          VALUES ($1, $2, 1, $6, $7)
+          INSERT INTO collaboration.units (unit_id, type, head_revision, creator_id, created_at_ms, metadata)
+          VALUES ($1, $2, 1, $6, $7, $8::jsonb)
           ON CONFLICT (unit_id) DO NOTHING
           RETURNING unit_id
         ), saved_blocks AS (
@@ -212,8 +228,9 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
         blocks.payloads,
         record.creatorID,
         record.createdAt,
+        metadata,
       ], client);
-      if (result.rowCount) return { status: "created", record: { ...record } };
+      if (result.rowCount) return { status: "created", record: { ...record, metadata: JSON.parse(metadata) as UnitMetadata } };
 
       // After a conflict, read the row under a lock so a concurrent delete or recover cannot interleave.
       const [unit] = await this._lockUnits(client, [record.unitID]);
@@ -232,20 +249,24 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     const { changeset } = input;
     // The persisted time replaces any caller-provided value; the input object is left unchanged.
     const createdAt = Date.now();
-    const committed: IChangeset = { ...changeset, createTime: Math.floor(createdAt / 1000) };
+    const { metadata, ...protocolChangeset } = changeset;
+    const payload = this._encode({
+      ...protocolChangeset,
+      createTime: Math.floor(createdAt / 1000),
+    });
 
     // The UPDATE performs the CAS under a row lock; a failed history insert rolls back the head too.
-    const result = await this._query("commit_changeset", `
+    const result = await this._query<{ readonly metadata: ChangesetMetadata }>("commit_changeset", `
       WITH updated_unit AS (
         UPDATE collaboration.units
-        SET head_revision = $2
+        SET head_revision = $2, metadata = $8::jsonb
         WHERE unit_id = $1 AND deleted_status IS NULL AND head_revision = $2::integer - 1
         RETURNING unit_id, head_revision
       )
       INSERT INTO collaboration.changesets
-        (unit_id, revision, base_revision, sid, req_id, created_at_ms, payload)
-      SELECT unit_id, head_revision, $3, $4, $5, $6, $7 FROM updated_unit
-      RETURNING revision
+        (unit_id, revision, base_revision, sid, req_id, created_at_ms, payload, metadata)
+      SELECT unit_id, head_revision, $3, $4, $5, $6, $7, $9::jsonb FROM updated_unit
+      RETURNING metadata
     `, [
       changeset.unitID,
       changeset.revision,
@@ -253,10 +274,16 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
       changeset.sid,
       changeset.reqId,
       createdAt,
-      this._encode(committed),
+      payload,
+      JSON.stringify(input.unitMetadata),
+      JSON.stringify(metadata),
     ]);
     if (result.rowCount) {
-      return { status: "committed", changeset: committed, headRevision: changeset.revision };
+      return {
+        status: "committed",
+        changeset: this._decodeChangeset(payload, result.rows[0]!.metadata),
+        headRevision: changeset.revision,
+      };
     }
 
     // Read the head that won, using a fresh statement snapshot.
@@ -268,7 +295,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
   /** Publishes a snapshot together with the blocks it references. */
   async saveSnapshot(_ctx: DatabaseContext, input: SaveSnapshotInput): Promise<void> {
     const { snapshot, sheetBlocks = [] } = input;
-    const blocks = this._encodeBlocks(sheetBlocks);
+    const blocks = this._encodeBlocks(await this._missingBlocks(snapshot.unitID, sheetBlocks));
     // The locked Unit row is validated inside the statement; writes apply only when it passes.
     const { rows } = await this._query<{ deletedStatus: "soft" | "hard" | null; saved: boolean }>("save_snapshot", `
       WITH locked_unit AS MATERIALIZED (
@@ -284,7 +311,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
         SELECT u.unit_id, b.id, b.payload
         FROM valid_unit u
         CROSS JOIN unnest($5::text[], $6::bytea[]) AS b(id, payload)
-        ON CONFLICT (unit_id, block_id) DO UPDATE SET payload = excluded.payload
+        ON CONFLICT (unit_id, block_id) DO NOTHING
       ), saved_snapshot AS (
         INSERT INTO collaboration.snapshots (unit_id, revision, payload)
         SELECT unit_id, $3, $4 FROM valid_unit
@@ -311,7 +338,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     const { unitIDs } = input;
     if (unitIDs.length === 0) return { units: [] };
 
-    return this._transaction(async (client) => {
+    return transaction(this._pool, async (client) => {
       const locked = await this._lockUnits(client, unitIDs);
       const units = locked.map((unit): DeleteUnitsDatabaseResult["units"][number] => {
         if (!unit || (unit.deletedStatus === "hard" && !input.hardDelete)) {
@@ -330,7 +357,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
         await this._query("hard_delete_units", `
           WITH deleted_units AS (
             UPDATE collaboration.units
-            SET deleted_at_ms = $2, deleted_status = 'hard'
+            SET deleted_at_ms = $2, deleted_status = 'hard', metadata = '{}'::jsonb
             WHERE unit_id = ANY($1::text[]) AND deleted_status IS DISTINCT FROM 'hard'
             RETURNING unit_id
           ), removed_snapshots AS (
@@ -359,7 +386,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     const { unitIDs } = input;
     if (unitIDs.length === 0) return { units: [] };
 
-    return this._transaction(async (client) => {
+    return transaction(this._pool, async (client) => {
       const locked = await this._lockUnits(client, unitIDs);
       const units = locked.map((unit): RecoverUnitsDatabaseResult["units"][number] => {
         if (!unit) throw new CollabError("UNIT_NOT_FOUND", "Cannot recover a missing unit");
@@ -381,88 +408,17 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
   }
 
   private async _initializeSchema(): Promise<void> {
-    await this._transaction(async (client) => {
+    await transaction(this._pool, async (client) => {
       await client.query("SELECT pg_advisory_xact_lock($1)", [SCHEMA_LOCK_KEY]);
-      await client.query(`
-        CREATE SCHEMA IF NOT EXISTS collaboration;
-        CREATE TABLE IF NOT EXISTS collaboration.schema_versions (
-          component TEXT PRIMARY KEY,
-          version INTEGER NOT NULL CHECK (version >= 1)
-        );
-      `);
-      const version = await this._readSchemaVersion(client);
+      await client.query(SCHEMA_VERSIONS_SQL);
+      const version = await readCoreVersion(client);
       if (version === SCHEMA_VERSION) return;
       if (version !== undefined) throw unsupportedSchemaVersion(version);
-      await this._createSchema(client);
+      await client.query(CORE_SCHEMA_SQL);
+      await client.query("INSERT INTO collaboration.schema_versions (component, version) VALUES ($1, $2)", [
+        SCHEMA_COMPONENT, SCHEMA_VERSION,
+      ]);
     });
-  }
-
-  private async _readSchemaVersion(client: PoolClient): Promise<number | undefined> {
-    const { rows } = await client.query<{ version: number }>(
-      `SELECT version FROM collaboration.schema_versions WHERE component = $1`,
-      [SCHEMA_COMPONENT],
-    );
-    return rows[0]?.version;
-  }
-
-  private async _createSchema(client: PoolClient): Promise<void> {
-    await client.query(`
-      CREATE TABLE collaboration.units (
-        unit_id TEXT PRIMARY KEY,
-        type INTEGER NOT NULL,
-        head_revision INTEGER NOT NULL CHECK (head_revision >= 1),
-        creator_id TEXT NOT NULL,
-        created_at_ms BIGINT NOT NULL,
-        deleted_at_ms BIGINT,
-        deleted_status TEXT CHECK (deleted_status IN ('soft', 'hard')),
-        CHECK ((deleted_status IS NULL) = (deleted_at_ms IS NULL))
-      );
-      CREATE TABLE collaboration.snapshots (
-        unit_id TEXT NOT NULL REFERENCES collaboration.units(unit_id) ON DELETE CASCADE,
-        revision INTEGER NOT NULL CHECK (revision >= 1),
-        payload BYTEA NOT NULL,
-        PRIMARY KEY (unit_id, revision)
-      );
-      CREATE TABLE collaboration.changesets (
-        unit_id TEXT NOT NULL REFERENCES collaboration.units(unit_id) ON DELETE CASCADE,
-        revision INTEGER NOT NULL CHECK (revision >= 2),
-        base_revision INTEGER NOT NULL CHECK (base_revision >= 1),
-        sid TEXT NOT NULL,
-        req_id INTEGER NOT NULL CHECK (req_id >= 1),
-        created_at_ms BIGINT NOT NULL,
-        payload BYTEA NOT NULL,
-        PRIMARY KEY (unit_id, revision),
-        UNIQUE (unit_id, sid, req_id)
-      );
-      CREATE TABLE collaboration.sheet_blocks (
-        unit_id TEXT NOT NULL REFERENCES collaboration.units(unit_id) ON DELETE CASCADE,
-        block_id TEXT NOT NULL,
-        payload BYTEA NOT NULL,
-        PRIMARY KEY (unit_id, block_id)
-      );
-      INSERT INTO collaboration.schema_versions (component, version)
-      VALUES ('${SCHEMA_COMPONENT}', ${SCHEMA_VERSION});
-    `);
-  }
-
-  private async _transaction<T>(work: (client: PoolClient) => Promise<T>): Promise<T> {
-    const client = await this._pool.connect();
-    let releaseError: Error | undefined;
-    try {
-      await client.query("BEGIN");
-      const result = await work(client);
-      await client.query("COMMIT");
-      return result;
-    } catch (error) {
-      try {
-        await client.query("ROLLBACK");
-      } catch (rollbackError) {
-        releaseError = rollbackError instanceof Error ? rollbackError : new Error("Rollback failed");
-      }
-      throw error;
-    } finally {
-      client.release(releaseError);
-    }
   }
 
   private async _lockUnits(
@@ -472,7 +428,7 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     // Locks rows in unit_id order so batches with different input orders cannot deadlock.
     const { rows } = await this._query<UnitRow>("lock_units", `
       SELECT unit_id AS "unitID", type, head_revision AS "headRevision",
-        creator_id AS "creatorID", created_at_ms AS "createdAt", deleted_status AS "deletedStatus"
+        creator_id AS "creatorID", created_at_ms AS "createdAt", metadata, deleted_status AS "deletedStatus"
       FROM collaboration.units
       WHERE unit_id = ANY($1::text[])
       ORDER BY unit_id
@@ -492,6 +448,10 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     return (client ?? this._pool).query<R>({ name, text, values });
   }
 
+  private _decodeChangeset(payload: Buffer, metadata: ChangesetMetadata): ChangesetRecord {
+    return { ...this._decode<IChangeset>(payload), metadata };
+  }
+
   private _encode(value: IChangeset | ISnapshot | ISheetBlock): Buffer {
     const bytes = this._encoder.encode(value);
     return Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -501,6 +461,20 @@ export class PostgresDatabaseAdapter implements IDatabaseAdapter {
     // A plain byte view makes protocol binary fields decode as Uint8Array rather than Buffer.
     const bytes = new Uint8Array(payload.buffer, payload.byteOffset, payload.byteLength);
     return this._decoder.decode(bytes) as T;
+  }
+
+  // A block ID identifies its content, so blocks the Unit already stores are neither encoded nor
+  // sent. Blocks are removed only together with their Unit, which the save statement validates.
+  private async _missingBlocks(unitID: string, sheetBlocks: readonly ISheetBlock[]): Promise<readonly ISheetBlock[]> {
+    if (sheetBlocks.length === 0) return sheetBlocks;
+    const { rows } = await this._query<{ blockID: string }>("get_stored_sheet_block_ids", `
+      SELECT block_id AS "blockID"
+      FROM collaboration.sheet_blocks
+      WHERE unit_id = $1 AND block_id = ANY($2::text[])
+    `, [unitID, sheetBlocks.map((block) => block.id)]);
+    if (rows.length === 0) return sheetBlocks;
+    const stored = new Set(rows.map((row) => row.blockID));
+    return sheetBlocks.filter((block) => !stored.has(block.id));
   }
 
   private _encodeBlocks(sheetBlocks: readonly ISheetBlock[]): { ids: string[]; payloads: Buffer[] } {
@@ -546,9 +520,10 @@ function validateRevisionBound(revision: number | undefined): number | undefined
 }
 
 function unsupportedSchemaVersion(version: number): CollabError {
+  const remedy = version < SCHEMA_VERSION ? "run migratePostgresCore first" : "upgrade the adapter";
   return new CollabError(
     "INTERNAL_ERROR",
-    `Core schema version ${version} is not supported by this adapter (expected ${SCHEMA_VERSION}); migrate the database explicitly first`,
+    `Core schema version ${version} is not supported by this adapter (expected ${SCHEMA_VERSION}); ${remedy}`,
   );
 }
 
@@ -559,5 +534,6 @@ function toUnitRecord(unit: UnitRecordRow): UnitRecord {
     headRevision: unit.headRevision,
     creatorID: unit.creatorID,
     createdAt: Number(unit.createdAt),
+    metadata: unit.metadata,
   };
 }

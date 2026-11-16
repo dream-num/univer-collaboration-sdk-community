@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-service",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "File Service of Univer Collaboration: metadata and content storage contracts, ownership rules, middleware and expiry cleanup",
   "license": "Apache-2.0",
   "repository": {
@@ -22,9 +22,9 @@
     "coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs/protocol": "1.5.2"
   },
   "devDependencies": {
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs/protocol": "1.5.2"
   }
 }

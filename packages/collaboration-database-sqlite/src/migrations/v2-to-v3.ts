@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import { Encoder } from "@msgpack/msgpack";
 import type Database from "libsql";
 import { UniverType } from "@univerjs/protocol";
-import { CORE_SCHEMA_V3_SQL } from "../schema.js";
+import { CORE_SCHEMA_V3_SQL } from "./schema-v3.js";
 import {
   readDependents,
   readMigrationRows,

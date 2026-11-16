@@ -4,6 +4,7 @@ import { CollabError } from "@univerjs-pro/collaboration-service";
 import { CORE_SCHEMA_VERSION } from "../schema.js";
 import { migrateSQLiteCoreV1ToV2, type SQLiteCoreV1ToV2MigrationOptions } from "./v1-to-v2.js";
 import { migrateSQLiteCoreV2ToV3 } from "./v2-to-v3.js";
+import { migrateSQLiteCoreV3ToV4 } from "./v3-to-v4.js";
 
 export interface SQLiteCoreMigrationOptions extends SQLiteCoreV1ToV2MigrationOptions {
   /** Where the backup is written before any change. Defaults to `<filename>.v<from>.backup`. */
@@ -23,6 +24,7 @@ export interface SQLiteCoreMigrationResult {
 const STEPS: readonly ((options: SQLiteCoreV1ToV2MigrationOptions) => Promise<void>)[] = [
   migrateSQLiteCoreV1ToV2,
   migrateSQLiteCoreV2ToV3,
+  migrateSQLiteCoreV3ToV4,
 ];
 
 /**

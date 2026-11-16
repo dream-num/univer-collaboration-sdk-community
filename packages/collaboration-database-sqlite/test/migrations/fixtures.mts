@@ -1,8 +1,8 @@
 import { Buffer } from "node:buffer";
 import Database from "libsql";
 
-// Frozen DDL of the schemas written by earlier releases. The adapter only creates v3, so the
-// migration tests build their inputs from these definitions.
+// Frozen DDL written by earlier releases. The adapter only creates the current schema,
+// so migration tests build their inputs from these definitions.
 const V2_UNITS = `
   CREATE TABLE collaboration_units (
     unit_id TEXT PRIMARY KEY,

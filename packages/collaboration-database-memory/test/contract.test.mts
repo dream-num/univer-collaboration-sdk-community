@@ -30,6 +30,7 @@ describe("MemoryDatabaseAdapter atomic publication", () => {
       snapshot: initial,
     });
     await adapter.commitChangeset(context, {
+      unitMetadata: {},
       changeset: createChangeset({
         unitID,
         type,

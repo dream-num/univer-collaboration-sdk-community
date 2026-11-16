@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-comment-database-sqlite",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "SQLite ICommentDatabaseAdapter for Univer Collaboration built on libsql",
   "license": "Apache-2.0",
   "repository": {
@@ -25,12 +25,12 @@
     "libsql": "^0.5.29"
   },
   "peerDependencies": {
-    "@univerjs-pro/collaboration-comment-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-comment-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   },
   "devDependencies": {
     "@univerjs-pro/collaboration-comment-database-testkit": "workspace:*",
-    "@univerjs-pro/collaboration-comment-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-comment-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

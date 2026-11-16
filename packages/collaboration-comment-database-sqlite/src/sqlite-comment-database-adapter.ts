@@ -19,8 +19,7 @@ import type {
 } from "@univerjs-pro/collaboration-comment-service";
 import { CommentSolvedStatus } from "@univerjs/protocol";
 
-const SCHEMA_COMPONENT = "comment";
-const SCHEMA_VERSION = 1;
+import { COMMENT_SCHEMA_SQL, SCHEMA_COMPONENT, SCHEMA_VERSION, SCHEMA_VERSIONS_SQL } from "./schema.js";
 
 interface CommentRow {
   readonly unit_id: string;
@@ -191,12 +190,7 @@ export class SQLiteCommentDatabaseAdapter implements ICommentDatabaseAdapter {
 
   private _initializeSchema(): void {
     this._transaction(() => {
-      this._database.exec(`
-        CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
-          component TEXT PRIMARY KEY,
-          version INTEGER NOT NULL CHECK (version >= 1)
-        );
-      `);
+      this._database.exec(SCHEMA_VERSIONS_SQL);
       const version = this._readSchemaVersion();
       if (version === SCHEMA_VERSION) return;
       if (version !== undefined) {
@@ -217,21 +211,7 @@ export class SQLiteCommentDatabaseAdapter implements ICommentDatabaseAdapter {
 
   private _createSchema(): void {
     this._database.exec(`
-      CREATE TABLE collaboration_comments (
-        unit_id TEXT NOT NULL,
-        thread_id TEXT NOT NULL,
-        reply_id TEXT NOT NULL,
-        author_user_id TEXT NOT NULL,
-        content TEXT NOT NULL,
-        mentions_json TEXT NOT NULL,
-        solved INTEGER NOT NULL,
-        created_at INTEGER NOT NULL,
-        updated_at INTEGER NOT NULL,
-        generation TEXT NOT NULL,
-        PRIMARY KEY (unit_id, reply_id)
-      );
-      CREATE INDEX collaboration_comments_thread_lookup
-        ON collaboration_comments(unit_id, thread_id, created_at, reply_id);
+      ${COMMENT_SCHEMA_SQL}
       INSERT INTO collaboration_schema_versions (component, version)
       VALUES ('${SCHEMA_COMPONENT}', ${SCHEMA_VERSION});
     `);

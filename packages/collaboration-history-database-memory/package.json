@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-history-database-memory",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "In-process IHistoryDatabaseAdapter for Univer Collaboration tests and temporary services",
   "license": "Apache-2.0",
   "repository": {
@@ -22,12 +22,12 @@
     "coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "@univerjs-pro/collaboration-history-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   },
   "devDependencies": {
     "@univerjs-pro/collaboration-history-database-testkit": "workspace:*",
-    "@univerjs-pro/collaboration-history-service": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-history-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

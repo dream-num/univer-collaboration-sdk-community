@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-exchange-service",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "Exchange Service of Univer Collaboration: Office and PDF import and export through exchange-node, the collaboration Service and the File Service",
   "license": "Apache-2.0",
   "repository": {
@@ -23,16 +23,16 @@
   },
   "peerDependencies": {
     "@univerjs-pro/collaboration-file-service": "workspace:*",
-    "@univerjs-pro/collaboration-service": "1.4.0",
-    "@univerjs-pro/exchange-node": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-service": "1.5.2",
+    "@univerjs-pro/exchange-node": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   },
   "devDependencies": {
     "@univerjs-pro/collaboration-database-memory": "workspace:*",
     "@univerjs-pro/collaboration-file-memory": "workspace:*",
     "@univerjs-pro/collaboration-file-service": "workspace:*",
-    "@univerjs-pro/collaboration-service": "1.4.0",
-    "@univerjs-pro/exchange-node": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-service": "1.5.2",
+    "@univerjs-pro/exchange-node": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

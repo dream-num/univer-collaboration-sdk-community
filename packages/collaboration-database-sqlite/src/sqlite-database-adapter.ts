@@ -3,6 +3,8 @@ import { Decoder, Encoder } from "@msgpack/msgpack";
 import Database from "libsql";
 import {
   CollabError,
+  type ChangesetMetadata,
+  type ChangesetRecord,
   type CommitChangesetInput,
   type CommitChangesetResult,
   type CreateUnitDatabaseInput,
@@ -16,12 +18,14 @@ import {
   type SaveSnapshotInput,
   type SnapshotInfo,
   type SubmitDatabaseContext,
+  type UnitMetadata,
   type UnitRecord,
 } from "@univerjs-pro/collaboration-service";
 import type { IChangeset, ISheetBlock, ISnapshot } from "@univerjs/protocol";
-import { CORE_SCHEMA_COMPONENT, CORE_SCHEMA_V3_SQL, CORE_SCHEMA_VERSION } from "./schema.js";
+import { CORE_SCHEMA_COMPONENT, CORE_SCHEMA_SQL, CORE_SCHEMA_VERSION, SCHEMA_VERSIONS_SQL } from "./schema.js";
 
-interface UnitRow extends UnitRecord {
+interface UnitRow extends Omit<UnitRecord, "metadata"> {
+  readonly metadata: string;
   readonly deletedStatus: "soft" | "hard" | null;
 }
 
@@ -59,9 +63,9 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
   private readonly _getSheetBlock: Database.Statement;
   private readonly _insertUnit: Database.Statement;
   private readonly _insertChangeset: Database.Statement;
-  private readonly _updateHeadRevision: Database.Statement;
+  private readonly _updateUnitHeadAndMetadata: Database.Statement;
   private readonly _upsertSnapshot: Database.Statement;
-  private readonly _upsertSheetBlock: Database.Statement;
+  private readonly _insertSheetBlock: Database.Statement;
   private readonly _deleteSnapshots: Database.Statement;
   private readonly _deleteChangesets: Database.Statement;
   private readonly _deleteSheetBlocks: Database.Statement;
@@ -82,7 +86,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
 
       this._getUnit = this._database.prepare(`
         SELECT unit_id AS unitID, type, head_revision AS headRevision,
-          creator_id AS creatorID, created_at_ms AS createdAt, deleted_status AS deletedStatus
+          creator_id AS creatorID, created_at_ms AS createdAt, metadata, deleted_status AS deletedStatus
         FROM collaboration_units
         WHERE unit_id = ?
       `);
@@ -124,14 +128,14 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
 
       // LEFT JOIN distinguishes an inaccessible Unit (no rows) from an empty range (one null row).
       this._getChangesets = this._database.prepare(`
-        SELECT c.payload
+        SELECT c.payload, c.metadata
         FROM collaboration_units u
         LEFT JOIN collaboration_changesets c ON c.unit_id = u.unit_id AND c.revision > ?
         WHERE u.unit_id = ? AND u.deleted_status IS NULL
         ORDER BY c.revision ASC
       `);
       this._getChangesetsInRange = this._database.prepare(`
-        SELECT c.payload
+        SELECT c.payload, c.metadata
         FROM collaboration_units u
         LEFT JOIN collaboration_changesets c
           ON c.unit_id = u.unit_id AND c.revision > ? AND c.revision <= ?
@@ -147,24 +151,24 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
       `);
 
       this._insertUnit = this._database.prepare(`
-        INSERT INTO collaboration_units (unit_id, type, head_revision, creator_id, created_at_ms)
-        VALUES (?, ?, 1, ?, ?)
+        INSERT INTO collaboration_units (unit_id, type, head_revision, creator_id, created_at_ms, metadata)
+        VALUES (?, ?, 1, ?, ?, ?)
       `);
       this._insertChangeset = this._database.prepare(`
         INSERT INTO collaboration_changesets
-          (unit_id, revision, base_revision, sid, req_id, created_at_ms, payload)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+          (unit_id, revision, base_revision, sid, req_id, created_at_ms, payload, metadata)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
-      this._updateHeadRevision = this._database.prepare(
-        "UPDATE collaboration_units SET head_revision = ? WHERE unit_id = ?",
+      this._updateUnitHeadAndMetadata = this._database.prepare(
+        "UPDATE collaboration_units SET head_revision = ?, metadata = ? WHERE unit_id = ?",
       );
       this._upsertSnapshot = this._database.prepare(`
         INSERT INTO collaboration_snapshots (unit_id, revision, payload) VALUES (?, ?, ?)
         ON CONFLICT (unit_id, revision) DO UPDATE SET payload = excluded.payload
       `);
-      this._upsertSheetBlock = this._database.prepare(`
+      this._insertSheetBlock = this._database.prepare(`
         INSERT INTO collaboration_sheet_blocks (unit_id, block_id, payload) VALUES (?, ?, ?)
-        ON CONFLICT (unit_id, block_id) DO UPDATE SET payload = excluded.payload
+        ON CONFLICT (unit_id, block_id) DO NOTHING
       `);
 
       this._deleteSnapshots = this._database.prepare(
@@ -180,7 +184,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
         "UPDATE collaboration_units SET deleted_at_ms = ?, deleted_status = 'soft' WHERE unit_id = ?",
       );
       this._markHardDeleted = this._database.prepare(
-        "UPDATE collaboration_units SET deleted_at_ms = ?, deleted_status = 'hard' WHERE unit_id = ?",
+        "UPDATE collaboration_units SET deleted_at_ms = ?, deleted_status = 'hard', metadata = '{}' WHERE unit_id = ?",
       );
       this._markActive = this._database.prepare(
         "UPDATE collaboration_units SET deleted_at_ms = NULL, deleted_status = NULL WHERE unit_id = ?",
@@ -213,7 +217,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
     return row ? this._decode<ISnapshot>(row.payload) : null;
   }
 
-  /** Reads metadata with the same selection rules as getSnapshot, without decoding the payload. */
+  /** Reads snapshot info with the same selection rules as getSnapshot, without decoding the payload. */
   async getSnapshotInfo(
     _ctx: DatabaseContext,
     unitID: string,
@@ -234,7 +238,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
     _ctx: DatabaseContext,
     unitID: string,
     range: { readonly from: number; readonly to?: number },
-  ): Promise<readonly IChangeset[] | null> {
+  ): Promise<readonly ChangesetRecord[] | null> {
     this._assertOpen();
     if (range.from < 0 || (range.to !== undefined && range.to < 0)) {
       throw new CollabError("INVALID_REQUEST", "Changeset range revisions cannot be negative");
@@ -244,12 +248,15 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
       range.to === undefined
         ? this._getChangesets.all(range.from, unitID)
         : this._getChangesetsInRange.all(range.from, range.to, unitID)
-    ) as { readonly payload: ArrayBuffer | Buffer | null }[];
+    ) as ({ readonly payload: ArrayBuffer | Buffer; readonly metadata: string }
+      | { readonly payload: null; readonly metadata: null })[];
     if (rows.length === 0) return null;
 
-    const changesets: IChangeset[] = [];
+    const changesets: ChangesetRecord[] = [];
     for (const row of rows) {
-      if (row.payload !== null) changesets.push(this._decode<IChangeset>(row.payload));
+      if (row.payload !== null) {
+        changesets.push(this._decodeChangeset(row.payload, row.metadata));
+      }
     }
     return changesets;
   }
@@ -275,6 +282,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
     // Encoding before the transaction keeps serialization failures out of the write lock.
     const encodedSnapshot = this._encode(snapshot);
     const encodedBlocks = this._encodeBlocks(sheetBlocks);
+    const metadata = JSON.stringify(record.metadata);
 
     return this._database
       .transaction((): CreateUnitDatabaseResult => {
@@ -286,9 +294,9 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
           return { status: "already-exists", record: toUnitRecord(existing) };
         }
 
-        this._insertUnit.run(record.unitID, record.type, record.creatorID, record.createdAt);
+        this._insertUnit.run(record.unitID, record.type, record.creatorID, record.createdAt, metadata);
         this._writeSnapshot(record.unitID, 1, encodedSnapshot, encodedBlocks);
-        return { status: "created", record: { ...record } };
+        return { status: "created", record: { ...record, metadata: JSON.parse(metadata) as UnitMetadata } };
       })
       .immediate();
   }
@@ -311,7 +319,9 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
 
         // The persisted time replaces any caller-provided value; the input object is left unchanged.
         const createdAt = Date.now();
-        const committed: IChangeset = { ...changeset, createTime: Math.floor(createdAt / 1000) };
+        const { metadata, ...protocolChangeset } = changeset;
+        const payload = this._encode({ ...protocolChangeset, createTime: Math.floor(createdAt / 1000) });
+        const metadataJSON = JSON.stringify(metadata);
         this._insertChangeset.run(
           changeset.unitID,
           changeset.revision,
@@ -319,10 +329,19 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
           changeset.sid,
           changeset.reqId,
           createdAt,
-          this._encode(committed),
+          payload,
+          metadataJSON,
         );
-        this._updateHeadRevision.run(changeset.revision, changeset.unitID);
-        return { status: "committed", changeset: committed, headRevision: changeset.revision };
+        this._updateUnitHeadAndMetadata.run(
+          changeset.revision,
+          JSON.stringify(input.unitMetadata),
+          changeset.unitID,
+        );
+        return {
+          status: "committed",
+          changeset: this._decodeChangeset(payload, metadataJSON),
+          headRevision: changeset.revision,
+        };
       })
       .immediate();
   }
@@ -425,12 +444,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
   private _initializeSchema(): void {
     this._database
       .transaction(() => {
-        this._database.exec(`
-          CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
-            component TEXT PRIMARY KEY,
-            version INTEGER NOT NULL CHECK (version >= 1)
-          );
-        `);
+        this._database.exec(SCHEMA_VERSIONS_SQL);
         const version = this._readSchemaVersion();
         if (version === CORE_SCHEMA_VERSION) return;
         if (version !== undefined) throw unsupportedSchemaVersion(version);
@@ -448,7 +462,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
 
   private _createSchema(): void {
     this._database.exec(`
-      ${CORE_SCHEMA_V3_SQL}
+      ${CORE_SCHEMA_SQL}
       INSERT INTO collaboration_schema_versions (component, version)
       VALUES ('${CORE_SCHEMA_COMPONENT}', ${CORE_SCHEMA_VERSION});
     `);
@@ -473,7 +487,7 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
     blocks: readonly { readonly id: string; readonly payload: Uint8Array }[],
   ): void {
     for (const block of blocks) {
-      this._upsertSheetBlock.run(unitID, block.id, block.payload);
+      this._insertSheetBlock.run(unitID, block.id, block.payload);
     }
     this._upsertSnapshot.run(unitID, revision, snapshot);
   }
@@ -494,13 +508,20 @@ export class SQLiteDatabaseAdapter implements IDatabaseAdapter {
     return blocks.map((block) => ({ id: block.id, payload: this._encode(block) }));
   }
 
-  private _decode<T>(payload: ArrayBuffer | Buffer): T {
+  private _decode<T>(payload: ArrayBuffer | Uint8Array): T {
     // A plain byte view makes protocol binary fields decode as Uint8Array rather than Buffer.
     const bytes =
       payload instanceof ArrayBuffer
         ? new Uint8Array(payload)
         : new Uint8Array(payload.buffer, payload.byteOffset, payload.byteLength);
     return this._decoder.decode(bytes) as T;
+  }
+
+  private _decodeChangeset(payload: ArrayBuffer | Uint8Array, metadata: string): ChangesetRecord {
+    return {
+      ...this._decode<IChangeset>(payload),
+      metadata: JSON.parse(metadata) as ChangesetMetadata,
+    };
   }
 }
 
@@ -548,5 +569,6 @@ function toUnitRecord(row: UnitRow): UnitRecord {
     headRevision: row.headRevision,
     creatorID: row.creatorID,
     createdAt: row.createdAt,
+    metadata: JSON.parse(row.metadata) as UnitMetadata,
   };
 }

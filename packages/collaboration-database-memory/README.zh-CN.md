@@ -27,9 +27,16 @@ await database.dispose();
 
 将 Adapter 作为 `dbAdapter` 传给 `UniverCollabService`。
 
+## 存储契约
+
 它与 SQLite、PostgreSQL Adapter 遵守相同的协同持久化契约，包括 revision CAS、revisioned
 snapshot、Sheet blocks 和原子 Unit 生命周期批次。提交幂等由 Service 从连续
 changeset history 中判断，不由 Adapter 维护 submission 索引。
+
+Unit 记录与 confirmed changeset 包含应用 `metadata`。成功的 `commitChangeset()` 将
+`changeset.metadata`、新 head 和完整的 `unitMetadata` 原子保存。每次提交必须提供两个完整
+metadata 对象，默认值和草稿由 Service 提供。metadata 必须是可 JSON 序列化的对象。
+`getUnit()` 和 `getChangesets()` 返回已保存 metadata 的独立副本。
 
 ## 限制
 

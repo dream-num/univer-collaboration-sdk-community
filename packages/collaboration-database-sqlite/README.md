@@ -38,11 +38,21 @@ Pass the Adapter to `UniverCollabService` as `dbAdapter`.
 
 - It does not change `journal_mode`; configure WAL, checkpointing, or backup policy before opening the Adapter when needed.
 - Core tables use the `collaboration_` prefix. Protocol objects are stored as MessagePack `BLOB` payloads.
-- Schema version `('core', 3)` is stored in `collaboration_schema_versions`, which other Univer collaboration components share; `PRAGMA user_version` is not used.
+- Schema version `('core', 4)` is stored in `collaboration_schema_versions`, which other Univer collaboration components share; `PRAGMA user_version` is not used.
 - Changeset scalar columns and the submission unique constraint provide database-level integrity, while commits use revision CAS and do not query the submission key.
-- An empty database is initialized automatically. A core schema version other than 3 is rejected; see Migrations.
+- An empty database is initialized automatically. A core schema version other than 4 is rejected; see Migrations.
 
 This implementation suits local applications and small-to-medium single-Node deployments.
+
+## Application metadata
+
+`UnitRecord.metadata` and `ChangesetRecord.metadata` use `Record<string, unknown>` and must contain
+JSON values. Creation stores `record.metadata`; `getUnit()` and `getChangesets()` return the saved values.
+`commitChangeset()` requires complete `unitMetadata` and `changeset.metadata` and saves both atomically
+with the new head. The Service prepares the metadata defaults and drafts before each commit.
+
+Soft deletion and recovery preserve metadata; hard deletion removes changesets and clears Unit
+metadata. Snapshot saves leave metadata unchanged.
 
 ## Migrations
 
@@ -53,7 +63,8 @@ fails with an error that points here; migrations never run when the adapter open
 | --- | --- |
 | v1 | 1.0.0-rc |
 | v2 | 1.0.0 to 1.3.x |
-| v3 | this release |
+| v3 | 1.4.x |
+| v4 | 1.5.0 onward |
 
 Stop writers, then let `migrateSQLiteCore` back up the file and apply every missing step:
 
@@ -61,7 +72,7 @@ Stop writers, then let `migrateSQLiteCore` back up the file and apply every miss
 import { migrateSQLiteCore } from '@univerjs-pro/collaboration-database-sqlite';
 
 const result = await migrateSQLiteCore({ filename: './data/collaboration.sqlite' });
-// { from: 2, to: 3, backupFilename: './data/collaboration.sqlite.v2.backup' }
+// { from: 2, to: 4, backupFilename: './data/collaboration.sqlite.v2.backup' }
 ```
 
 The backup is a consistent copy written next to the database before anything changes; pass
@@ -96,3 +107,8 @@ V3 stores protocol objects as MessagePack `BLOB` payloads instead of JSON text, 
 explicit indexes. Each v2 tombstone becomes a hard-delete marker row that keeps its Unit ID reserved;
 the marker carries placeholder values (Sheet type, revision 1, creator `anonymous`, purge time as
 creation time) and is never returned by reads.
+
+### Data added in v4
+
+V4 adds metadata to Units and changesets. Existing records receive `{}`; no metadata is inferred
+from document contents, and changeset payloads remain unchanged.

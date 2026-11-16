@@ -14,6 +14,7 @@ import {
   HISTORY_SCHEMA_COMPONENT,
   HISTORY_SCHEMA_VERSION,
   HISTORY_TABLE_SQL,
+  SCHEMA_VERSIONS_SQL,
 } from "./schema.js";
 
 interface HistoryRow {
@@ -183,12 +184,7 @@ export class SQLiteHistoryDatabaseAdapter implements IHistoryDatabaseAdapter {
 
   private _initializeSchema(): void {
     this._transaction(() => {
-      this._database.exec(`
-        CREATE TABLE IF NOT EXISTS collaboration_schema_versions (
-          component TEXT PRIMARY KEY,
-          version INTEGER NOT NULL CHECK (version >= 1)
-        );
-      `);
+      this._database.exec(SCHEMA_VERSIONS_SQL);
       const version = this._readSchemaVersion();
       if (version === HISTORY_SCHEMA_VERSION) return;
       if (version !== undefined) throw unsupportedSchemaVersion(version);

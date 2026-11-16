@@ -1,0 +1,29 @@
+{
+  "name": "@univerjs-pro/collaboration-worktree-database-memory",
+  "version": "1.5.2",
+  "description": "In-process IWorktreeDatabaseAdapter for Univer Collaboration tests and temporary services",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dream-num/univer-collaboration-sdk-community.git",
+    "directory": "packages/collaboration-worktree-database-memory"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@univerjs-pro/collaboration-service": "1.5.2",
+    "@univerjs-pro/collaboration-worktree-service": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
+  },
+  "devDependencies": {
+    "@univerjs-pro/collaboration-worktree-database-testkit": "workspace:*"
+  }
+}

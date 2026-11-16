@@ -5,6 +5,7 @@ import { createChangeset, createDatabaseContext, createSnapshot } from "@univerj
 import { UniverType } from "@univerjs/protocol";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { SQLiteDatabaseAdapter, migrateSQLiteCoreV1ToV2, migrateSQLiteCoreV2ToV3 } from "../../src/index.js";
+import { migrateSQLiteCoreV3ToV4 } from "../../src/migrations/v3-to-v4.js";
 import { createV1Database, encodeLegacy, exec } from "./fixtures.mjs";
 
 let directory: string;
@@ -31,18 +32,19 @@ afterEach(async () => {
   await rm(directory, { recursive: true, force: true });
 });
 
-it("migrates a v1 database through v2 to v3 and serves it with the adapter", async () => {
+it("migrates a v1 database through v2 and v3 to v4 and serves it with the adapter", async () => {
   await migrateSQLiteCoreV1ToV2({
     filename,
     resolveUnitCreation: (unitID) => ({ creatorID: `creator-${unitID}`, createdAt: 1700000000000 }),
     resolveChangesetCreatedAt: () => 1700000000123,
   });
   await migrateSQLiteCoreV2ToV3({ filename });
+  await migrateSQLiteCoreV3ToV4({ filename });
 
   const adapter = new SQLiteDatabaseAdapter({ filename });
   try {
     await expect(adapter.getUnit(context, "active")).resolves.toEqual({
-      unitID: "active", type, headRevision: 2, creatorID: "creator-active", createdAt: 1700000000000,
+      unitID: "active", type, headRevision: 2, creatorID: "creator-active", createdAt: 1700000000000, metadata: {},
     });
     await expect(adapter.getSnapshot(context, "active")).resolves.toEqual(createSnapshot("active", type, 1));
     const changesets = await adapter.getChangesets(context, "active", { from: 1 });
@@ -57,6 +59,7 @@ it("migrates a v1 database through v2 to v3 and serves it with the adapter", asy
 
     await expect(
       adapter.commitChangeset(context, {
+        unitMetadata: {},
         changeset: createChangeset({ unitID: "active", type, revision: 3, sid: "s", reqId: 2 }),
       }),
     ).resolves.toMatchObject({ status: "committed", headRevision: 3 });

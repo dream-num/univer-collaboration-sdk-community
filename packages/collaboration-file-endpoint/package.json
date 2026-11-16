@@ -1,6 +1,6 @@
 {
   "name": "@univerjs-pro/collaboration-file-endpoint",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "HTTP file routes of the Univer frontend for the Univer Collaboration File Service",
   "license": "Apache-2.0",
   "repository": {
@@ -27,13 +27,13 @@
   },
   "peerDependencies": {
     "@univerjs-pro/collaboration-file-service": "workspace:*",
-    "@univerjs-pro/collaboration-transport-node": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-transport-node": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   },
   "devDependencies": {
     "@univerjs-pro/collaboration-file-memory": "workspace:*",
     "@univerjs-pro/collaboration-file-service": "workspace:*",
-    "@univerjs-pro/collaboration-transport-node": "1.4.0",
-    "@univerjs/protocol": "1.4.0"
+    "@univerjs-pro/collaboration-transport-node": "1.5.2",
+    "@univerjs/protocol": "1.5.2"
   }
 }

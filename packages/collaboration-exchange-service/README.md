@@ -37,6 +37,65 @@ await fileService.dispose();
 
 The constructor throws a `TypeError` when a required option is missing. Dispose Exchange before the File Service and the collaboration Service.
 
+## The core of an import and an export
+
+An import is one conversion and one call to the collaboration Service; so is an export. For an XLSX file and a Sheet they look like this:
+
+```ts
+const unitID = randomUUID();
+const imported = await importBufferToSnapshot(bytes, {
+  type: UniverInstanceType.UNIVER_SHEET,
+  format: ExchangeFormat.XLSX,
+  fileName,
+  unitId: unitID,
+  formulaCalculation: FormulaCalculationMode.FORCED,
+  files: { store: storeEmbeddedFile },
+});
+
+await collabService.createUnitFromSnapshot(
+  {
+    snapshot: { ...imported.snapshot, unitID, type: UniverType.UNIVER_SHEET, rev: 1 },
+    sheetBlocks: imported.sheetBlocks,
+  },
+  context
+);
+```
+
+```ts
+const data = await collabService.getUnitLoadDataWithBlocks(
+  { unitID, type: UniverType.UNIVER_SHEET, revision: 0 },
+  context
+);
+
+// `materializer` is one `UnitSnapshotMaterializer`, created once and reused.
+const head =
+  data.changesets.length === 0
+    ? { snapshot: data.snapshot, sheetBlocks: [...data.sheetBlocks] }
+    : await materializer.materializeSnapshot(data);
+
+const xlsx = await exportSnapshotToBuffer(head, {
+  type: UniverInstanceType.UNIVER_SHEET,
+  format: ExchangeFormat.XLSX,
+  // Already calculated: by the import, by the collaboration Service when it saved the snapshot,
+  // or by `materializeSnapshot`. Calculating again here is not needed.
+  formulaCalculation: FormulaCalculationMode.NO,
+  files: { load: loadEmbeddedFile },
+});
+```
+
+The `files.store` and `files.load` callbacks can use the SDK’s [File Service](../collaboration-file-service/README.md) or your application’s own storage to save and retrieve images and attachments.
+
+The rest of this Service handles what surrounds those calls:
+
+| Concern | What the Service does |
+| --- | --- |
+| Tasks | Runs the conversion in the background and keeps each task readable by its creator. |
+| Requests | Validates the input, and resolves the format and the front-end options for each type. |
+| Files | Checks that the caller owns the source file, stores imported images and attachments as files of the new Unit, loads them again on export, and deletes temporary files. |
+| Permissions | Runs the collaboration Service's middleware and its own `import` and `export` middleware. |
+| Snapshot JSON | Imports to a JSON file instead of a Unit (`outputType: 2`) and exports a client snapshot (`jsonID`). |
+| OLE attachments | Converts a stored attachment into an online Unit and embeds online Units in an export. |
+
 ## Supported conversions
 
 | Type | Import | Export |
@@ -47,11 +106,38 @@ The constructor throws a `TypeError` when a required option is missing. Dispose 
 | Base | xls, xlsx, csv, tsv | xlsx, csv |
 | PDF | pdf | pdf |
 
-The name of the uploaded file decides the import format. Board is rejected. For PDF, install `@univerjs-pro/exchange-pdf-node-binding` and run `import '@univerjs-pro/exchange-node/pdf'` at startup; without them a PDF task fails with `UNSUPPORTED_FORMAT`.
+The name of the uploaded file decides the import format. Board is rejected.
+
+Sheet formulas are calculated on import, not on export. An XLSX import recalculates every formula; XLS, CSV and TSV imports do not yet. An export writes the results the snapshot holds, so a formula without a result is exported without a value.
+
+A `unitID` export uses the latest stored snapshot as it is when no changeset follows it, and replays the changesets and recalculates otherwise.
+
+### Enable PDF Unit support (optional)
+
+Use `UniverType.UNIVER_PDF` as the task’s `type` for both import and export. An import converts a PDF file into a PDF Unit or its snapshot. An export writes a PDF Unit or its snapshot back to a PDF file.
+
+To enable this conversion, install the PDF binding.
+
+```bash
+pnpm add @univerjs-pro/exchange-pdf-node-binding
+```
+
+Register PDF support in the entry point of the import/export process. Without this import, PDF tasks fail with `UNSUPPORTED_FORMAT`.
+
+```ts
+import '@univerjs-pro/exchange-node/pdf';
+```
 
 ## License and quota
 
-Configure the License through `exchange-node`: set `UNIVER_LICENSE` and `UNIVER_LICENSE_KEY`, or call `configureExchange()`. A License passed only to the `UniverCollabService` constructor does not reach `exchange-node`. Query the remaining quota with `getExportQuota()` from `exchange-node`.
+Set the `UNIVER_LICENSE` and `UNIVER_LICENSE_KEY` environment variables in the import/export process to the full contents of the license and key files, respectively. `exchange-node` reads them automatically. You can also configure the license in code at startup.
+
+```ts
+import { configureExchange, getExportQuota } from '@univerjs-pro/exchange-node';
+
+await configureExchange({ license, licenseKey });
+const quota = await getExportQuota(); // Optional: check the remaining export quota.
+```
 
 ## Methods
 
@@ -86,7 +172,7 @@ Finished tasks stay readable for one hour. Tasks live in this Service instance, 
 
 ## Files
 
-Importing to a Unit stores images and attachments of Sheet, Doc and Slide as `UnitEmbedded` files of the new Unit. If the import fails, those files are deleted. Base, PDF and `outputType: 2` keep them inline in the snapshot.
+Importing to a Unit stores images and attachments of Sheet, Doc, Slide and PDF as `UnitEmbedded` files of the new Unit. If the import fails, those files are deleted. Base, PDF fonts and `outputType: 2` keep them inline in the snapshot.
 
 The source upload and the snapshot JSON of a `jsonID` export are deleted when their task ends. Results stay until File cleanup removes them.
 

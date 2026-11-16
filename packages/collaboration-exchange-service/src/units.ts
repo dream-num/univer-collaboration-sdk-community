@@ -42,7 +42,12 @@ export class ExchangeUnits {
     return this._collabService.getUnitLoadDataWithBlocks({ unitID, type, revision: HEAD_REVISION }, context);
   }
 
+  // Without changesets after it, the stored snapshot already is the snapshot of the target revision:
+  // there is nothing to replay, and whoever stored it (the Runtime, or the import) calculated it.
   materialize(data: UnitLoadDataWithBlocks): Promise<ISnapshotWithBlocks> {
+    if (data.changesets.length === 0) {
+      return Promise.resolve({ snapshot: data.snapshot, sheetBlocks: [...data.sheetBlocks] });
+    }
     return this._materializer.materializeSnapshot(data);
   }
 
