@@ -38,14 +38,6 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.md) | SQLite adapter built on `libsql` |
 | [`@univerjs-pro/collaboration-history-database-postgres`](./packages/collaboration-history-database-postgres/README.md) | PostgreSQL adapter for History records |
 
-### Worktree database adapters
-
-| Package | Description |
-| --- | --- |
-| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.md) | In-process adapter for tests and temporary services |
-| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.md) | SQLite adapter built on `libsql` |
-| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
-
 ### File
 
 | Package | Description |
@@ -64,6 +56,14 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | --- | --- |
 | [`@univerjs-pro/collaboration-exchange-service`](./packages/collaboration-exchange-service/README.md) | Exchange Service: Office and PDF import and export through `exchange-node`, the collaboration Service and the File Service |
 | [`@univerjs-pro/collaboration-exchange-endpoint`](./packages/collaboration-exchange-endpoint/README.md) | HTTP routes the Univer frontend calls for import, export and task status |
+
+### Worktree database adapters
+
+| Package | Description |
+| --- | --- |
+| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.md) | In-process adapter for tests and temporary services |
+| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
 
 ## Development
 

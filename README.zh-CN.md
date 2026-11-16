@@ -36,14 +36,6 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | [`@univerjs-pro/collaboration-history-database-sqlite`](./packages/collaboration-history-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
 | [`@univerjs-pro/collaboration-history-database-postgres`](./packages/collaboration-history-database-postgres/README.zh-CN.md) | 使用 PostgreSQL 存储 History 记录 |
 
-### Worktree 数据库适配器
-
-| 包 | 说明 |
-| --- | --- |
-| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
-| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
-| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.zh-CN.md) | 基于 `node-postgres` 的 PostgreSQL 适配器 |
-
 ### File
 
 | 包 | 说明 |
@@ -62,6 +54,14 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | --- | --- |
 | [`@univerjs-pro/collaboration-exchange-service`](./packages/collaboration-exchange-service/README.zh-CN.md) | Exchange Service：经 `exchange-node`、协同 Service 与 File Service 完成 Office 与 PDF 的导入导出 |
 | [`@univerjs-pro/collaboration-exchange-endpoint`](./packages/collaboration-exchange-endpoint/README.zh-CN.md) | Univer 前端导入、导出与任务查询的 HTTP 路由 |
+
+### Worktree 数据库适配器
+
+| 包 | 说明 |
+| --- | --- |
+| [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
+| [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
+| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.zh-CN.md) | 基于 `node-postgres` 的 PostgreSQL 适配器 |
 
 ## 开发
 
