@@ -44,6 +44,7 @@ through issues and pull requests as described in [CONTRIBUTING.md](./CONTRIBUTIN
 | --- | --- |
 | [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.md) | In-process adapter for tests and temporary services |
 | [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.md) | SQLite adapter built on `libsql` |
+| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.md) | PostgreSQL adapter built on `node-postgres` |
 
 ### File
 

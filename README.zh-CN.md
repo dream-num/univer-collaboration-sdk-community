@@ -42,6 +42,7 @@ Univer Collaboration SDK 的开源部分，采用 Apache-2.0 许可。这些包�
 | --- | --- |
 | [`@univerjs-pro/collaboration-worktree-database-memory`](./packages/collaboration-worktree-database-memory/README.zh-CN.md) | 进程内适配器，用于测试和临时服务 |
 | [`@univerjs-pro/collaboration-worktree-database-sqlite`](./packages/collaboration-worktree-database-sqlite/README.zh-CN.md) | 基于 `libsql` 的 SQLite 适配器 |
+| [`@univerjs-pro/collaboration-worktree-database-postgres`](./packages/collaboration-worktree-database-postgres/README.zh-CN.md) | 基于 `node-postgres` 的 PostgreSQL 适配器 |
 
 ### File
 
